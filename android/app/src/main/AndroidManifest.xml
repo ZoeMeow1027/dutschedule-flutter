@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.zoemeow.subjectnotifier">
+   <uses-permission android:name="android.permission.INTERNET" />
+
    <application
-        android:label="subjectnotifier"
+        android:label="Subject Notifier"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

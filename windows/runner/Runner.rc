@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "io.zoemeow" "\0"
-            VALUE "FileDescription", "subjectnotifier" "\0"
+            VALUE "CompanyName", "ZoeMeow" "\0"
+            VALUE "FileDescription", "Optimize view in page and subject notifications for DUT student page." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "subjectnotifier" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 io.zoemeow. All rights reserved." "\0"
+            VALUE "InternalName", "SubjectNotifier" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 ZoeMeow." "\0"
             VALUE "OriginalFilename", "subjectnotifier.exe" "\0"
-            VALUE "ProductName", "subjectnotifier" "\0"
+            VALUE "ProductName", "SubjectNotifier" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
