@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:subject_notifier_flutter/utils/custom_scroll_behavior.dart';
 
 import 'screens/main_screen/main_screen_view.dart';
+import 'utils/custom_scroll_behavior.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
