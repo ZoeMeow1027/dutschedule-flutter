@@ -2,8 +2,8 @@ import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class NewsDetailItemView extends StatelessWidget {
-  const NewsDetailItemView({
+class NewsDetailItemWidget extends StatelessWidget {
+  const NewsDetailItemWidget({
     super.key,
     required this.newsItem,
     this.isNewsSubject = false,
