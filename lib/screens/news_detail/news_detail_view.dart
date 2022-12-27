@@ -19,7 +19,7 @@ class NewsDetailView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("News Detail"),
       ),
-      body: NewsDetailItemView(
+      body: NewsDetailItemWidget(
         newsItem: newsItem,
         isNewsSubject: isNewsSubject,
       ),
