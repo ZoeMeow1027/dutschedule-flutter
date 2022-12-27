@@ -1,14 +1,17 @@
 import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
-import 'package:subject_notifier_flutter/screens/components/news_summary_item_widget.dart';
+
+import 'news_summary_item_widget.dart';
 
 class NewsSummaryListWidget extends StatelessWidget {
   const NewsSummaryListWidget({
     super.key,
     required this.newsList,
+    this.onClick,
   });
 
   final List<NewsGlobal> newsList;
+  final Function(NewsGlobal)? onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,11 @@ class NewsSummaryListWidget extends StatelessWidget {
                 newsItem: newsList[index],
                 padding:
                     const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                onClick: () {
+                  if (onClick != null) {
+                    onClick!(newsList[index]);
+                  }
+                },
               ),
             ),
           ),
