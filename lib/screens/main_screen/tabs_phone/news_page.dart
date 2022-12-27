@@ -71,7 +71,7 @@ class _NewsPageState extends State<NewsPage> {
       ),
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (page) => setState(() {
           setState(() {
             _currentPage = page;
@@ -81,10 +81,6 @@ class _NewsPageState extends State<NewsPage> {
           NewsTabGlobal(newsList: _newsListGlobal),
           NewsTabSubject(newsList: _newsListSubject),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.menu),
-        onPressed: () {},
       ),
     );
   }
@@ -98,6 +94,7 @@ class _NewsPageState extends State<NewsPage> {
     return Container(
       padding: padding,
       child: TextButton(
+        // TODO: Color here
         style: TextButton.styleFrom(
           backgroundColor: isFocus ? Colors.amberAccent : null,
           shape: RoundedRectangleBorder(
