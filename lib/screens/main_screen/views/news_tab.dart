@@ -14,9 +14,9 @@ class NewsTabGlobal extends StatefulWidget {
     this.showDetailOnRight = false,
   });
 
-  final bool showDetailOnRight;
   final List<NewsGlobal> listNewsGlobal;
   final List<NewsSubject> listNewsSubject;
+  final bool showDetailOnRight;
 
   @override
   State<StatefulWidget> createState() => _NewsTabGlobalState();
@@ -26,8 +26,16 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
   NewsGlobal? _selectedNews;
   bool _isNewsSubject = false;
 
+  // 0: News Global, 1: News Subject
   int _currentPage = 0;
-  final PageController _pageController = PageController(initialPage: 0);
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pageController = PageController(initialPage: _currentPage);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,68 +72,63 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
     required List<NewsSubject> listNewsSubject,
     Function(NewsGlobal, bool)? onClick,
   }) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _tabSwitchButton(
-              text: "Global",
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-              isFocus: _currentPage == 0,
-              onClick: () {
-                _pageController.animateToPage(
-                  0,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.fastOutSlowIn,
-                );
-              },
-            ),
-            _tabSwitchButton(
-              text: "Subject",
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-              isFocus: _currentPage == 1,
-              onClick: () {
-                _pageController.animateToPage(
-                  1,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.fastOutSlowIn,
-                );
-              },
-            ),
-          ],
-        ),
-        Expanded(
-          child: PageView(
-            controller: _pageController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            onPageChanged: (page) => setState(() {
-              setState(() {
-                _currentPage = page;
-              });
-            }),
-            children: [
-              NewsSummaryListWidget(
-                newsList: widget.listNewsGlobal,
-                onClick: (news) {
-                  if (onClick != null) {
-                    onClick(news, false);
-                  }
-                },
-              ),
-              NewsSummaryListWidget(
-                newsList: widget.listNewsSubject,
-                onClick: (news) {
-                  if (onClick != null) {
-                    onClick(news, true);
-                  }
-                },
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("News"),
+        actions: [
+          _tabSwitchButton(
+            text: "Global",
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+            isFocus: _currentPage == 0,
+            onClick: () {
+              _pageController.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn,
+              );
+            },
           ),
-        ),
-      ],
+          _tabSwitchButton(
+            text: "Subject",
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+            isFocus: _currentPage == 1,
+            onClick: () {
+              _pageController.animateToPage(
+                1,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn,
+              );
+            },
+          ),
+        ],
+      ),
+      body: PageView(
+        controller: _pageController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        onPageChanged: (page) {
+          setState(() {
+            _currentPage = page;
+          });
+        },
+        children: [
+          NewsSummaryListWidget(
+            newsList: widget.listNewsGlobal,
+            onClick: (news) {
+              if (onClick != null) {
+                onClick(news, false);
+              }
+            },
+          ),
+          NewsSummaryListWidget(
+            newsList: widget.listNewsSubject,
+            onClick: (news) {
+              if (onClick != null) {
+                onClick(news, true);
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
