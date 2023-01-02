@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/main_screen/main_screen_view.dart';
@@ -14,14 +15,25 @@ class MainApplication extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Subject Notifier',
-      scrollBehavior: CustomScrollBehavior(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
-      home: const MainScreenView(),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        return MaterialApp(
+          title: 'Subject Notifier',
+          scrollBehavior: CustomScrollBehavior(),
+          theme: ThemeData(
+            primarySwatch: lightDynamic != null ? null : Colors.blue,
+            colorScheme: lightDynamic,
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            primarySwatch: darkDynamic != null ? null : Colors.blue,
+            colorScheme: darkDynamic,
+            useMaterial3: true,
+          ),
+          themeMode: ThemeMode.system,
+          home: const MainScreenView(),
+        );
+      },
     );
   }
 }
