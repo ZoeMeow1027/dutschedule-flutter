@@ -40,13 +40,10 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("News")),
-      body: NewsTabGlobal(
-        listNewsGlobal: _newsListGlobal,
-        listNewsSubject: _newsListSubject,
-        showDetailOnRight: widget.showDetailOnRight,
-      ),
+    return NewsTabGlobal(
+      listNewsGlobal: _newsListGlobal,
+      listNewsSubject: _newsListSubject,
+      showDetailOnRight: widget.showDetailOnRight,
     );
   }
 }
