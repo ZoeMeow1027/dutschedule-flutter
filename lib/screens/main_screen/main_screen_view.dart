@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:subject_notifier_flutter/model/scaffold_nav.dart';
 
-import 'views/news_page.dart';
+import '../../utils/get_device_type.dart';
+import 'views/account_tab.dart';
+import 'views/news_tab.dart';
 
 class MainScreenView extends StatefulWidget {
   const MainScreenView({super.key});
@@ -11,83 +14,83 @@ class MainScreenView extends StatefulWidget {
 
 class _MyHomePageState extends State<MainScreenView> {
   int _selectedPage = 1;
-  final _navDestList = const [
-    NavigationDestination(
-      icon: Icon(Icons.home),
-      label: "Home",
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.newspaper),
-      label: "News",
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.account_circle_outlined),
-      label: "Account",
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.settings),
-      label: "Settings",
-    ),
-  ];
 
-  final _navDestRailList = const [
-    NavigationRailDestination(
-      icon: Icon(Icons.home),
-      label: Text("Home"),
+  final ScaffoldNavigationList _navList = ScaffoldNavigationList(itemList: [
+    ScaffoldNavigationItem(
+      id: 0,
+      label: "Home",
+      iconData: Icons.home,
     ),
-    NavigationRailDestination(
-      icon: Icon(Icons.newspaper),
-      label: Text("News"),
+    ScaffoldNavigationItem(
+      id: 1,
+      label: "News",
+      iconData: Icons.newspaper,
     ),
-    NavigationRailDestination(
-      icon: Icon(Icons.account_circle_outlined),
-      label: Text("Account"),
+    ScaffoldNavigationItem(
+      id: 2,
+      label: "Account",
+      iconData: Icons.account_circle_outlined,
     ),
-    NavigationRailDestination(
-      icon: Icon(Icons.settings),
-      label: Text("Settings"),
+    ScaffoldNavigationItem(
+      id: 3,
+      label: "Settings",
+      iconData: Icons.settings,
     ),
-  ];
+  ]);
+
+  late PageController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(initialPage: _selectedPage);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    // 0: Phone
-    // 1: Large screen phone
-    // 2: Tablet/desktop
-    final screenType = screenWidth <= 600
-        ? 0
-        : screenWidth <= 1000
-            ? 1
-            : 2;
+    var screenType = getDeviceType(context);
 
     return Scaffold(
       body: Row(
         children: [
-          screenType < 1
-              ? const Center()
-              : NavigationRail(
-                  destinations: _navDestRailList,
+          screenType.value > DeviceType.phone.value
+              ? NavigationRail(
+                  destinations: _navList.convertToListNavRailDestination(),
                   selectedIndex: _selectedPage,
                   labelType: NavigationRailLabelType.all,
                   onDestinationSelected: (index) {
-                    setState(() => {_selectedPage = index});
+                    _controller.jumpToPage(index);
+                    // setState(() => {_selectedPage = index});
                   },
                   minWidth: 80,
-                ),
+                )
+              : const Center(),
           Expanded(
-            child: NewsPage(
-              showDetailOnRight: screenType > 1,
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _controller,
+              onPageChanged: (page) {
+                setState(() {
+                  _selectedPage = page;
+                });
+              },
+              children: const <Widget>[
+                Center(),
+                NewsTab(),
+                AccountTab(),
+                Center(),
+              ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: screenType < 1
+      bottomNavigationBar: screenType.value <= DeviceType.phone.value
           ? NavigationBar(
-              destinations: _navDestList,
+              destinations: _navList.convertToListNavDestination(),
               selectedIndex: _selectedPage,
               onDestinationSelected: (index) {
-                setState(() => {_selectedPage = index});
+                _controller.jumpToPage(index);
+                // setState(() => {_selectedPage = index});
               },
             )
           : null,
