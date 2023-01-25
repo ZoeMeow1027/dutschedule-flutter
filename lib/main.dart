@@ -30,7 +30,7 @@ class MainApplication extends StatelessWidget {
             colorScheme: darkDynamic,
             useMaterial3: true,
           ),
-          themeMode: ThemeMode.system,
+          themeMode: ThemeMode.light,
           home: const MainScreenView(),
         );
       },

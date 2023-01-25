@@ -1,28 +1,26 @@
 import 'package:dutwrapper/model/news_obj.dart';
+import 'package:dutwrapper/news.dart';
 import 'package:flutter/material.dart';
-import 'package:split_view/split_view.dart';
 
+import '../../../utils/get_device_type.dart';
 import '../../components/news_details_item_widget.dart';
 import '../../components/news_summary_list_widget.dart';
 import '../../news_detail/news_detail_view.dart';
 
-class NewsTabGlobal extends StatefulWidget {
-  const NewsTabGlobal({
-    super.key,
-    required this.listNewsGlobal,
-    required this.listNewsSubject,
-    this.showDetailOnRight = false,
-  });
-
-  final List<NewsGlobal> listNewsGlobal;
-  final List<NewsSubject> listNewsSubject;
-  final bool showDetailOnRight;
+class NewsTab extends StatefulWidget {
+  const NewsTab({super.key});
 
   @override
-  State<StatefulWidget> createState() => _NewsTabGlobalState();
+  State<StatefulWidget> createState() {
+    return _NewsTabState();
+  }
 }
 
-class _NewsTabGlobalState extends State<NewsTabGlobal> {
+class _NewsTabState extends State<NewsTab>
+    with AutomaticKeepAliveClientMixin<NewsTab> {
+  final List<NewsGlobal> _newsListGlobal = [];
+  final List<NewsSubject> _newsListSubject = [];
+
   NewsGlobal? _selectedNews;
   bool _isNewsSubject = false;
 
@@ -32,18 +30,30 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     _pageController = PageController(initialPage: _currentPage);
+
+    News.getNewsGlobal(page: 1).then((value) {
+      _newsListGlobal.clear();
+      _newsListGlobal.addAll(value);
+      setState(() {});
+    });
+    News.getNewsSubject(page: 1).then((value) {
+      _newsListSubject.clear();
+      _newsListSubject.addAll(value);
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.showDetailOnRight
+    super.build(context);
+    return getDeviceType(context).value > DeviceType.tablet.value
         ? _splitView(
             context: context,
-            listNewsGlobal: widget.listNewsGlobal,
-            listNewsSubject: widget.listNewsSubject,
+            listNewsGlobal: _newsListGlobal,
+            listNewsSubject: _newsListSubject,
             selectedNews: _selectedNews,
             onClick: (news, isNewsSubject) {
               setState(() {
@@ -54,14 +64,18 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
           )
         : _singleView(
             context: context,
-            listNewsGlobal: widget.listNewsGlobal,
-            listNewsSubject: widget.listNewsSubject,
+            listNewsGlobal: _newsListGlobal,
+            listNewsSubject: _newsListSubject,
             onClick: (news, isNewsSubject) {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NewsDetailView(
-                  newsItem: news,
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewsDetailView(
+                    newsItem: news,
+                    isNewsSubject: isNewsSubject,
+                  ),
                 ),
-              ));
+              );
             },
           );
   }
@@ -90,7 +104,8 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
           ),
           _tabSwitchButton(
             text: "Subject",
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+            padding:
+                const EdgeInsets.only(top: 5, bottom: 5, right: 10, left: 3),
             isFocus: _currentPage == 1,
             onClick: () {
               _pageController.animateToPage(
@@ -112,7 +127,7 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
         },
         children: [
           NewsSummaryListWidget(
-            newsList: widget.listNewsGlobal,
+            newsList: listNewsGlobal,
             onClick: (news) {
               if (onClick != null) {
                 onClick(news, false);
@@ -120,7 +135,7 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
             },
           ),
           NewsSummaryListWidget(
-            newsList: widget.listNewsSubject,
+            newsList: listNewsSubject,
             onClick: (news) {
               if (onClick != null) {
                 onClick(news, true);
@@ -139,29 +154,82 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
     Function(NewsGlobal, bool)? onClick,
     NewsGlobal? selectedNews,
   }) {
-    return SplitView(
-      viewMode: SplitViewMode.Horizontal,
-      children: [
-        _singleView(
-          context: context,
-          listNewsGlobal: listNewsGlobal,
-          listNewsSubject: listNewsSubject,
-          onClick: (news, isNewsSubject) {
-            if (onClick != null) {
-              onClick(news, isNewsSubject);
-            }
-          },
-        ),
-        selectedNews == null
-            ? const Center(
-                child: Text("Select a news on the left to show its details"),
-              )
-            : NewsDetailItemWidget(
-                newsItem: selectedNews,
-                isNewsSubject: false,
+    return IntrinsicWidth(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 450,
+            child: _singleView(
+              context: context,
+              listNewsGlobal: listNewsGlobal,
+              listNewsSubject: listNewsSubject,
+              onClick: (news, isNewsSubject) {
+                if (onClick != null) {
+                  onClick(news, isNewsSubject);
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, right: 10, bottom: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                  // TODO: Change to dynamic color here!
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: selectedNews == null
+                      ? const Center(
+                          child: Text(
+                              "Select a news on the left to show its details"),
+                        )
+                      : NewsDetailItemWidget(
+                          newsItem: selectedNews,
+                          isNewsSubject: _isNewsSubject,
+                        ),
+                ),
               ),
-      ],
+            ),
+          ),
+        ],
+      ),
     );
+    // return SplitView(
+    //   viewMode: SplitViewMode.Horizontal,
+    //   children: [
+    //     _singleView(
+    //       context: context,
+    //       listNewsGlobal: listNewsGlobal,
+    //       listNewsSubject: listNewsSubject,
+    //       onClick: (news, isNewsSubject) {
+    //         if (onClick != null) {
+    //           onClick(news, isNewsSubject);
+    //         }
+    //       },
+    //     ),
+    //     selectedNews == null
+    //         ? const Center(
+    //             child: Text("Select a news on the left to show its details"),
+    //           )
+    //         : NewsDetailItemWidget(
+    //             newsItem: selectedNews,
+    //             isNewsSubject: _isNewsSubject,
+    //           ),
+    //   ],
+    // );
   }
 
   Widget _tabSwitchButton({
@@ -197,4 +265,7 @@ class _NewsTabGlobalState extends State<NewsTabGlobal> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
