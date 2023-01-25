@@ -7,17 +7,20 @@ class NewsSummaryListWidget extends StatelessWidget {
   const NewsSummaryListWidget({
     super.key,
     required this.newsList,
+    this.color,
     this.onClick,
   });
 
   final List<NewsGlobal> newsList;
   final Function(NewsGlobal)? onClick;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Container(
+        color: color,
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Column(
