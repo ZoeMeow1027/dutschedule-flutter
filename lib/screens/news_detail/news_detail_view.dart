@@ -1,6 +1,7 @@
 import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/launch_url.dart';
 import '../components/news_details_item_widget.dart';
 
 class NewsDetailView extends StatelessWidget {
@@ -22,6 +23,16 @@ class NewsDetailView extends StatelessWidget {
       body: NewsDetailItemWidget(
         newsItem: newsItem,
         isNewsSubject: isNewsSubject,
+        onClickUrl: (url) {
+          launchOwnUrl(
+            url,
+            onFailed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("We can't open links for you."),
+              ));
+            },
+          );
+        },
       ),
     );
   }

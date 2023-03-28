@@ -1,11 +1,7 @@
-import 'dart:developer';
-import 'dart:io' show Platform;
 import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class _NewsTextProcessing {
   late String text;
@@ -19,10 +15,12 @@ class NewsDetailItemWidget extends StatelessWidget {
     super.key,
     required this.newsItem,
     this.isNewsSubject = false,
+    this.onClickUrl,
   });
 
   final NewsGlobal newsItem;
   final bool isNewsSubject;
+  final Function(String)? onClickUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,6 @@ class NewsDetailItemWidget extends StatelessWidget {
       source: newsItem.contentString,
       newsLinkItem: List.of(newsItem.links),
     );
-    print(data.length);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -86,12 +83,10 @@ class NewsDetailItemWidget extends StatelessWidget {
                         recognizer: data[index].url == null
                             ? null
                             : (TapGestureRecognizer()
-                              ..onTap = () async {
-                                if (await canLaunchUrlString(
-                                    data[index].url!)) {
-                                  await launchUrlString(data[index].url!);
-                                } else {
-                                  log("error while launch url");
+                              ..onTap = () {
+                                if (onClickUrl != null &&
+                                    data[index].url != null) {
+                                  onClickUrl!(data[index].url!);
                                 }
                               }),
                       );

@@ -3,6 +3,7 @@ import 'package:dutwrapper/news.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/get_device_type.dart';
+import '../../../utils/launch_url.dart';
 import '../../components/news_details_item_widget.dart';
 import '../../components/news_summary_list_widget.dart';
 import '../../news_detail/news_detail_view.dart';
@@ -199,6 +200,17 @@ class _NewsTabState extends State<NewsTab>
                       : NewsDetailItemWidget(
                           newsItem: selectedNews,
                           isNewsSubject: _isNewsSubject,
+                          onClickUrl: (url) {
+                            launchOwnUrl(
+                              url,
+                              onFailed: () {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("We can't open links for you."),
+                                ));
+                              },
+                            );
+                          },
                         ),
                 ),
               ),
@@ -207,29 +219,6 @@ class _NewsTabState extends State<NewsTab>
         ],
       ),
     );
-    // return SplitView(
-    //   viewMode: SplitViewMode.Horizontal,
-    //   children: [
-    //     _singleView(
-    //       context: context,
-    //       listNewsGlobal: listNewsGlobal,
-    //       listNewsSubject: listNewsSubject,
-    //       onClick: (news, isNewsSubject) {
-    //         if (onClick != null) {
-    //           onClick(news, isNewsSubject);
-    //         }
-    //       },
-    //     ),
-    //     selectedNews == null
-    //         ? const Center(
-    //             child: Text("Select a news on the left to show its details"),
-    //           )
-    //         : NewsDetailItemWidget(
-    //             newsItem: selectedNews,
-    //             isNewsSubject: _isNewsSubject,
-    //           ),
-    //   ],
-    // );
   }
 
   Widget _tabSwitchButton({
@@ -258,10 +247,7 @@ class _NewsTabState extends State<NewsTab>
             onClick();
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-          child: Text(text),
-        ),
+        child: Text(text),
       ),
     );
   }
