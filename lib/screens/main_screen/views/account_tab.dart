@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/theme_tools.dart';
+
 class AccountTab extends StatefulWidget {
   const AccountTab({super.key});
 
@@ -16,21 +18,22 @@ class _AccountTabState extends State<AccountTab>
       appBar: AppBar(
         title: const Text("Account"),
       ),
-      body: _notLoggedIn(),
+      body: _notLoggedIn(context),
     );
   }
 
-  Widget _notLoggedIn() {
+  Widget _notLoggedIn(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Wrap(
-          alignment: WrapAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             RichText(
               text: TextSpan(
-                style: const TextStyle(
-                  color: Colors.black,
+                style: TextStyle(
+                  color: ThemeTool.isDarkMode(context) ? Colors.white : Colors.black,
                 ),
                 children: [
                   WidgetSpan(

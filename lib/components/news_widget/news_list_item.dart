@@ -2,8 +2,10 @@ import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class NewsSummaryItemWidget extends StatelessWidget {
-  const NewsSummaryItemWidget({
+import '../../utils/theme_tools.dart';
+
+class NewsListItem extends StatelessWidget {
+  const NewsListItem({
     super.key,
     required this.newsItem,
     this.padding = const EdgeInsets.all(0),
@@ -32,13 +34,17 @@ class NewsSummaryItemWidget extends StatelessWidget {
           alignment: Alignment.topLeft,
           decoration: BoxDecoration(
             // TODO: Change to dynamic color here!
-            color: Colors.white,
+            color: ThemeTool.isDarkMode(context)
+              ? Theme.of(context).dialogBackgroundColor
+              : Colors.white,
             borderRadius: const BorderRadius.all(Radius.circular(5)),
             boxShadow: !showShadow
                 ? null
                 : [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: ThemeTool.isDarkMode(context)
+                       ? const Color.fromARGB(255, 64, 64, 64).withOpacity(0.5)
+                       : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,
                       offset: const Offset(0, 3), // changes position of shadow
@@ -68,7 +74,7 @@ class NewsSummaryItemWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 17,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -76,7 +82,7 @@ class NewsSummaryItemWidget extends StatelessWidget {
                   newsItem.contentString,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 15),
                 ),
               ],
             ),

@@ -18,7 +18,7 @@ class MainApplication extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         return MaterialApp(
-          title: 'Subject Notifier',
+          title: 'DutSchedule',
           scrollBehavior: CustomScrollBehavior(),
           theme: ThemeData(
             primarySwatch: lightDynamic != null ? null : Colors.blue,
@@ -30,7 +30,7 @@ class MainApplication extends StatelessWidget {
             colorScheme: darkDynamic,
             useMaterial3: true,
           ),
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.dark,
           home: const MainScreenView(),
         );
       },

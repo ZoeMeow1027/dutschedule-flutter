@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "ZoeMeow" "\0"
-            VALUE "FileDescription", "Subject Notifier [Flutter]" "\0"
+            VALUE "FileDescription", "DutSchedule [Flutter]" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Subject Notifier" "\0"
+            VALUE "InternalName", "DutSchedule" "\0"
             VALUE "LegalCopyright", "" "\0"
-            VALUE "OriginalFilename", "subjectnotifier.exe" "\0"
-            VALUE "ProductName", "Subject Notifier" "\0"
+            VALUE "OriginalFilename", "dutschedule.exe" "\0"
+            VALUE "ProductName", "DutSchedule" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
