@@ -2,10 +2,12 @@ import 'package:dutwrapper/model/news_obj.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:flutter/material.dart';
 
+import '../../../components/news_widget/news_detail_item.dart';
+import '../../../utils/theme_tools.dart';
+import '../../../components/news_widget/news_list.dart';
+import '../../../components/tab_switch_button.dart';
 import '../../../utils/get_device_type.dart';
 import '../../../utils/launch_url.dart';
-import '../../components/news_details_item_widget.dart';
-import '../../components/news_summary_list_widget.dart';
 import '../../news_detail/news_detail_view.dart';
 
 class NewsTab extends StatefulWidget {
@@ -91,7 +93,7 @@ class _NewsTabState extends State<NewsTab>
       appBar: AppBar(
         title: const Text("News"),
         actions: [
-          _tabSwitchButton(
+          TabSwitchButton(
             text: "Global",
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
             isFocus: _currentPage == 0,
@@ -103,7 +105,7 @@ class _NewsTabState extends State<NewsTab>
               );
             },
           ),
-          _tabSwitchButton(
+          TabSwitchButton(
             text: "Subject",
             padding:
                 const EdgeInsets.only(top: 5, bottom: 5, right: 10, left: 3),
@@ -127,15 +129,20 @@ class _NewsTabState extends State<NewsTab>
           });
         },
         children: [
-          NewsSummaryListWidget(
+          NewsList(
             newsList: listNewsGlobal,
             onClick: (news) {
               if (onClick != null) {
                 onClick(news, false);
               }
             },
+            endListReached: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("You reached end of this list!"),
+              ));
+            },
           ),
-          NewsSummaryListWidget(
+          NewsList(
             newsList: listNewsSubject,
             onClick: (news) {
               if (onClick != null) {
@@ -178,12 +185,15 @@ class _NewsTabState extends State<NewsTab>
               padding: const EdgeInsets.only(top: 5, right: 10, bottom: 5),
               child: Container(
                 decoration: BoxDecoration(
-                  // TODO: Change to dynamic color here!
-                  color: Colors.white,
+                  color: ThemeTool.isDarkMode(context)
+                      ? Theme.of(context).dialogBackgroundColor
+                      : Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: ThemeTool.isDarkMode(context)
+                          ? const Color.fromARGB(255, 64, 64, 64).withOpacity(0.5)
+                          : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,
                       offset: const Offset(0, 3), // changes position of shadow
@@ -197,7 +207,7 @@ class _NewsTabState extends State<NewsTab>
                           child: Text(
                               "Select a news on the left to show its details"),
                         )
-                      : NewsDetailItemWidget(
+                      : NewsDetailItem(
                           newsItem: selectedNews,
                           isNewsSubject: _isNewsSubject,
                           onClickUrl: (url) {
@@ -217,37 +227,6 @@ class _NewsTabState extends State<NewsTab>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _tabSwitchButton({
-    required String text,
-    bool isFocus = false,
-    Function()? onClick,
-    EdgeInsetsGeometry padding = const EdgeInsets.all(0),
-  }) {
-    return Padding(
-      padding: padding,
-      child: TextButton(
-        // TODO: Color here
-        style: TextButton.styleFrom(
-          backgroundColor: isFocus ? Colors.amberAccent : null,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              color: Colors.amberAccent,
-              width: 1.5,
-              style: BorderStyle.solid,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-        onPressed: () {
-          if (onClick != null) {
-            onClick();
-          }
-        },
-        child: Text(text),
       ),
     );
   }

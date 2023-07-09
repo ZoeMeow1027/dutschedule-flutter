@@ -1,8 +1,8 @@
 import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/news_widget/news_detail_item.dart';
 import '../../utils/launch_url.dart';
-import '../components/news_details_item_widget.dart';
 
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({
@@ -20,7 +20,7 @@ class NewsDetailView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("News Detail"),
       ),
-      body: NewsDetailItemWidget(
+      body: NewsDetailItem(
         newsItem: newsItem,
         isNewsSubject: isNewsSubject,
         onClickUrl: (url) {

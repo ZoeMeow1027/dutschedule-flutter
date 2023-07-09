@@ -27,7 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(100, 100);
   Win32Window::Size size(429, 879);
-  if (!window.CreateAndShow(L"Subject Notifier [Flutter - Windows]", origin, size)) {
+  if (!window.CreateAndShow(L"DutSchedule [Flutter]", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

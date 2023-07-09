@@ -3,26 +3,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class _NewsTextProcessing {
-  late String text;
-  String? url;
+import '../../utils/theme_tools.dart';
 
-  _NewsTextProcessing({required this.text, this.url});
-}
-
-class NewsDetailItemWidget extends StatelessWidget {
-  const NewsDetailItemWidget({
+class NewsDetailItem extends StatelessWidget {
+  const NewsDetailItem({
     super.key,
     required this.newsItem,
     this.isNewsSubject = false,
     this.onClickUrl,
   });
-
+  
   final NewsGlobal newsItem;
   final bool isNewsSubject;
   final Function(String)? onClickUrl;
 
-  @override
+@override
   Widget build(BuildContext context) {
     var dateStr = DateFormat("dd/MM/yyyy")
         .format(DateTime.fromMillisecondsSinceEpoch(newsItem.date));
@@ -44,16 +39,16 @@ class NewsDetailItemWidget extends StatelessWidget {
               newsItem.title,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 25,
+                fontSize: 22,
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Text(
-                "News date: $dateStr",
+                dateStr,
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
-                  fontSize: 22,
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -75,10 +70,12 @@ class NewsDetailItemWidget extends StatelessWidget {
                               ? null
                               : TextDecoration.underline,
                           fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: data[index].url == null
-                              ? Colors.black
-                              : Colors.blueAccent,
+                          fontSize: 17,
+                          color: data[index].url != null
+                              ? Colors.blueAccent
+                              : ThemeTool.isDarkMode(context)
+                                ? Colors.white
+                                : Colors.black,
                         ),
                         recognizer: data[index].url == null
                             ? null
@@ -150,4 +147,11 @@ class NewsDetailItemWidget extends StatelessWidget {
     // End of processing
     return data;
   }
+}
+
+class _NewsTextProcessing {
+  late String text;
+  String? url;
+
+  _NewsTextProcessing({required this.text, this.url});
 }
