@@ -1,4 +1,4 @@
-# Subject Notifier (now with Flutter)
+# DutSchedule (now with Flutter)
 
 Optimize view in page and subject notifications for DUT student page
 
@@ -15,7 +15,7 @@ Navigate to Release (at right of this README) to download app.
 ### Requirements
 You will need:
 - [Flutter](https://flutter.dev/) (currently developing at 3.7)
-- An IDE if you want to modifiy this project easily (ex. [Visual Studio Code](https://code.visualstudio.com/) with [Dart](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code) and [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) extension, [Android Studio](https://developer.android.com/studio),...).
+- An IDE or Text editor if you want to modifiy this project easily (ex. [Visual Studio Code](https://code.visualstudio.com/) with [Dart](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code) and [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) extension, [Android Studio](https://developer.android.com/studio),...).
 
 ### How to build/run
 Just build or run with command `flutter build ...` or `flutter run` in your project directory. No extras arguments required. For more information, navigate to [Flutter document](https://docs.flutter.dev/).
@@ -40,5 +40,5 @@ Just build or run with command `flutter build ...` or `flutter run` in your proj
 
 # Copyright?
 
-- This project - SubjectNotifier - is not affiliated with Da Nang University of Technology.
+- This project - DutSchedule - is not affiliated with Da Nang University of Technology.
 - DUT, Da Nang University of Technology, web materials and web contents are trademarks and copyrights of Da Nang University of Technology school.

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:subject_notifier_flutter/model/scaffold_nav.dart';
 
-import '../../utils/get_device_type.dart';
-import 'views/account_tab.dart';
-import 'views/news_tab.dart';
+import '/model/scaffold_nav.dart';
+import '/utils/get_device_type.dart';
+import '/screens/main_screen/views/account_tab.dart';
+import '/screens/main_screen/views/news_tab.dart';
 
 class MainScreenView extends StatefulWidget {
   const MainScreenView({super.key});

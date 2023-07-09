@@ -1,4 +1,4 @@
-name: subject_notifier_flutter
+name: dutschedule
 description: Optimize view in page and subject notifications for DUT student page.
 
 # The following line prevents the package from being accidentally published to
@@ -31,10 +31,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  theme_mode_handler: ^3.0.0
   dutwrapper:
     git:
-      url: https://github.com/dutwrapper-lib/dart/
-      ref: b30372d
+      url: https://github.com/ZoeMeow1027/dutwrapper
+      ref: 853bc27
+      path: src/dart
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
