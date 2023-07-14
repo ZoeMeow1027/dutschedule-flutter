@@ -1,4 +1,5 @@
-import 'package:dutwrapper/model/news_obj.dart';
+import 'package:dutwrapper/model/news_global.dart';
+import 'package:dutwrapper/model/news_link_item.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,12 +13,12 @@ class NewsDetailItem extends StatelessWidget {
     this.isNewsSubject = false,
     this.onClickUrl,
   });
-  
+
   final NewsGlobal newsItem;
   final bool isNewsSubject;
   final Function(String)? onClickUrl;
 
-@override
+  @override
   Widget build(BuildContext context) {
     var dateStr = DateFormat("dd/MM/yyyy")
         .format(DateTime.fromMillisecondsSinceEpoch(newsItem.date));
@@ -74,8 +75,8 @@ class NewsDetailItem extends StatelessWidget {
                           color: data[index].url != null
                               ? Colors.blueAccent
                               : ThemeTool.isDarkMode(context)
-                                ? Colors.white
-                                : Colors.black,
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         recognizer: data[index].url == null
                             ? null

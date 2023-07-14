@@ -1,7 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/main_screen/main_screen_view.dart';
+import 'screens/mainscreen/main_screen_view.dart';
 import 'utils/custom_scroll_behavior.dart';
 
 void main() {
@@ -30,7 +30,7 @@ class MainApplication extends StatelessWidget {
             colorScheme: darkDynamic,
             useMaterial3: true,
           ),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
           home: const MainScreenView(),
         );
       },

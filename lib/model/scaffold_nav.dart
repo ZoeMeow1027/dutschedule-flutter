@@ -29,7 +29,7 @@ class ScaffoldNavigationItem {
 class ScaffoldNavigationList {
   ScaffoldNavigationList({this.itemList = const []});
 
-  List<ScaffoldNavigationItem> itemList = [];
+  List<ScaffoldNavigationItem> itemList;
 
   List<NavigationDestination> convertToListNavDestination() {
     return itemList.map((e) => e.convertToNavDestination()).toList();

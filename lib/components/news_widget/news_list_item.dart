@@ -1,4 +1,4 @@
-import 'package:dutwrapper/model/news_obj.dart';
+import 'package:dutwrapper/model/news_global.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -35,16 +35,16 @@ class NewsListItem extends StatelessWidget {
           decoration: BoxDecoration(
             // TODO: Change to dynamic color here!
             color: ThemeTool.isDarkMode(context)
-              ? Theme.of(context).dialogBackgroundColor
-              : Colors.white,
+                ? Theme.of(context).dialogBackgroundColor
+                : Colors.white,
             borderRadius: const BorderRadius.all(Radius.circular(5)),
             boxShadow: !showShadow
                 ? null
                 : [
                     BoxShadow(
                       color: ThemeTool.isDarkMode(context)
-                       ? const Color.fromARGB(255, 64, 64, 64).withOpacity(0.5)
-                       : Colors.grey.withOpacity(0.5),
+                          ? Color.fromARGB(255, 56, 56, 56).withOpacity(0.5)
+                          : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,
                       offset: const Offset(0, 3), // changes position of shadow

@@ -1,14 +1,15 @@
-import 'package:dutwrapper/model/news_obj.dart';
+import 'package:dutwrapper/model/news_global.dart';
+import 'package:dutwrapper/model/news_subject.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:flutter/material.dart';
 
-import '../../../components/news_widget/news_detail_item.dart';
-import '../../../utils/theme_tools.dart';
-import '../../../components/news_widget/news_list.dart';
-import '../../../components/tab_switch_button.dart';
-import '../../../utils/get_device_type.dart';
-import '../../../utils/launch_url.dart';
-import '../../news_detail/news_detail_view.dart';
+import '../../components/news_widget/news_detail_item.dart';
+import '../../utils/theme_tools.dart';
+import '../../components/news_widget/news_list.dart';
+import '../../components/tab_switch_button.dart';
+import '../../utils/get_device_type.dart';
+import '../../utils/launch_url.dart';
+import '../news_detail/news_detail_view.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({super.key});
@@ -23,6 +24,36 @@ class _NewsTabState extends State<NewsTab>
     with AutomaticKeepAliveClientMixin<NewsTab> {
   final List<NewsGlobal> _newsListGlobal = [];
   final List<NewsSubject> _newsListSubject = [];
+  int _newsGlobalPage = 1;
+  int _newsSubjectPage = 1;
+
+  void _loadNewsGlobal({bool forceNew = false}) {
+    if (forceNew) {
+      _newsGlobalPage = 1;
+    }
+    News.getNewsGlobal(page: _newsGlobalPage).then((value) {
+      if (forceNew) {
+        _newsListGlobal.clear();
+      }
+      _newsListGlobal.addAll(value);
+      _newsGlobalPage += 1;
+      setState(() {});
+    });
+  }
+
+  void _loadNewsSubject({bool forceNew = false}) {
+    if (forceNew) {
+      _newsSubjectPage = 1;
+    }
+    News.getNewsSubject(page: _newsSubjectPage).then((value) {
+      if (forceNew) {
+        _newsListSubject.clear();
+      }
+      _newsListSubject.addAll(value);
+      _newsSubjectPage += 1;
+      setState(() {});
+    });
+  }
 
   NewsGlobal? _selectedNews;
   bool _isNewsSubject = false;
@@ -37,16 +68,8 @@ class _NewsTabState extends State<NewsTab>
 
     _pageController = PageController(initialPage: _currentPage);
 
-    News.getNewsGlobal(page: 1).then((value) {
-      _newsListGlobal.clear();
-      _newsListGlobal.addAll(value);
-      setState(() {});
-    });
-    News.getNewsSubject(page: 1).then((value) {
-      _newsListSubject.clear();
-      _newsListSubject.addAll(value);
-      setState(() {});
-    });
+    _loadNewsGlobal(forceNew: true);
+    _loadNewsSubject(forceNew: true);
   }
 
   @override
@@ -138,8 +161,9 @@ class _NewsTabState extends State<NewsTab>
             },
             endListReached: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("You reached end of this list!"),
+                content: Text("Reloading new..."),
               ));
+              _loadNewsGlobal();
             },
           ),
           NewsList(
@@ -148,6 +172,12 @@ class _NewsTabState extends State<NewsTab>
               if (onClick != null) {
                 onClick(news, true);
               }
+            },
+            endListReached: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Reloading new..."),
+              ));
+              _loadNewsSubject();
             },
           ),
         ],
@@ -192,7 +222,7 @@ class _NewsTabState extends State<NewsTab>
                   boxShadow: [
                     BoxShadow(
                       color: ThemeTool.isDarkMode(context)
-                          ? const Color.fromARGB(255, 64, 64, 64).withOpacity(0.5)
+                          ? Color.fromARGB(255, 48, 48, 48).withOpacity(0.5)
                           : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,
