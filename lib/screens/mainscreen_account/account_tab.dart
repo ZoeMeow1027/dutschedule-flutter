@@ -24,7 +24,11 @@ class _AccountTabState extends State<AccountTab>
           showModalBottomSheet<void>(
               context: context,
               builder: (BuildContext context) {
-                return AccountLoginBottomSheet();
+                return AccountLoginBottomSheet(
+                  onClickLogin: (user, pass, remember) {
+                    // TODO: Login here!
+                  },
+                );
               });
         },
       ),

@@ -19,7 +19,7 @@ class NewsList extends StatelessWidget {
   final Function(NewsGlobal)? onClick;
   final Color? color;
   final Function()? endListReached;
-  final Future Function()? refreshRequested;
+  final Function()? refreshRequested;
   final bool isRefreshing;
 
   @override
