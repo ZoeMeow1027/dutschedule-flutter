@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dutwrapper/model/news_global.dart';
 import 'package:dutwrapper/model/news_subject.dart';
 import 'package:dutwrapper/news.dart';
@@ -29,7 +31,7 @@ class _NewsTabState extends State<NewsTab>
   bool _isNewsGlobalRefreshing = false;
   bool _isNewsSubjectRefreshing = false;
 
-  void _loadNewsGlobal({bool forceNew = false}) async {
+  Future<void> _loadNewsGlobal({bool forceNew = false}) async {
     if (_isNewsGlobalRefreshing) {
       return;
     }
@@ -55,7 +57,7 @@ class _NewsTabState extends State<NewsTab>
     }
   }
 
-  void _loadNewsSubject({bool forceNew = false}) async {
+  Future<void> _loadNewsSubject({bool forceNew = false}) async {
     if (_isNewsSubjectRefreshing) {
       return;
     }
@@ -90,7 +92,7 @@ class _NewsTabState extends State<NewsTab>
   late final PageController _pageController;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
 
     _pageController = PageController(initialPage: _currentPage);
@@ -192,7 +194,7 @@ class _NewsTabState extends State<NewsTab>
             },
             refreshRequested: () async {
               try {
-                _loadNewsGlobal(forceNew: true);
+                await _loadNewsGlobal(forceNew: true);
               } catch (ex) {
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -215,7 +217,7 @@ class _NewsTabState extends State<NewsTab>
             },
             refreshRequested: () async {
               try {
-                _loadNewsSubject(forceNew: true);
+                await _loadNewsSubject(forceNew: true);
               } catch (ex) {
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

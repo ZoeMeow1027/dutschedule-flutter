@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '/model/scaffold_nav.dart';
-import '/utils/get_device_type.dart';
+import '../../model/scaffold_nav.dart';
+import '../../utils/get_device_type.dart';
 import '../mainscreen_account/account_tab.dart';
 import '../mainscreen_news/news_tab.dart';
 
@@ -13,7 +13,7 @@ class MainScreenView extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MainScreenView> {
-  int _selectedPage = 1;
+  int _selectedPage = 2;
 
   final ScaffoldNavigationList _navList = ScaffoldNavigationList(itemList: [
     ScaffoldNavigationItem(
