@@ -26,33 +26,60 @@ class _NewsTabState extends State<NewsTab>
   final List<NewsSubject> _newsListSubject = [];
   int _newsGlobalPage = 1;
   int _newsSubjectPage = 1;
+  bool _isNewsGlobalRefreshing = false;
+  bool _isNewsSubjectRefreshing = false;
 
-  void _loadNewsGlobal({bool forceNew = false}) {
-    if (forceNew) {
-      _newsGlobalPage = 1;
+  void _loadNewsGlobal({bool forceNew = false}) async {
+    if (_isNewsGlobalRefreshing) {
+      return;
     }
-    News.getNewsGlobal(page: _newsGlobalPage).then((value) {
+    setState(() {
+      _isNewsGlobalRefreshing = true;
+    });
+
+    try {
+      var data = await News.getNewsGlobal(page: forceNew ? 1 : _newsGlobalPage);
       if (forceNew) {
         _newsListGlobal.clear();
       }
-      _newsListGlobal.addAll(value);
-      _newsGlobalPage += 1;
-      setState(() {});
-    });
+      _newsListGlobal.addAll(data);
+      setState(() {
+        _newsGlobalPage = forceNew ? 2 : _newsGlobalPage + 1;
+      });
+    } catch (ex) {
+      rethrow;
+    } finally {
+      setState(() {
+        _isNewsGlobalRefreshing = false;
+      });
+    }
   }
 
-  void _loadNewsSubject({bool forceNew = false}) {
-    if (forceNew) {
-      _newsSubjectPage = 1;
+  void _loadNewsSubject({bool forceNew = false}) async {
+    if (_isNewsSubjectRefreshing) {
+      return;
     }
-    News.getNewsSubject(page: _newsSubjectPage).then((value) {
+    setState(() {
+      _isNewsSubjectRefreshing = true;
+    });
+
+    try {
+      var data =
+          await News.getNewsSubject(page: forceNew ? 1 : _newsSubjectPage);
       if (forceNew) {
         _newsListSubject.clear();
       }
-      _newsListSubject.addAll(value);
-      _newsSubjectPage += 1;
-      setState(() {});
-    });
+      _newsListSubject.addAll(data);
+      setState(() {
+        _newsSubjectPage = forceNew ? 2 : _newsSubjectPage + 1;
+      });
+    } catch (ex) {
+      rethrow;
+    } finally {
+      setState(() {
+        _isNewsSubjectRefreshing = false;
+      });
+    }
   }
 
   NewsGlobal? _selectedNews;
@@ -154,30 +181,48 @@ class _NewsTabState extends State<NewsTab>
         children: [
           NewsList(
             newsList: listNewsGlobal,
+            isRefreshing: _isNewsGlobalRefreshing,
             onClick: (news) {
               if (onClick != null) {
                 onClick(news, false);
               }
             },
             endListReached: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Reloading new..."),
-              ));
               _loadNewsGlobal();
+            },
+            refreshRequested: () async {
+              try {
+                _loadNewsGlobal(forceNew: true);
+              } catch (ex) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                      "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
+                ));
+              }
             },
           ),
           NewsList(
             newsList: listNewsSubject,
+            isRefreshing: _isNewsSubjectRefreshing,
             onClick: (news) {
               if (onClick != null) {
                 onClick(news, true);
               }
             },
             endListReached: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Reloading new..."),
-              ));
               _loadNewsSubject();
+            },
+            refreshRequested: () async {
+              try {
+                _loadNewsSubject(forceNew: true);
+              } catch (ex) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                      "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
+                ));
+              }
             },
           ),
         ],
@@ -222,7 +267,8 @@ class _NewsTabState extends State<NewsTab>
                   boxShadow: [
                     BoxShadow(
                       color: ThemeTool.isDarkMode(context)
-                          ? Color.fromARGB(255, 48, 48, 48).withOpacity(0.5)
+                          ? const Color.fromARGB(255, 48, 48, 48)
+                              .withOpacity(0.5)
                           : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 7,

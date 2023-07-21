@@ -1,51 +1,71 @@
+import 'package:dutschedule/components/news_widget/news_end_list_item.dart';
 import 'package:dutwrapper/model/news_global.dart';
 import 'package:flutter/material.dart';
 
 import 'news_list_item.dart';
 
-class NewsList extends StatefulWidget {
+class NewsList extends StatelessWidget {
   const NewsList({
     super.key,
     required this.newsList,
     this.color,
     this.onClick,
     this.endListReached,
+    this.refreshRequested,
+    this.isRefreshing = false,
   });
 
   final List<NewsGlobal> newsList;
   final Function(NewsGlobal)? onClick;
   final Color? color;
   final Function()? endListReached;
+  final Future Function()? refreshRequested;
+  final bool isRefreshing;
 
-  @override
-  State<StatefulWidget> createState() => _NewsListState();
-}
-
-class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener(
       child: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-          color: widget.color,
+          color: color,
           alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(
-                widget.newsList.length,
-                (index) => NewsListItem(
-                  newsItem: widget.newsList[index],
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                  onClick: () {
-                    if (widget.onClick != null) {
-                      widget.onClick!(widget.newsList[index]);
-                    }
-                  },
-                ),
+          child: RefreshIndicator(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Column(
+                    children: List.generate(
+                      newsList.length,
+                      (index) => NewsListItem(
+                        newsItem: newsList[index],
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 7, horizontal: 10),
+                        onClick: () {
+                          if (onClick != null) {
+                            onClick!(newsList[index]);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  NewsEndListItem(
+                    isRefreshing: isRefreshing,
+                    refreshRequested: () {
+                      if (endListReached != null) {
+                        endListReached!();
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
+            onRefresh: () async {
+              if (refreshRequested != null) {
+                await refreshRequested!();
+              }
+            },
           ),
         ),
       ),
@@ -53,8 +73,8 @@ class _NewsListState extends State<NewsList> {
         if (notificationInfo is ScrollEndNotification) {
           // print("Bottom: " + notificationInfo.metrics.extentAfter.toString());
           if (notificationInfo.metrics.extentAfter < 128) {
-            if (widget.endListReached != null) {
-              widget.endListReached!();
+            if (endListReached != null) {
+              endListReached!();
             }
           }
         }
