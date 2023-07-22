@@ -1,7 +1,4 @@
-import 'dart:io';
-
-import 'package:dutwrapper/model/news_global.dart';
-import 'package:dutwrapper/model/news_subject.dart';
+import 'package:dutwrapper/model/news_obj.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:flutter/material.dart';
 

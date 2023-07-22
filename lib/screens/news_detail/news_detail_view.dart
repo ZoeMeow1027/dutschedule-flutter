@@ -1,4 +1,4 @@
-import 'package:dutwrapper/model/news_global.dart';
+import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/news_widget/news_detail_item.dart';

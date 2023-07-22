@@ -1,7 +1,7 @@
-import 'package:dutschedule/components/news_widget/news_end_list_item.dart';
-import 'package:dutwrapper/model/news_global.dart';
+import 'package:dutwrapper/model/news_obj.dart';
 import 'package:flutter/material.dart';
 
+import 'news_end_list_item.dart';
 import 'news_list_item.dart';
 
 class NewsList extends StatelessWidget {
