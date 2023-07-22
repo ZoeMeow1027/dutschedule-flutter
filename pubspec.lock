@@ -61,11 +61,11 @@ packages:
     dependency: "direct main"
     description:
       path: "src/dart"
-      ref: d78bc3d
-      resolved-ref: d78bc3d3987c6ed6aa2a00b479c415e57386334b
+      ref: "4350e60"
+      resolved-ref: "4350e60c33fde5a0ff92116816111d68aa23365d"
       url: "https://github.com/ZoeMeow1027/dutwrapper"
     source: git
-    version: "0.3.3"
+    version: "0.3.4"
   dynamic_color:
     dependency: "direct main"
     description:

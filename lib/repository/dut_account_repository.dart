@@ -1,5 +1,5 @@
 import 'package:dutwrapper/account.dart';
-import 'package:dutwrapper/model/global_obj_var.dart';
+import 'package:dutwrapper/model/enums.dart';
 
 import '../model/dut_account.dart';
 import '../model/exceptions/dut_account_login_exception.dart';
