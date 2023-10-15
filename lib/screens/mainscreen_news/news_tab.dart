@@ -89,7 +89,7 @@ class _NewsTabState extends State<NewsTab>
   late final PageController _pageController;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
 
     _pageController = PageController(initialPage: _currentPage);

@@ -8,7 +8,8 @@ class AccountLoginBottomSheet extends StatefulWidget {
     this.onClickLogin,
   });
 
-  final Function(String, String, bool)? onClickLogin;
+  final Future<Map<String, dynamic>?> Function(String, String, bool)?
+      onClickLogin;
 
   @override
   State<StatefulWidget> createState() => _AccountLoginBottomSheetState();
@@ -30,8 +31,23 @@ class _AccountLoginBottomSheetState extends State<AccountLoginBottomSheet> {
           _statusText = "Logging in...";
         });
         if (widget.onClickLogin != null) {
-          widget.onClickLogin!(_userController.text, _passController.text,
-              _rememberLoginChecked);
+          widget.onClickLogin!(
+            _userController.text,
+            _passController.text,
+            _rememberLoginChecked,
+          )
+              .then((value) {
+            if (value!["status"] != true) {
+              setState(() {
+                _controlEnabled = true;
+                _statusText = value["msg"];
+              });
+            } else {
+              setState(() {
+                _statusText = value["msg"];
+              });
+            }
+          });
         }
       }
     }
