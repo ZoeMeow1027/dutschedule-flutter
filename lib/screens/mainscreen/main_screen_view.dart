@@ -60,7 +60,6 @@ class _MyHomePageState extends State<MainScreenView> {
                   labelType: NavigationRailLabelType.all,
                   onDestinationSelected: (index) {
                     _controller.jumpToPage(index);
-                    // setState(() => {_selectedPage = index});
                   },
                   minWidth: 80,
                 )
@@ -90,7 +89,6 @@ class _MyHomePageState extends State<MainScreenView> {
               selectedIndex: _selectedPage,
               onDestinationSelected: (index) {
                 _controller.jumpToPage(index);
-                // setState(() => {_selectedPage = index});
               },
             )
           : null,
