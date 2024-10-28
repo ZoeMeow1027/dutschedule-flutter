@@ -45,3 +45,6 @@ Just build or run with command `flutter build ...` or `flutter run` in your proj
 
 - This project - DutSchedule - is not affiliated with [Da Nang University of Technology](http://dut.udn.vn).
 - DUT, Da Nang University of Technology, web materials and web contents are trademarks and copyrights of [Da Nang University of Technology](http://dut.udn.vn).
+
+# References
+- https://github.com/flutter/flutter/issues/53229#issuecomment-1452057539
