@@ -1,4 +1,5 @@
-import 'package:dutwrapper/model/enums.dart';
+
+import 'package:dutwrapper/enums.dart';
 
 class DUTAccountLoginException implements Exception {
   final String? message;
