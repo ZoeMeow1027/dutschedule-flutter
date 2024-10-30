@@ -1,6 +1,6 @@
 # DutSchedule (now with Flutter)
 
-Friendly view in page and subject notifications for [DUT student page](http://sv.dut.udn.vn).
+Friendly view and subject notifications for [sv.dut.udn.vn](http://sv.dut.udn.vn).
 
 ## Features & Screenshots?
 
@@ -15,7 +15,7 @@ Navigate to Release (at right of this README) to download app.
 ### Requirements
 
 - [Flutter](https://flutter.dev/) (currently developing at 3.7)
-- An IDE or Text editor if you want to modifiy this project easily, for example:
+- An IDE or Text editor if you want to modify this project easily, for example:
   - [Visual Studio Code](https://code.visualstudio.com/) with [Dart](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code) and [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) extension.
   - [Android Studio](https://developer.android.com/studio).
   - [IntelliJ IDEA Community](https://www.jetbrains.com/idea/).

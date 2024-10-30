@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 
 import 'news_end_list_item.dart';
 
-class NewsList extends StatelessWidget {
+class NewsList extends StatefulWidget {
   const NewsList({
     super.key,
     required this.newsList,
+    this.scrollController,
     this.color,
     this.onClick,
     this.endListReached,
@@ -17,6 +18,7 @@ class NewsList extends StatelessWidget {
   });
 
   final List<NewsGlobal> newsList;
+  final ScrollController? scrollController;
   final Function(NewsGlobal)? onClick;
   final Color? color;
   final Function()? endListReached;
@@ -24,44 +26,47 @@ class NewsList extends StatelessWidget {
   final bool isRefreshing;
 
   @override
+  State<StatefulWidget> createState() => _NewsListState();
+}
+
+class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
-    var tmp = groupBy(newsList, (NewsGlobal item) => item.date);
+    super.build(context);
+    var tmp = groupBy(widget.newsList, (NewsGlobal item) => item.date);
     return NotificationListener(
       child: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-          color: color,
+          color: widget.color,
           alignment: Alignment.topCenter,
           child: RefreshIndicator(
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Column(
-                    children: List.generate(
-                      tmp.length,
-                      (index) => NewsListInDate(
-                        date: tmp.keys.elementAt(index),
-                        newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
-                        color: color,
-                        onClick: onClick,
-                      ),
-                    ),
-                  ),
-                  NewsEndListItem(
-                    isRefreshing: isRefreshing,
+            child: ListView.builder(
+              controller: widget.scrollController,
+              itemCount: tmp.length + 1,
+              itemBuilder: (context, index) {
+                if (index == tmp.length) {
+                  return NewsEndListItem(
+                    isRefreshing: widget.isRefreshing,
                     refreshRequested: () {
-                      if (endListReached != null) {
-                        endListReached!();
+                      if (widget.endListReached != null) {
+                        widget.endListReached!();
                       }
                     },
-                  ),
-                ],
-              ),
+                  );
+                } else {
+                  return NewsListInDate(
+                    date: tmp.keys.elementAt(index),
+                    newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
+                    color: widget.color,
+                    onClick: widget.onClick,
+                  );
+                }
+              },
             ),
             onRefresh: () async {
-              if (refreshRequested != null) {
-                await refreshRequested!();
+              if (widget.refreshRequested != null) {
+                await widget.refreshRequested!();
               }
             },
           ),
@@ -71,8 +76,8 @@ class NewsList extends StatelessWidget {
         if (notificationInfo is ScrollEndNotification) {
           // print("Bottom: " + notificationInfo.metrics.extentAfter.toString());
           if (notificationInfo.metrics.extentAfter < 128) {
-            if (endListReached != null) {
-              endListReached!();
+            if (widget.endListReached != null) {
+              widget.endListReached!();
             }
           }
         }
@@ -80,4 +85,7 @@ class NewsList extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

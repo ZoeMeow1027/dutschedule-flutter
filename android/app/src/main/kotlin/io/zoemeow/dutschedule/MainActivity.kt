@@ -1,4 +1,4 @@
-package io.zoemeow.subjectnotifier
+package io.zoemeow.dutschedule
 
 import io.flutter.embedding.android.FlutterActivity
 
