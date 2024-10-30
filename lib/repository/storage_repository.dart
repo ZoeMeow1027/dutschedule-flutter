@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dutwrapper/account_session_object.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../model/dut_account.dart';
 
 class StorageRepository {
   static Future<File> _localFile({required String fileName}) async {
@@ -12,15 +11,15 @@ class StorageRepository {
     return File('${directory.path}/$fileName');
   }
 
-  static Future<void> saveAccount({required DUTAccount account}) async {
+  static Future<void> saveAccount({required AccountSession session}) async {
     final data = await _localFile(fileName: 'account.json');
-    await data.writeAsString(jsonEncode(account.toJson()));
+    await data.writeAsString(jsonEncode(session.toJson()));
   }
 
-  static Future<DUTAccount> loadAccount() async {
-    final data = await _localFile(fileName: 'account.json');
+  static Future<AccountSession> loadAccountSession() async {
+    final data = await _localFile(fileName: 'account.session.json');
     final dataString = await data.readAsString();
     final content = jsonDecode(dataString);
-    return DUTAccount.fromJson(content);
+    return AccountSession.fromJson(content);
   }
 }

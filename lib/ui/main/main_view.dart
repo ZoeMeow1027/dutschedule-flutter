@@ -14,7 +14,7 @@ class MainScreenView extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MainScreenView> {
-  int _selectedPage = 0;
+  int _selectedPage = 2;
 
   final ScaffoldNavigationList _navList = ScaffoldNavigationList(itemList: [
     ScaffoldNavigationItem(

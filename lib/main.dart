@@ -1,12 +1,25 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'ui/main/main_screen_view.dart';
+import 'ui/main/main_view.dart';
 import 'utils/custom_scroll_behavior.dart';
+import 'viewmodel/account_session_instance.dart';
+import 'viewmodel/main_viewmodel.dart';
+import 'viewmodel/news_cache_instance.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MainApplication());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MainViewModel()),
+        ChangeNotifierProvider(create: (context) => NewsCacheInstance()),
+        ChangeNotifierProvider(create: (context) => AccountSessionInstance()),
+      ],
+      child: const MainApplication(),
+    ),
+  );
 }
 
 class MainApplication extends StatelessWidget {

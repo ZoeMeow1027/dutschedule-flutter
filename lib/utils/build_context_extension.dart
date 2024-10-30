@@ -20,4 +20,8 @@ extension BuildContextExtension on BuildContext {
         ? DeviceType.tablet
         : DeviceType.largeTabletAndDesktop;
   }
+
+  bool isDarkMode() {
+    return MediaQuery.of(this).platformBrightness == Brightness.dark;
+  }
 }
