@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.3.4+241104
+version: 0.3.5+241105
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -33,21 +33,22 @@ dependencies:
     sdk: flutter
   theme_mode_handler: ^3.0.0
   collection: ^1.17.1
-  dutwrapper:
-    git:
-      url: https://github.com/dutwrapper/dutwrapper-dart
-      ref: "1da39a2"
-      # path: src/dart
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
   intl: ^0.19.0
   split_view: ^3.2.1
   url_launcher: ^6.1.8
   path_provider: ^2.0.15
   provider: ^6.1.2
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  # dutwrapper - 1.0.1 in draft branch
+  dutwrapper:
+    git:
+      url: https://github.com/dutwrapper/dutwrapper-dart
+      ref: "07798a0aec457de0e1cf263e5563815a6744f854"
+      # path: src/dart
+
 
 dev_dependencies:
   flutter_test:

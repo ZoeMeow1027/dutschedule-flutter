@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:dutschedule/ui/components/news_widget/news_list_in_date.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
 import 'news_end_list_item.dart';
+import 'news_list_in_date.dart';
 
 class NewsList extends StatefulWidget {
   const NewsList({
@@ -15,6 +15,7 @@ class NewsList extends StatefulWidget {
     this.endListReached,
     this.refreshRequested,
     this.isRefreshing = false,
+    this.showDateInHeader = true,
   });
 
   final List<NewsGlobal> newsList;
@@ -24,6 +25,7 @@ class NewsList extends StatefulWidget {
   final Function()? endListReached;
   final Function()? refreshRequested;
   final bool isRefreshing;
+  final bool showDateInHeader;
 
   @override
   State<StatefulWidget> createState() => _NewsListState();
@@ -60,6 +62,7 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
                     newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
                     color: widget.color,
                     onClick: widget.onClick,
+                    showDateInHeader: widget.showDateInHeader,
                   );
                 }
               },

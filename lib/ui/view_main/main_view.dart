@@ -19,7 +19,7 @@ class MainScreenView extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MainScreenView> {
-  int _selectedPage = 2;
+  int _selectedPage = 1;
 
   final ScaffoldNavigationList _navList = ScaffoldNavigationList(itemList: [
     ScaffoldNavigationItem(
@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MainScreenView> {
     ),
     ScaffoldNavigationItem(
       id: 2,
-      label: "Account",
+      label: "Accounts",
       iconData: Icons.account_circle_outlined,
     ),
   ]);

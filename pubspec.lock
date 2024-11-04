@@ -61,11 +61,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1da39a2"
-      resolved-ref: "1da39a20109ae0899e2c7661f46e60ba9639ce58"
+      ref: "07798a0aec457de0e1cf263e5563815a6744f854"
+      resolved-ref: "07798a0aec457de0e1cf263e5563815a6744f854"
       url: "https://github.com/dutwrapper/dutwrapper-dart"
     source: git
-    version: "1.0.0"
+    version: "1.0.1"
   dynamic_color:
     dependency: "direct main"
     description:
@@ -378,10 +378,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "0dea215895a4d254401730ca0ba8204b29109a34a99fb06ae559a2b60988d2de"
+      sha256: "6fc2f56536ee873eeb867ad176ae15f304ccccc357848b351f6f0d8d4a40d193"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.13"
+    version: "6.3.14"
   url_launcher_ios:
     dependency: transitive
     description:

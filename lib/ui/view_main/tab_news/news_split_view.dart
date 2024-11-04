@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../viewmodel/main_view_model.dart';
-import '../../components/news_widget/news_detail_item.dart';
+import '../../components/widget_news/news_detail_item.dart';
 import 'news_summary_list_view.dart';
 
 class NewsSplitView extends StatelessWidget {

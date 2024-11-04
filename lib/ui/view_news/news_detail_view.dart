@@ -1,7 +1,7 @@
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
-import '../components/news_widget/news_detail_item.dart';
+import '../components/widget_news/news_detail_item.dart';
 
 class NewsDetailView extends StatelessWidget {
   const NewsDetailView({

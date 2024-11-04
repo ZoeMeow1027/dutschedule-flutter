@@ -18,7 +18,7 @@ class AccountTab extends StatelessWidget {
     final accountSession = Provider.of<AccountSessionInstance>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Account")),
+      appBar: AppBar(title: const Text("Accounts")),
       body: accountSession.accountSession.state == ProcessState.successful
           ? AccountDashboardView()
           : AccountNotLoggedInView(
