@@ -11,6 +11,11 @@ class StorageRepository {
     return File('${directory.path}/$fileName');
   }
 
+  static Future<String> getWebViewPath() async {
+    final directory = await getApplicationSupportDirectory();
+    return '${directory.path}/WebView';
+  }
+
   static Future<void> saveAccount({required AccountSession session}) async {
     final data = await _localFile(fileName: 'account.json');
     await data.writeAsString(jsonEncode(session.toJson()));

@@ -2,19 +2,19 @@ import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
 import '../model/enum/news_tab_location.dart';
+import 'base_view_model.dart';
 
-class MainViewModel extends ChangeNotifier {
+class MainViewModel extends ChangeNotifier with BaseViewModel {
+  @override
+  Future<void> initializing() async {}
+
   // News page
-  final ScrollController newsGlobalScrollController = ScrollController();
-  final ScrollController newsSubjectScrollController = ScrollController();
-
   NewsTabLocation newsCurrentPage = NewsTabLocation.globalNews;
   final PageController newsPageController = PageController(
     initialPage: NewsTabLocation.globalNews.value,
   );
-  void setNewsCurrentPage({
-    required NewsTabLocation selectedPage
-  }) {
+
+  void setNewsCurrentPage({required NewsTabLocation selectedPage}) {
     newsCurrentPage = selectedPage;
     newsPageController.animateToPage(
       selectedPage.value,
@@ -26,6 +26,7 @@ class MainViewModel extends ChangeNotifier {
 
   NewsGlobal? newsSelected;
   bool newsSelectedIsSubject = false;
+
   void setNewsSelected({
     NewsGlobal? news,
     bool isNewsSubject = false,
@@ -34,6 +35,7 @@ class MainViewModel extends ChangeNotifier {
     newsSelectedIsSubject = isNewsSubject;
     notifyListeners();
   }
+
   // End news page
 
   // Account page
@@ -43,5 +45,5 @@ class MainViewModel extends ChangeNotifier {
     accountParameter[key] = value;
     notifyListeners();
   }
-  // End accôunt page
+// End accôunt page
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
-import '../../../viewmodel/main_viewmodel.dart';
+import '../../../viewmodel/main_view_model.dart';
 import 'dashboard.dart';
 import 'not_logged_in.dart';
 
@@ -48,6 +48,10 @@ class AccountTab extends StatelessWidget {
                           context.showSnackBar(SnackBar(
                             content: Text("Successfully login!"),
                           ));
+                          accountSession.fetchSubjectInformation();
+                          accountSession.fetchSubjectFee();
+                          accountSession.fetchStudentInformation();
+                          accountSession.fetchTrainingResult();
                           break;
                         case ProcessState.failed:
                         case ProcessState.notRunYet:

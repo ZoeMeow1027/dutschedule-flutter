@@ -2,14 +2,16 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'ui/main/main_view.dart';
+import 'ui/view_main/main_view.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'viewmodel/account_session_instance.dart';
-import 'viewmodel/main_viewmodel.dart';
+import 'viewmodel/main_view_model.dart';
 import 'viewmodel/news_cache_instance.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Run the app with providers
   runApp(
     MultiProvider(
       providers: [
@@ -43,6 +45,10 @@ class MainApplication extends StatelessWidget {
             colorScheme: darkDynamic,
             useMaterial3: true,
           ),
+          supportedLocales: [
+            const Locale("en"),
+            const Locale("vi"),
+          ],
           themeMode: ThemeMode.system,
           home: const MainScreenView(),
         );
