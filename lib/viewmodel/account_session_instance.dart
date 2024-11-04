@@ -75,6 +75,7 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
       this.authInfo = authInfo;
       accountSession.state = ProcessState.successful;
       log("[Account] [Session - Login] Running successful!");
+      log("[Account] [Session - Login] Session ID: ${session.sessionId}");
     } catch (ex) {
       accountSession.state = ProcessState.notRunYet;
       log("[Account] [Session - Login] Running failed!");

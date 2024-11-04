@@ -56,6 +56,15 @@ class AccountDashboardView extends StatelessWidget {
             schoolClass: accountSessionInstance.studentInformation.data?.schoolClass,
             specialization: accountSessionInstance.studentInformation.data?.specialization,
             isRunning: accountSessionInstance.studentInformation.state == ProcessState.running,
+            onClick: () {
+              if (accountSessionInstance.accountSession.state == ProcessState.running) {
+                return;
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => StudentInformationView()),
+              );
+            },
           ),
           // Button action
           _customButton(
@@ -76,17 +85,6 @@ class AccountDashboardView extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => SubjectFeeView()),
               );
-            },
-          ),
-          _customButton(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Text("View student information"),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StudentInformationView()),
-              );
-
             },
           ),
           _customButton(

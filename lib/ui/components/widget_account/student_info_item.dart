@@ -15,18 +15,28 @@ class StudentInfoItem extends StatelessWidget {
     return Card.filled(
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.only(top: 7, bottom: 9, left: 12, right: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              name ?? "(unknown)",
-              style: Theme.of(context).textTheme.titleSmall,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name ?? "(unknown)",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Text(
+                  value ?? "(unknown)",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
             ),
-            Text(
-              value ?? "(unknown)",
-              style: Theme.of(context).textTheme.bodyMedium,
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.copy),
             ),
           ],
         ),

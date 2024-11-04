@@ -50,7 +50,7 @@ class StudentInformationView extends StatelessWidget {
                   Icon(Icons.info),
                   Padding(
                     padding: const EdgeInsets.only(left: 7),
-                    child: Text("About changing information\n(Hold or long-tap for info)"),
+                    child: Text("Edit information?\n(Hold/long-tap for info)"),
                   ),
                 ],
               ),

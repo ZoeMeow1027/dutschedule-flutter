@@ -7,6 +7,7 @@ import 'utils/custom_scroll_behavior.dart';
 import 'viewmodel/account_session_instance.dart';
 import 'viewmodel/main_view_model.dart';
 import 'viewmodel/news_cache_instance.dart';
+import 'viewmodel/news_search_instance.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => MainViewModel()),
         ChangeNotifierProvider(create: (context) => NewsCacheInstance()),
+        ChangeNotifierProvider(create: (context) => NewsSearchInstance()),
         ChangeNotifierProvider(create: (context) => AccountSessionInstance()),
       ],
       child: const MainApplication(),
