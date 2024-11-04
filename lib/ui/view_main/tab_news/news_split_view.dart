@@ -1,10 +1,7 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/launch_url.dart';
-import '../../../utils/theme_tools.dart';
-import '../../../viewmodel/main_viewmodel.dart';
+import '../../../viewmodel/main_view_model.dart';
 import '../../components/news_widget/news_detail_item.dart';
 import 'news_summary_list_view.dart';
 
@@ -51,18 +48,6 @@ class NewsSplitView extends StatelessWidget {
                       : NewsDetailItem(
                           newsItem: mainViewModel.newsSelected!,
                           isNewsSubject: mainViewModel.newsSelectedIsSubject,
-                          onClickUrl: (url) {
-                            launchOwnUrl(
-                              url,
-                              onFailed: () {
-                                context.clearSnackBars();
-                                context.showSnackBar(const SnackBar(
-                                  content: Text(
-                                      "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
-                                ));
-                              },
-                            );
-                          },
                         ),
                 ),
               ),

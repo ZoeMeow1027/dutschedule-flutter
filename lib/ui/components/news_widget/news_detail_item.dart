@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/launch_url.dart';
 import '../../../utils/theme_tools.dart';
 
 class NewsDetailItem extends StatelessWidget {
@@ -10,17 +11,14 @@ class NewsDetailItem extends StatelessWidget {
     super.key,
     required this.newsItem,
     this.isNewsSubject = false,
-    this.onClickUrl,
   });
 
   final NewsGlobal newsItem;
   final bool isNewsSubject;
-  final Function(String)? onClickUrl;
 
   @override
   Widget build(BuildContext context) {
-    var dateStr = DateFormat("EEEE, dd/MM/yyyy")
-        .format(DateTime.fromMillisecondsSinceEpoch(newsItem.date));
+    var dateStr = DateFormat("EEEE, dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(newsItem.date));
 
     // String to rich text
     List<_NewsTextProcessing> data = _richText(
@@ -30,71 +28,84 @@ class NewsDetailItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              newsItem.title,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            newsItem.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 22,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 7),
+            child: Text(
+              dateStr,
               style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 22,
+                fontWeight: FontWeight.w400,
+                fontSize: 20,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                dateStr,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            const Divider(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: const Divider(
               height: 10,
               color: Colors.grey,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: RichText(
-                text: TextSpan(
-                  children: List.generate(
-                    data.length,
-                    (index) {
-                      return TextSpan(
-                        text: data[index].text,
-                        style: TextStyle(
-                          // decoration: data[index].url == null
-                          //     ? null
-                          //     : TextDecoration.underline,
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17,
-                          color: data[index].url != null
-                              ? Colors.blueAccent
-                              : ThemeTool.isDarkMode(context)
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: List.generate(
+                        data.length,
+                            (index) {
+                          return TextSpan(
+                            text: data[index].text,
+                            style: TextStyle(
+                              // decoration: data[index].url == null
+                              //     ? null
+                              //     : TextDecoration.underline,
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              color: data[index].url != null
+                                  ? Colors.blueAccent
+                                  : ThemeTool.isDarkMode(context)
                                   ? Colors.white
                                   : Colors.black,
-                        ),
-                        recognizer: data[index].url == null
-                            ? null
-                            : (TapGestureRecognizer()
+                            ),
+                            recognizer: data[index].url != null
+                                ? (TapGestureRecognizer()
                               ..onTap = () {
-                                if (onClickUrl != null &&
-                                    data[index].url != null) {
-                                  onClickUrl!(data[index].url!);
+                                if (data[index].url == null) {
+                                  return;
                                 }
-                              }),
-                      );
-                    },
-                  ),
-                ),
+                                launchOwnUrl(
+                                  data[index].url!,
+                                  onFailed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                      content: Text("We can't open links for you."),
+                                    ));
+                                  },
+                                );
+                              })
+                                : null,
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -124,18 +135,14 @@ class NewsDetailItem extends StatelessWidget {
         text: newsLinkItem[0].text,
         url: newsLinkItem[0].content,
       ));
-      source = source.replaceRange(
-          0,
-          source.indexOf(newsLinkItem[0].text) + newsLinkItem[0].text.length,
-          "");
+      source = source.replaceRange(0, source.indexOf(newsLinkItem[0].text) + newsLinkItem[0].text.length, "");
       newsLinkItem.removeAt(0);
       if (newsLinkItem.isNotEmpty) {
         if (source.indexOf(newsLinkItem[0].text) > 0) {
           data.add(_NewsTextProcessing(
             text: source.substring(0, source.indexOf(newsLinkItem[0].text)),
           ));
-          source =
-              source.replaceRange(0, source.indexOf(newsLinkItem[0].text), "");
+          source = source.replaceRange(0, source.indexOf(newsLinkItem[0].text), "");
         }
       }
     }

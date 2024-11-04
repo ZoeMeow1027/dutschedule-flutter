@@ -6,7 +6,7 @@ import '../../../model/process_state.dart';
 import '../../../utils/launch_url.dart';
 import '../../../utils/theme_tools.dart';
 import '../../../viewmodel/account_session_instance.dart';
-import '../../../viewmodel/main_viewmodel.dart';
+import '../../../viewmodel/main_view_model.dart';
 
 class AccountNotLoggedInView extends StatelessWidget {
   const AccountNotLoggedInView({
@@ -33,9 +33,7 @@ class AccountNotLoggedInView extends StatelessWidget {
             RichText(
               text: TextSpan(
                 style: TextStyle(
-                  color: ThemeTool.isDarkMode(context)
-                      ? Colors.white
-                      : Colors.black,
+                  color: ThemeTool.isDarkMode(context) ? Colors.white : Colors.black,
                 ),
                 children: [
                   WidgetSpan(
@@ -58,14 +56,12 @@ class AccountNotLoggedInView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: TextField(
-                enabled:
-                    accountSession.accountSession.state != ProcessState.running,
+                enabled: accountSession.accountSession.state != ProcessState.running,
                 onChanged: (changed) {
                   onAuthInfoChanged(
                     changed,
                     mainViewModel.accountParameter["password"] as String? ?? "",
-                    mainViewModel.accountParameter["rememberLogin"] as bool? ??
-                        false,
+                    mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
                   );
                 },
                 decoration: InputDecoration(
@@ -77,14 +73,12 @@ class AccountNotLoggedInView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: TextField(
-                enabled:
-                    accountSession.accountSession.state != ProcessState.running,
+                enabled: accountSession.accountSession.state != ProcessState.running,
                 onChanged: (changed) {
                   onAuthInfoChanged(
                     mainViewModel.accountParameter["username"] as String? ?? "",
                     changed,
-                    mainViewModel.accountParameter["rememberLogin"] as bool? ??
-                        false,
+                    mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
                   );
                 },
                 obscureText: true,
@@ -97,52 +91,34 @@ class AccountNotLoggedInView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap:
-                    accountSession.accountSession.state == ProcessState.running
-                        ? null
-                        : () {
-                            onAuthInfoChanged(
-                              mainViewModel.accountParameter["username"]
-                                      as String? ??
-                                  "",
-                              mainViewModel.accountParameter["password"]
-                                      as String? ??
-                                  "",
-                              !(mainViewModel.accountParameter["rememberLogin"]
-                                      as bool? ??
-                                  false),
-                            );
-                          },
+                onTap: accountSession.accountSession.state == ProcessState.running
+                    ? null
+                    : () {
+                        onAuthInfoChanged(
+                          mainViewModel.accountParameter["username"] as String? ?? "",
+                          mainViewModel.accountParameter["password"] as String? ?? "",
+                          !(mainViewModel.accountParameter["rememberLogin"] as bool? ?? false),
+                        );
+                      },
                 child: Container(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Checkbox(
-                          onChanged: accountSession.accountSession.state ==
-                                  ProcessState.running
+                          onChanged: accountSession.accountSession.state == ProcessState.running
                               ? null
                               : (checked) {
                                   onAuthInfoChanged(
-                                    mainViewModel.accountParameter["username"]
-                                            as String? ??
-                                        "",
-                                    mainViewModel.accountParameter["password"]
-                                            as String? ??
-                                        "",
-                                    checked ??
-                                        !(mainViewModel.accountParameter[
-                                                "rememberLogin"] as bool? ??
-                                            false),
+                                    mainViewModel.accountParameter["username"] as String? ?? "",
+                                    mainViewModel.accountParameter["password"] as String? ?? "",
+                                    checked ?? !(mainViewModel.accountParameter["rememberLogin"] as bool? ?? false),
                                   );
                                 },
-                          value: mainViewModel.accountParameter["rememberLogin"]
-                                  as bool? ??
-                              false,
+                          value: mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
                         ),
                         Text("Remember my login")
                       ],
@@ -173,13 +149,11 @@ class AccountNotLoggedInView extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10),
               child: InkWell(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text("Forgot your password?"),
                 ),
                 onTap: () {
-                  if (accountSession.accountSession.state !=
-                      ProcessState.running) {
+                  if (accountSession.accountSession.state != ProcessState.running) {
                     launchOwnUrl(
                       "https://github.com/ZoeMeow1027/DutSchedule/wiki/Changing-Password-In-DUT#qu%C3%AAn-m%E1%BA%ADt-kh%E1%BA%A9u",
                       onFailed: () {

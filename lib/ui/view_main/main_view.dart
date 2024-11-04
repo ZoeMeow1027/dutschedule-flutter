@@ -1,8 +1,13 @@
 import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/scaffold_nav.dart';
 import '../../utils/get_device_type.dart';
+import '../../viewmodel/account_session_instance.dart';
+import '../../viewmodel/main_view_model.dart';
+import '../../viewmodel/news_cache_instance.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_news/news_tab.dart';
 
@@ -40,6 +45,33 @@ class _MyHomePageState extends State<MainScreenView> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: _selectedPage);
+
+    // Defer initialization to after the first frame
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _initializeViewModels();
+    });
+  }
+
+  bool _isInitialized = false;
+
+  Future<void> _initializeViewModels() async {
+    if (_isInitialized) {
+      return;
+    }
+
+    final mainViewModel = Provider.of<MainViewModel>(context, listen: false);
+    final newsCacheInstance =
+        Provider.of<NewsCacheInstance>(context, listen: false);
+    final accountSessionInstance =
+        Provider.of<AccountSessionInstance>(context, listen: false);
+
+    // Initialize view models
+    await mainViewModel.initialize();
+    await newsCacheInstance.initialize();
+    await accountSessionInstance.initialize();
+
+    // Update the state to indicate initialization is complete
+    setState(() => _isInitialized = true);
   }
 
   @override
@@ -51,7 +83,7 @@ class _MyHomePageState extends State<MainScreenView> {
         children: [
           screenType.value > DeviceType.phone.value
               ? NavigationRail(
-            groupAlignment: 0.0,
+                  groupAlignment: 0.0,
                   destinations: _navList.convertToListNavRailDestination(),
                   selectedIndex: _selectedPage,
                   labelType: NavigationRailLabelType.all,

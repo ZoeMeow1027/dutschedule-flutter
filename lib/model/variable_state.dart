@@ -21,11 +21,12 @@ class VariableState<T> {
   }
 
   bool isSuccessfulRequestExpired() {
-    return state == ProcessState.successful ? isExpired() : false;
+    return state == ProcessState.successful ? isExpired() : true;
   }
 
   void resetValue() {
     if (state != ProcessState.running) {
+      data = null;
       lastRequest = 0;
       state = ProcessState.notRunYet;
     }
@@ -52,7 +53,7 @@ class VariableListState<T> {
   }
 
   bool isSuccessfulRequestExpired() {
-    return state == ProcessState.successful ? isExpired() : false;
+    return state == ProcessState.successful ? isExpired() : true;
   }
 
   void resetValue() {

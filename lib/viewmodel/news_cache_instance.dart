@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../model/process_state.dart';
 import '../model/variable_state.dart';
+import 'base_view_model.dart';
 
 enum NewsFetchType {
   nextPage,
@@ -13,7 +14,13 @@ enum NewsFetchType {
   clearCacheAndFirstPage,
 }
 
-class NewsCacheInstance extends ChangeNotifier {
+class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
+  @override
+  Future<void> initializing() async {
+    fetchGlobalNews();
+    fetchSubjectNews();
+  }
+
   VariableListState<NewsGlobal> newsGlobal = VariableListState.from(
     data: [],
     lastRequest: 0,
@@ -55,7 +62,9 @@ class NewsCacheInstance extends ChangeNotifier {
 
       if (fetchType == NewsFetchType.clearCacheAndFirstPage) {
         newsGlobal.data.clear();
-        newsGlobal.data.addAll(listFromInternet);
+        latestNews.addAll(listFromInternet);
+      } else if (fetchType == NewsFetchType.nextPage) {
+        latestNews.addAll(listFromInternet);
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsGlobal.data.any((p) {
@@ -76,10 +85,12 @@ class NewsCacheInstance extends ChangeNotifier {
           });
 
           // Ignore when entire match
-          if (anyMatch) { }
+          if (anyMatch) {
+          }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsGlobal.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsGlobal.data
+                .firstWhere((p) => p.date == item.date && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -104,19 +115,21 @@ class NewsCacheInstance extends ChangeNotifier {
 
       // Adjust index
       switch (fetchType) {
-      // Increase by 1
+        // Increase by 1
         case NewsFetchType.nextPage:
-          newsGlobal.parameters["nextPage"] = ((int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) + 1).toString();
+          newsGlobal.parameters["nextPage"] =
+              ((int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) + 1)
+                  .toString();
           break;
-      // Just keep current
+        // Just keep current
         case NewsFetchType.firstPage:
-          newsGlobal.parameters["nextPage"] = (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1).toString();
+          newsGlobal.parameters["nextPage"] =
+              (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1)
+                  .toString();
           break;
-      // Set to 2
+        // Set to 2
         case NewsFetchType.clearCacheAndFirstPage:
           newsGlobal.parameters["nextPage"] = 2.toString();
-          break;
-        default:
           break;
       }
 
@@ -162,7 +175,9 @@ class NewsCacheInstance extends ChangeNotifier {
 
       if (fetchType == NewsFetchType.clearCacheAndFirstPage) {
         newsSubject.data.clear();
-        newsSubject.data.addAll(listFromInternet);
+        latestNews.addAll(listFromInternet);
+      } else if (fetchType == NewsFetchType.nextPage) {
+        latestNews.addAll(listFromInternet);
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsSubject.data.any((p) {
@@ -173,25 +188,26 @@ class NewsCacheInstance extends ChangeNotifier {
             }
             return false;
           });
-          // var anyNeedUpdated = newsSubject.data.any((p) {
-          //   if ((p.date == item.date) &&
-          //       (p.title.compareTo(item.title) == 0) &&
-          //       (p.contentHtml.compareTo(item.contentHtml) != 0)) {
-          //     return true;
-          //   }
-          //   return false;
-          // });
+          var anyNeedUpdated = newsSubject.data.any((p) {
+            if ((p.date == item.date) &&
+                (p.title.compareTo(item.title) == 0) &&
+                (p.contentHtml.compareTo(item.contentHtml) != 0)) {
+              return true;
+            }
+            return false;
+          });
 
           // Ignore when entire match
-          if (anyMatch) { }
+          if (anyMatch) {
+          }
           // Update when match date and title
-          // else if (anyNeedUpdated) {
-          //   newsSubject.data.firstWhere((p) => p.date == item.date && p.title == item.title)
-          //     ..title = item.title
-          //     ..contentHtml = item.contentHtml
-          //     ..resources.clear()
-          //     ..resources.addAll(item.resources);
-          // }
+          else if (anyNeedUpdated) {
+            newsSubject.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+              ..title = item.title
+              ..contentHtml = item.contentHtml
+              ..resources.clear()
+              ..resources.addAll(item.resources);
+          }
           // Otherwise, add to latest news collection
           else {
             latestNews.add(item);
@@ -211,19 +227,22 @@ class NewsCacheInstance extends ChangeNotifier {
 
       // Adjust index
       switch (fetchType) {
-      // Increase by 1
+        // Increase by 1
         case NewsFetchType.nextPage:
-          newsSubject.parameters["nextPage"] = ((int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) + 1).toString();
+          newsSubject.parameters["nextPage"] =
+              ((int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) +
+                      1)
+                  .toString();
           break;
-      // Just keep current
+        // Just keep current
         case NewsFetchType.firstPage:
-          newsSubject.parameters["nextPage"] = (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1).toString();
+          newsSubject.parameters["nextPage"] =
+              (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1)
+                  .toString();
           break;
-      // Set to 2
+        // Set to 2
         case NewsFetchType.clearCacheAndFirstPage:
           newsSubject.parameters["nextPage"] = 2.toString();
-          break;
-        default:
           break;
       }
 
@@ -239,5 +258,4 @@ class NewsCacheInstance extends ChangeNotifier {
       onDone?.call();
     }
   }
-
 }

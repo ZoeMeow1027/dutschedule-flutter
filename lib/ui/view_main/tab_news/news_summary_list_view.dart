@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
-import '../../../viewmodel/main_viewmodel.dart';
+import '../../../viewmodel/main_view_model.dart';
 import '../../../viewmodel/news_cache_instance.dart';
 import '../../components/news_widget/news_list.dart';
 import '../../../model/enum/news_tab_location.dart';
@@ -29,7 +29,7 @@ class NewsSummaryListView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 5),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {},
               icon: Icon(Icons.search),
             ),
           )
@@ -41,17 +41,13 @@ class NewsSummaryListView extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           onPageChanged: (page) {
             mainViewModel.setNewsCurrentPage(
-              selectedPage: page == 0
-                  ? NewsTabLocation.globalNews
-                  : NewsTabLocation.subjectNews,
+              selectedPage: page == 0 ? NewsTabLocation.globalNews : NewsTabLocation.subjectNews,
             );
           },
           children: [
             NewsList(
               newsList: newsCacheInstance.newsGlobal.data,
-              scrollController: mainViewModel.newsGlobalScrollController,
-              isRefreshing:
-                  newsCacheInstance.newsGlobal.state == ProcessState.running,
+              isRefreshing: newsCacheInstance.newsGlobal.state == ProcessState.running,
               onClick: (news) {
                 onClick?.call(news, false);
               },
@@ -78,9 +74,7 @@ class NewsSummaryListView extends StatelessWidget {
             ),
             NewsList(
               newsList: newsCacheInstance.newsSubject.data,
-              scrollController: mainViewModel.newsSubjectScrollController,
-              isRefreshing:
-                  newsCacheInstance.newsSubject.state == ProcessState.running,
+              isRefreshing: newsCacheInstance.newsSubject.state == ProcessState.running,
               onClick: (news) {
                 onClick?.call(news, true);
               },
@@ -108,20 +102,16 @@ class NewsSummaryListView extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          child:
-              ((mainViewModel.newsCurrentPage == NewsTabLocation.globalNews &&
-                          newsCacheInstance.newsGlobal.state ==
-                              ProcessState.running) ||
-                      (mainViewModel.newsCurrentPage ==
-                              NewsTabLocation.subjectNews &&
-                          newsCacheInstance.newsSubject.state ==
-                              ProcessState.running))
-                  ? SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: CircularProgressIndicator(),
-                    )
-                  : const Icon(Icons.refresh),
+          child: ((mainViewModel.newsCurrentPage == NewsTabLocation.globalNews &&
+                      newsCacheInstance.newsGlobal.state == ProcessState.running) ||
+                  (mainViewModel.newsCurrentPage == NewsTabLocation.subjectNews &&
+                      newsCacheInstance.newsSubject.state == ProcessState.running))
+              ? SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: CircularProgressIndicator(),
+                )
+              : const Icon(Icons.refresh),
           onPressed: () async {
             try {
               switch (mainViewModel.newsCurrentPage) {
@@ -181,8 +171,7 @@ class NewsSummaryListView extends StatelessWidget {
                     //     curve: Curves.fastOutSlowIn,
                     //   );
                     // });
-                    mainViewModel.setNewsCurrentPage(
-                        selectedPage: selected.first);
+                    mainViewModel.setNewsCurrentPage(selectedPage: selected.first);
                   },
                 ),
               ],
