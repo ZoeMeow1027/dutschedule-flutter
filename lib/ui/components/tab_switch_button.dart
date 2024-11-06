@@ -35,20 +35,20 @@ class TabSwitchButton extends StatelessWidget {
               },
               style: TextButton.styleFrom(
                 backgroundColor: isFocus
-                    ? (ThemeTool.isDarkMode(context)
+                    ? (ThemeTool.isAppDarkMode(context)
                         ? Colors.white
                         : Theme.of(context).primaryColor)
-                    : (ThemeTool.isDarkMode(context)
+                    : (ThemeTool.isAppDarkMode(context)
                         ? Theme.of(context).primaryColor
                         : Colors.white),
                 foregroundColor: isFocus
-                    ? (ThemeTool.isDarkMode(context)
+                    ? (ThemeTool.isAppDarkMode(context)
                         ? Theme.of(context).primaryColor
                         : Colors.white)
                     : null,
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    color: ThemeTool.isDarkMode(context)
+                    color: ThemeTool.isAppDarkMode(context)
                         ? Colors.white
                         : Theme.of(context).primaryColor,
                     width: 1.5,

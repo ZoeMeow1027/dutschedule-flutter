@@ -30,8 +30,10 @@ class NewsSearchOptionView extends StatelessWidget {
             padding: const EdgeInsets.only(right: 5),
             child: IconButton(
               onPressed: () {
-                newsSearchInstance.fetchSearchRun(startOver: true);
-                Navigator.pop(context);
+                if (newsSearchInstance.searchQueryTemp.isNotEmpty) {
+                  newsSearchInstance.fetchSearchRun(startOver: true);
+                  Navigator.pop(context);
+                }
               },
               icon: Icon(Icons.search),
             ),
@@ -49,7 +51,7 @@ class NewsSearchOptionView extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
               width: double.infinity,
               child: SegmentedButton<NewsType>(
                 segments: <ButtonSegment<NewsType>>[
@@ -65,7 +67,7 @@ class NewsSearchOptionView extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
               width: double.infinity,
               child: SegmentedButton<NewsSearchMethod>(
                 segments: <ButtonSegment<NewsSearchMethod>>[
@@ -82,60 +84,27 @@ class NewsSearchOptionView extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 5, bottom: 10),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
+                    children: List.generate(
+                      newsSearchInstance.newsHistoryList.length,
+                      (index) => NewsSearchHistoryItem(
+                        query: newsSearchInstance.newsHistoryList.elementAt(index).query,
+                        newsType: newsSearchInstance.newsHistoryList.elementAt(index).newsType,
+                        searchMethod: newsSearchInstance.newsHistoryList.elementAt(index).searchMethod,
+                        onClick: () {
+                          newsSearchInstance.changeNewsSearchOption(
+                            query: newsSearchInstance.newsHistoryList.elementAt(index).query,
+                            newsType: newsSearchInstance.newsHistoryList.elementAt(index).newsType,
+                            searchMethod: newsSearchInstance.newsHistoryList.elementAt(index).searchMethod,
+                          );
+                          newsSearchInstance.fetchSearchRun(startOver: true);
+                          Navigator.pop(context);
+                        },
                       ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                      NewsSearchHistoryItem(
-                        query: "toeic",
-                        newsType: NewsType.global,
-                        searchMethod: NewsSearchMethod.byTitle,
-                        onClick: () {},
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),

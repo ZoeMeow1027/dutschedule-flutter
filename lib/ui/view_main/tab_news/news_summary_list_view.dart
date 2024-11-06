@@ -9,7 +9,7 @@ import '../../../viewmodel/news_cache_instance.dart';
 import '../../../viewmodel/news_search_instance.dart';
 import '../../components/widget_news/news_list.dart';
 import '../../../model/enum/news_tab_location.dart';
-import '../../view_news/news_serch_view.dart';
+import '../../view_news/news_search_view.dart';
 
 class NewsSummaryListView extends StatelessWidget {
   const NewsSummaryListView({
@@ -66,9 +66,9 @@ class NewsSummaryListView extends StatelessWidget {
                   forceRequest: true,
                 );
               },
-              refreshRequested: () async {
+              refreshRequested: () {
                 try {
-                  await newsCacheInstance.fetchGlobalNews(
+                  newsCacheInstance.fetchGlobalNews(
                     fetchType: NewsFetchType.clearCacheAndFirstPage,
                     forceRequest: true,
                   );
@@ -93,9 +93,9 @@ class NewsSummaryListView extends StatelessWidget {
                   forceRequest: true,
                 );
               },
-              refreshRequested: () async {
+              refreshRequested: () {
                 try {
-                  await newsCacheInstance.fetchSubjectNews(
+                  newsCacheInstance.fetchSubjectNews(
                     fetchType: NewsFetchType.clearCacheAndFirstPage,
                     forceRequest: true,
                   );
@@ -121,17 +121,17 @@ class NewsSummaryListView extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 )
               : const Icon(Icons.refresh),
-          onPressed: () async {
+          onPressed: () {
             try {
               switch (mainViewModel.newsCurrentPage) {
                 case NewsTabLocation.globalNews:
-                  await newsCacheInstance.fetchGlobalNews(
+                  newsCacheInstance.fetchGlobalNews(
                     fetchType: NewsFetchType.clearCacheAndFirstPage,
                     forceRequest: true,
                   );
                   break;
                 case NewsTabLocation.subjectNews:
-                  await newsCacheInstance.fetchSubjectNews(
+                  newsCacheInstance.fetchSubjectNews(
                     fetchType: NewsFetchType.clearCacheAndFirstPage,
                     forceRequest: true,
                   );

@@ -48,20 +48,30 @@ class NewsSearchView extends StatelessWidget {
           },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.search),
-            ),
-          ),
+          newsSearchInstance.searchQuery.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: IconButton(
+                    onPressed: () {
+                      newsSearchInstance.fetchSearchRun(startOver: true);
+                    },
+                    icon: newsSearchInstance.searchProcessState == ProcessState.running
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(),
+                          )
+                        : Icon(Icons.refresh),
+                  ),
+                )
+              : Container(),
         ],
       ),
-      body: newsSearchInstance.searchResult.data.isNotEmpty
+      body: newsSearchInstance.searchResult.isNotEmpty
           ? _haveResults(
               context: context,
-              newsList: newsSearchInstance.searchResult.data,
-              isRefreshing: newsSearchInstance.searchResult.state == ProcessState.running,
+              newsList: newsSearchInstance.searchResult,
+              isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
               endListReached: () => newsSearchInstance.fetchSearchRun(),
               refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
               onClick: (news) async {
@@ -76,9 +86,11 @@ class NewsSearchView extends StatelessWidget {
                 );
               },
             )
-          : newsSearchInstance.searchResult.state == ProcessState.notRunYet
-              ? _notRunYet(context)
-              : _noAnyResult(context),
+          : newsSearchInstance.searchProcessState == ProcessState.running
+              ? _loading(context)
+              : newsSearchInstance.searchProcessState == ProcessState.notRunYet
+                  ? _notRunYet(context)
+                  : _noAnyResult(context),
     );
   }
 
@@ -102,6 +114,19 @@ class NewsSearchView extends StatelessWidget {
         children: [
           Spacer(),
           Text("No results."),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _loading(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Spacer(),
+          CircularProgressIndicator(),
           Spacer(),
         ],
       ),
