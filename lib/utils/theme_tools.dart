@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ThemeTool {
-  static bool isDarkMode(BuildContext context) {
+  static bool isAppDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
   }
 

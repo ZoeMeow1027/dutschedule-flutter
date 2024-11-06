@@ -76,7 +76,7 @@ class NewsDetailItem extends StatelessWidget {
                               fontSize: 17,
                               color: data[index].url != null
                                   ? Colors.blueAccent
-                                  : ThemeTool.isDarkMode(context)
+                                  : ThemeTool.isAppDarkMode(context)
                                   ? Colors.white
                                   : Colors.black,
                             ),

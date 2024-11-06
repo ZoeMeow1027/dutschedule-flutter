@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+import '../../main.dart';
 import '../../model/scaffold_nav.dart';
+import '../../utils/app_localizations.dart';
 import '../../utils/get_device_type.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../../viewmodel/main_view_model.dart';
 import '../../viewmodel/news_cache_instance.dart';
 import 'tab_account/account_tab.dart';
+import 'tab_dashboard/dashboard_tab.dart';
 import 'tab_news/news_tab.dart';
 
 class MainScreenView extends StatefulWidget {
@@ -19,25 +22,7 @@ class MainScreenView extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MainScreenView> {
-  int _selectedPage = 1;
-
-  final ScaffoldNavigationList _navList = ScaffoldNavigationList(itemList: [
-    ScaffoldNavigationItem(
-      id: 0,
-      label: "Dashboard",
-      iconData: Icons.home,
-    ),
-    ScaffoldNavigationItem(
-      id: 1,
-      label: "News",
-      iconData: Icons.newspaper,
-    ),
-    ScaffoldNavigationItem(
-      id: 2,
-      label: "Accounts",
-      iconData: Icons.account_circle_outlined,
-    ),
-  ]);
+  int _selectedPage = 0;
 
   late PageController _controller;
 
@@ -84,7 +69,7 @@ class _MyHomePageState extends State<MainScreenView> {
           screenType.value > DeviceType.phone.value
               ? NavigationRail(
                   groupAlignment: 0.0,
-                  destinations: _navList.convertToListNavRailDestination(),
+                  destinations: _getNavList(context).convertToListNavRailDestination(),
                   selectedIndex: _selectedPage,
                   labelType: NavigationRailLabelType.all,
                   onDestinationSelected: (index) {
@@ -103,7 +88,7 @@ class _MyHomePageState extends State<MainScreenView> {
                 });
               },
               children: const <Widget>[
-                Center(),
+                DashboardTab(),
                 NewsTab(),
                 AccountTab(),
               ],
@@ -113,7 +98,7 @@ class _MyHomePageState extends State<MainScreenView> {
       ),
       bottomNavigationBar: screenType.value <= DeviceType.phone.value
           ? NavigationBar(
-              destinations: _navList.convertToListNavDestination(),
+              destinations: _getNavList(context).convertToListNavDestination(),
               selectedIndex: _selectedPage,
               onDestinationSelected: (index) {
                 _controller.jumpToPage(index);
@@ -121,5 +106,25 @@ class _MyHomePageState extends State<MainScreenView> {
             )
           : null,
     );
+  }
+
+  ScaffoldNavigationList _getNavList(BuildContext context) {
+    return ScaffoldNavigationList(itemList: [
+      ScaffoldNavigationItem(
+        id: 0,
+        label: AppLocalizations.of(context).translate("mainview_tab_dashboard"),
+        iconData: Icons.home,
+      ),
+      ScaffoldNavigationItem(
+        id: 1,
+        label: AppLocalizations.of(context).translate("mainview_tab_news"),
+        iconData: Icons.newspaper,
+      ),
+      ScaffoldNavigationItem(
+        id: 2,
+        label: AppLocalizations.of(context).translate("mainview_tab_account"),
+        iconData: Icons.account_circle_outlined,
+      ),
+    ]);
   }
 }

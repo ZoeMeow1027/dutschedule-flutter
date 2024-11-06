@@ -33,7 +33,7 @@ class AccountNotLoggedInView extends StatelessWidget {
             RichText(
               text: TextSpan(
                 style: TextStyle(
-                  color: ThemeTool.isDarkMode(context) ? Colors.white : Colors.black,
+                  color: ThemeTool.isAppDarkMode(context) ? Colors.white : Colors.black,
                 ),
                 children: [
                   WidgetSpan(

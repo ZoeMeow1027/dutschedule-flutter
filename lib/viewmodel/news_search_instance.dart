@@ -5,8 +5,8 @@ import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
+import '../model/news_search_history.dart';
 import '../model/process_state.dart';
-import '../model/variable_state.dart';
 import 'base_view_model.dart';
 
 class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
@@ -18,21 +18,19 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
   int _nextPage = 1;
   String searchQuery = "";
   String searchQueryTemp = "";
+  int _searchLastRequest = 0;
   NewsType newsType = NewsType.global;
+  ProcessState searchProcessState = ProcessState.notRunYet;
   NewsSearchMethod searchMethod = NewsSearchMethod.byTitle;
-  VariableListState<NewsGlobal> searchResult = VariableListState<NewsGlobal>();
+  List<NewsGlobal> searchResult = [];
+  List<NewsSearchHistory> newsHistoryList = [];
 
-  void resetQuery() {
+  void resetQueryAndResult() {
     searchQuery = "";
     newsType = NewsType.global;
     searchMethod = NewsSearchMethod.byTitle;
     _nextPage = 1;
-    notifyListeners();
-  }
-
-  void resetQueryAndResult() {
-    resetQuery();
-    searchResult.resetValue();
+    searchResult.clear();
     newsSearchQueryTextControl.clear();
     notifyListeners();
   }
@@ -48,30 +46,30 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
     notifyListeners();
   }
 
-  void resetNewsSearchOption() {
-    resetQuery();
-    newsSearchQueryTextControl.clear();
-    notifyListeners();
-  }
-
   Future<void> fetchSearchRun({
     Function()? beforeRun,
     Function()? afterRun,
     bool startOver = false,
   }) async {
-    if (searchResult.state == ProcessState.running) {
+    if (searchProcessState == ProcessState.running) {
       log("[Search history] Running denied because of another task...");
       return;
     }
 
-    searchResult.state = ProcessState.running;
+    searchProcessState = ProcessState.running;
     notifyListeners();
     beforeRun?.call();
 
     log("[Search history] Running...");
     try {
-      searchQuery = searchQueryTemp;
-      searchQueryTemp = "";
+      if (searchQueryTemp.isNotEmpty) {
+        searchQuery = searchQueryTemp;
+        searchQueryTemp = "";
+      }
+      if (searchQuery.isEmpty) {
+        log("[Search history] Running denied because search query is empty...");
+        return;
+      }
       var page = startOver ? 1 : _nextPage;
 
       final session = newsType == NewsType.global
@@ -87,9 +85,9 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
             );
 
       if (startOver) {
-        searchResult.data.clear();
+        searchResult.clear();
       }
-      searchResult.data.addAll(session);
+      searchResult.addAll(session);
 
       if (startOver) {
         _nextPage = 2;
@@ -97,13 +95,22 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
         _nextPage += 1;
       }
 
-      searchResult.state = ProcessState.successful;
+      final searchHistory = NewsSearchHistory(
+        query: searchQuery,
+        newsType: newsType,
+        searchMethod: searchMethod,
+      );
+      if (!newsHistoryList.any((p) => p.equals(searchHistory))) {
+        newsHistoryList.add(searchHistory);
+      }
+
+      searchProcessState = ProcessState.successful;
       log("[Search history] Running successful!");
     } catch (ex) {
-      searchResult.state = ProcessState.failed;
+      searchProcessState = ProcessState.failed;
       log("[Search history] Running failed!");
     } finally {
-      searchResult.lastRequest = DateTime.now().millisecondsSinceEpoch;
+      _searchLastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Search history] End run.");
       notifyListeners();
       afterRun?.call();

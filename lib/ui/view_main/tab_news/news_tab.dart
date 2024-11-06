@@ -21,7 +21,7 @@ class NewsTab extends StatelessWidget {
                 builder: (BuildContext context) => FractionallySizedBox(
                   heightFactor: 0.75,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 30),
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 20, bottom: 30),
                     child: NewsDetailItem(
                       newsItem: news,
                       isNewsSubject: isNewsSubject,
