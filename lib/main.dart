@@ -40,7 +40,7 @@ class MainApplication extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         return MaterialApp(
-          locale: settingsInstance.locale,
+          locale: settingsInstance.localeAuto ? null : settingsInstance.locale,
           title: "DutSchedule",
           scrollBehavior: CustomScrollBehavior(),
           theme: ThemeData(
@@ -63,7 +63,7 @@ class MainApplication extends StatelessWidget {
             const Locale("en"),
             const Locale("vi"),
           ],
-          themeMode: ThemeMode.system,
+          themeMode: settingsInstance.themeMode,
           home: const MainScreenView(),
         );
       },

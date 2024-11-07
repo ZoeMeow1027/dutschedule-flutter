@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
+import '../../../utils/app_localizations.dart';
 import '../../../utils/launch_url.dart';
 import '../../../utils/theme_tools.dart';
 import '../../../viewmodel/account_session_instance.dart';
@@ -40,13 +41,13 @@ class AccountNotLoggedInView extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
-                        "Login",
+                        AppLocalizations.of(context).translate("account_login_title"),
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
                   ),
                   TextSpan(
-                    text: "\nUse your account from sv.dut.udn.vn to login.",
+                    text: "\n${AppLocalizations.of(context).translate("account_login_description")}",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
@@ -66,7 +67,7 @@ class AccountNotLoggedInView extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Username (Student ID)',
+                  labelText: AppLocalizations.of(context).translate("account_login_username"),
                 ),
               ),
             ),
@@ -84,7 +85,7 @@ class AccountNotLoggedInView extends StatelessWidget {
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Password',
+                  labelText: AppLocalizations.of(context).translate("account_login_password"),
                 ),
               ),
             ),
@@ -120,7 +121,7 @@ class AccountNotLoggedInView extends StatelessWidget {
                                 },
                           value: mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
                         ),
-                        Text("Remember my login")
+                        Text(AppLocalizations.of(context).translate("account_login_rememberpassword"))
                       ],
                     ),
                   ),
@@ -139,8 +140,8 @@ class AccountNotLoggedInView extends StatelessWidget {
                     vertical: 18,
                   ),
                 ),
-                child: const Text(
-                  "Login",
+                child: Text(
+                  AppLocalizations.of(context).translate("account_login_actionlogin"),
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -150,7 +151,7 @@ class AccountNotLoggedInView extends StatelessWidget {
               child: InkWell(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  child: Text("Forgot your password?"),
+                  child: Text(AppLocalizations.of(context).translate("account_login_actionforgot")),
                 ),
                 onTap: () {
                   if (accountSession.accountSession.state != ProcessState.running) {
@@ -158,9 +159,7 @@ class AccountNotLoggedInView extends StatelessWidget {
                       "https://github.com/ZoeMeow1027/DutSchedule/wiki/Changing-Password-In-DUT#qu%C3%AAn-m%E1%BA%ADt-kh%E1%BA%A9u",
                       onFailed: () {
                         context.clearSnackBars();
-                        context.showSnackBar(const SnackBar(
-                          content: Text("We can't open links for you."),
-                        ));
+                        context.showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).translate("link_failed"))));
                       },
                     );
                   }

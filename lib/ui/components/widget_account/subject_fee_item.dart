@@ -1,6 +1,9 @@
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
+import '../../../utils/string_utils.dart';
+
 class SubjectFeeItem extends StatelessWidget {
   const SubjectFeeItem({
     super.key,
@@ -40,7 +43,10 @@ class SubjectFeeItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text("Credit(s): ${subjectFee.credit}, ${subjectFee.price} VND"),
+                Text(StringUtils.formatString(
+                  AppLocalizations.of(context).translate("account_subjectfee_summary_main"),
+                  [subjectFee.credit.toString(), subjectFee.price.toStringAsFixed(0)],
+                )),
               ],
             ),
           ),

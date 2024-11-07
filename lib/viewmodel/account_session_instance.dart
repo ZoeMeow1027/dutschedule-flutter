@@ -19,7 +19,7 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
   }
 
   AuthInfo? authInfo;
-  SchoolYear schoolYear = SchoolYear(year: 24, semester: 1);
+  SchoolYear schoolYear = SchoolYear(year: 21, semester: 3);
   var accountSession = VariableState<AccountSession>();
   var subjectInformationList = VariableListState<SubjectInformation>();
   var subjectFeeList = VariableListState<SubjectFee>();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
+import '../../utils/app_localizations.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../components/widget_account/student_info_item.dart';
 
@@ -17,7 +18,7 @@ class StudentInformationView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Student Information"),
+        title: Text(AppLocalizations.of(context).translate("account_accinfo_title")),
       ),
       floatingActionButton: (accountSession.studentInformation.state == ProcessState.running &&
               accountSession.studentInformation.data == null)
@@ -50,7 +51,7 @@ class StudentInformationView extends StatelessWidget {
                   Icon(Icons.info),
                   Padding(
                     padding: const EdgeInsets.only(left: 7),
-                    child: Text("Edit information?\n(Hold/long-tap for info)"),
+                    child: Text(AppLocalizations.of(context).translate("account_accinfo_editinfo")),
                   ),
                 ],
               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
+
 class NewsEndListItem extends StatelessWidget {
   const NewsEndListItem({
     super.key,
@@ -22,26 +24,26 @@ class NewsEndListItem extends StatelessWidget {
                 }
               },
         child: Center(
-          child: isRefreshing ? _refreshing() : _clickToRefresh(),
+          child: isRefreshing ? _refreshing(context) : _clickToRefresh(context),
         ),
       ),
     );
   }
 
-  Widget _clickToRefresh() {
-    return const Row(
+  Widget _clickToRefresh(BuildContext context) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Click here or scroll to end of list again to refresh",
+          AppLocalizations.of(context).translate("news_endoflist_title"),
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 
-  Widget _refreshing() {
-    return const Row(
+  Widget _refreshing(BuildContext context) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
@@ -53,7 +55,7 @@ class NewsEndListItem extends StatelessWidget {
           ),
         ),
         Text(
-          "Refreshing...",
+          AppLocalizations.of(context).translate("news_endoflist_refreshing"),
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ],

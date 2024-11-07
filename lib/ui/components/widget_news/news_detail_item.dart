@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/app_localizations.dart';
 import '../../../utils/launch_url.dart';
 import '../../../utils/theme_tools.dart';
 
@@ -18,7 +19,9 @@ class NewsDetailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dateStr = DateFormat("EEEE, dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(newsItem.date));
+    var dateStr = DateFormat("EEEE, dd/MM/yyyy", Localizations.localeOf(context).toString()).format(
+      DateTime.fromMillisecondsSinceEpoch(newsItem.date),
+    );
 
     // String to rich text
     List<_NewsTextProcessing> data = _richText(
@@ -64,7 +67,7 @@ class NewsDetailItem extends StatelessWidget {
                     text: TextSpan(
                       children: List.generate(
                         data.length,
-                            (index) {
+                        (index) {
                           return TextSpan(
                             text: data[index].text,
                             style: TextStyle(
@@ -77,24 +80,24 @@ class NewsDetailItem extends StatelessWidget {
                               color: data[index].url != null
                                   ? Colors.blueAccent
                                   : ThemeTool.isAppDarkMode(context)
-                                  ? Colors.white
-                                  : Colors.black,
+                                      ? Colors.white
+                                      : Colors.black,
                             ),
                             recognizer: data[index].url != null
                                 ? (TapGestureRecognizer()
-                              ..onTap = () {
-                                if (data[index].url == null) {
-                                  return;
-                                }
-                                launchOwnUrl(
-                                  data[index].url!,
-                                  onFailed: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                      content: Text("We can't open links for you."),
-                                    ));
-                                  },
-                                );
-                              })
+                                  ..onTap = () {
+                                    if (data[index].url == null) {
+                                      return;
+                                    }
+                                    launchOwnUrl(
+                                      data[index].url!,
+                                      onFailed: () {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                          content: Text(AppLocalizations.of(context).translate("link_failed")),
+                                        ));
+                                      },
+                                    );
+                                  })
                                 : null,
                           );
                         },

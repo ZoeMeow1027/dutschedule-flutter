@@ -1,6 +1,9 @@
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
+import '../../../utils/string_utils.dart';
+
 class SubjectInfoItem extends StatelessWidget {
   const SubjectInfoItem({
     super.key,
@@ -35,15 +38,24 @@ class SubjectInfoItem extends StatelessWidget {
                   subjectInfo.name,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                Text("""
-                ${subjectInfo.lecturerName}
-                
-                Week range: ${subjectInfo.subjectStudy.weekList.toString()}
-                Schedules:
-                ${subjectInfo.subjectStudy.subjectStudyList.map((p) {
-                  return "- ${p.dayOfWeek} - Lesson ${p.lesson.toString()} - Room ${p.room}";
-                }).join("\n") }
-                """),
+                Text(StringUtils.formatString(
+                  AppLocalizations.of(context).translate("account_subjectinfo_summary_schinfo"),
+                  [
+                    subjectInfo.lecturerName,
+                    subjectInfo.subjectStudy.weekList.map((p) => p.toString()).toList().join(", "),
+                    subjectInfo.subjectStudy.subjectStudyList.map((p) {
+                      return StringUtils.formatString(
+                        AppLocalizations.of(context).translate("account_subjectinfo_summary_schitem"),
+                        [
+                          p.dayOfWeek.toString(),
+                          p.lesson.start.toString(),
+                          p.lesson.end.toString(),
+                          p.room
+                        ],
+                      );
+                    }).join("\n"),
+                  ],
+                )),
               ],
             ),
           ),

@@ -14,7 +14,7 @@ class DashboardTab extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("appname")),
+        title: Text(AppLocalizations.of(context).translate("app_name")),
         actions: [
           IconButton(
             onPressed: () {
@@ -28,20 +28,7 @@ class DashboardTab extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              settingsInstance.setLocale(Locale("en", "US"));
-            },
-            child: const Text("en-us"),
-          ),
-          TextButton(
-            onPressed: () {
-              settingsInstance.setLocale(Locale("vi"));
-            },
-            child: const Text("vi"),
-          ),
-        ],
+        children: [],
       ),
     );
   }

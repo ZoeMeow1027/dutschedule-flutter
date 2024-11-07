@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
+import '../../utils/app_localizations.dart';
+import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../components/widget_account/subject_info_item.dart';
 
@@ -18,7 +20,7 @@ class SubjectInformationView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Subject Information"),
+        title: Text(AppLocalizations.of(context).translate("account_subjectinfo_title")),
       ),
       floatingActionButton: (accountSession.subjectInformationList.state == ProcessState.running &&
               accountSession.subjectInformationList.data.isEmpty)
@@ -45,11 +47,25 @@ class SubjectInformationView extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
+    final accountSession = Provider.of<AccountSessionInstance>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       width: double.infinity,
       alignment: Alignment.center,
-      child: Text("1234567890"),
+      child: Text(
+        StringUtils.formatString(
+          AppLocalizations.of(context).translate("account_schoolyear_main"),
+          [
+            accountSession.schoolYear.year.toString(),
+            (accountSession.schoolYear.year + 1).toString(),
+            (accountSession.schoolYear.semester == 3 ? 2 : accountSession.schoolYear.semester).toString(),
+            accountSession.schoolYear.semester == 3
+                ? AppLocalizations.of(context).translate("account_schoolyear_summer")
+                : "",
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -59,7 +75,10 @@ class SubjectInformationView extends StatelessWidget {
       children: [
         _header(context),
         Spacer(),
-        Text("No data from sv.dut.udn.vn."),
+        Text(
+          AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
+          textAlign: TextAlign.center,
+        ),
         Spacer(),
       ],
     );
