@@ -29,6 +29,7 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
     searchQuery = "";
     newsType = NewsType.global;
     searchMethod = NewsSearchMethod.byTitle;
+    searchProcessState = ProcessState.notRunYet;
     _nextPage = 1;
     searchResult.clear();
     newsSearchQueryTextControl.clear();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
+import '../../../utils/app_localizations.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import '../../components/message_card.dart';
 import '../../components/widget_account/dashboard_basic_info_view.dart';
@@ -27,17 +28,16 @@ class AccountDashboardView extends StatelessWidget {
               ? MessageCard.processing(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    "Fetching information from sv.dut.udn.vn...",
+                    AppLocalizations.of(context).translate("account_status_processing"),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  onClick: () {},
                 )
               : Container(),
           (accountSessionInstance.accountSession.state == ProcessState.failed)
               ? MessageCard.warning(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    "We can't fetch any information from sv.dut.udn.vn. Please check your internet connection.\nIf everything fine, please try again later.\nClick here to try again.",
+                    AppLocalizations.of(context).translate("account_status_failed"),
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -69,7 +69,7 @@ class AccountDashboardView extends StatelessWidget {
           // Button action
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Text("View subject information"),
+            child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectinfo")),
             onPressed: () {
               Navigator.push(
                 context,
@@ -79,7 +79,7 @@ class AccountDashboardView extends StatelessWidget {
           ),
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Text("View subject fee list"),
+            child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectfee")),
             onPressed: () {
               Navigator.push(
                 context,
@@ -89,39 +89,39 @@ class AccountDashboardView extends StatelessWidget {
           ),
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Text("View training result"),
+            child: Text(AppLocalizations.of(context).translate("account_dashboard_button_accounttrainstats")),
             onPressed: () {},
           ),
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Text("Logout"),
+            child: Text(AppLocalizations.of(context).translate("account_dashboard_button_logout")),
             onPressed: () async {
               showDialog<void>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                  title: const Text("Logout"),
-                  content: const SingleChildScrollView(
+                  title: Text(AppLocalizations.of(context).translate("account_logout_title")),
+                  content: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text("Are you sure you want to logout?"),
+                        Text(AppLocalizations.of(context).translate("account_logout_description")),
                       ],
                     ),
                   ),
                   actions: [
                     TextButton(
-                      child: const Text("Logout"),
+                      child: Text(AppLocalizations.of(context).translate("account_logout_action_logout")),
                       onPressed: () {
                         Navigator.pop(context);
                         accountSessionInstance.logout(afterRun: () {
                           context.clearSnackBars();
                           context.showSnackBar(SnackBar(
-                            content: Text("Successfully logout!"),
+                            content: Text(AppLocalizations.of(context).translate("account_logout_loggedout")),
                           ));
                         });
                       },
                     ),
                     TextButton(
-                      child: const Text("Cancel"),
+                      child: Text(AppLocalizations.of(context).translate("action_cancel")),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],

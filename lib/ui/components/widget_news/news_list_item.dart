@@ -39,7 +39,7 @@ class NewsListItem extends StatelessWidget {
                   !showDate
                       ? const Center()
                       : Text(
-                    DateFormat("dd/MM/yyyy").format(
+                    DateFormat("dd/MM/yyyy", Localizations.localeOf(context).toString()).format(
                         DateTime.fromMillisecondsSinceEpoch(newsItem.date)),
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,

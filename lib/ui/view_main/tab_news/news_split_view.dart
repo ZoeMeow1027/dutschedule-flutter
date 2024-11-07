@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/app_localizations.dart';
 import '../../../viewmodel/main_view_model.dart';
 import '../../components/widget_news/news_detail_item.dart';
 import 'news_summary_list_view.dart';
@@ -41,7 +42,7 @@ class NewsSplitView extends StatelessWidget {
                   child: mainViewModel.newsSelected == null
                       ? Center(
                           child: Text(
-                            "Select a news on the left to show its details",
+                            AppLocalizations.of(context).translate("news_splitview_noselected"),
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         )

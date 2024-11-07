@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
+
 class StudentInfoItem extends StatelessWidget {
   const StudentInfoItem({
     super.key,
@@ -25,11 +27,11 @@ class StudentInfoItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name ?? "(unknown)",
+                  name ?? AppLocalizations.of(context).translate("data_unknown"),
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 Text(
-                  value ?? "(unknown)",
+                  value ?? AppLocalizations.of(context).translate("data_unknown"),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],

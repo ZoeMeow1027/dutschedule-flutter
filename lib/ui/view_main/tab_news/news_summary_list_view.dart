@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
+import '../../../utils/app_localizations.dart';
 import '../../../viewmodel/main_view_model.dart';
 import '../../../viewmodel/news_cache_instance.dart';
 import '../../../viewmodel/news_search_instance.dart';
@@ -27,7 +28,7 @@ class NewsSummaryListView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("News"),
+        title: Text(AppLocalizations.of(context).translate("news_title")),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 5),
@@ -74,9 +75,8 @@ class NewsSummaryListView extends StatelessWidget {
                   );
                 } catch (ex) {
                   context.clearSnackBars();
-                  context.showSnackBar(const SnackBar(
-                    content: Text(
-                        "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
+                  context.showSnackBar(SnackBar(
+                    content: Text(AppLocalizations.of(context).translate("news_search_failed")),
                   ));
                 }
               },
@@ -101,9 +101,8 @@ class NewsSummaryListView extends StatelessWidget {
                   );
                 } catch (ex) {
                   context.clearSnackBars();
-                  context.showSnackBar(const SnackBar(
-                    content: Text(
-                        "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
+                  context.showSnackBar(SnackBar(
+                    content: Text(AppLocalizations.of(context).translate("news_search_failed")),
                   ));
                 }
               },
@@ -139,9 +138,8 @@ class NewsSummaryListView extends StatelessWidget {
               }
             } catch (ex) {
               context.clearSnackBars();
-              context.showSnackBar(const SnackBar(
-                content: Text(
-                    "We ran into a issue prevent you refreshing news. Please try again or check your internet connection."),
+              context.showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context).translate("news_search_failed")),
               ));
             }
           },
@@ -156,14 +154,14 @@ class NewsSummaryListView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SegmentedButton<NewsTabLocation>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: NewsTabLocation.globalNews,
-                      label: Text("Global"),
+                      label: Text(AppLocalizations.of(context).translate("news_tabname_global")),
                     ),
                     ButtonSegment(
                       value: NewsTabLocation.subjectNews,
-                      label: Text("Subject"),
+                      label: Text(AppLocalizations.of(context).translate("news_tabname_subject")),
                     ),
                   ],
                   selected: <NewsTabLocation>{mainViewModel.newsCurrentPage},

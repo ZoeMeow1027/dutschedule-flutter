@@ -21,9 +21,7 @@ class ListViewOptionItem extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: InkWell(
-        onTap: () {
-          onClick?.call();
-        },
+        onTap: () => onClick?.call(),
         child: Padding(
           padding: const EdgeInsets.only(top: 12, bottom: 15, left: 20, right: 20),
           child: Row(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
+
 class DashboardBasicInfoView extends StatelessWidget {
   const DashboardBasicInfoView({
     super.key,
@@ -36,10 +38,10 @@ class DashboardBasicInfoView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Basic student information",
+                        AppLocalizations.of(context).translate("account_dashboard_banner_title"),
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      Text("(click this banner to view full information)"),
+                      Text(AppLocalizations.of(context).translate("account_dashboard_banner_titleclick")),
                     ],
                   ),
                 ),
@@ -55,12 +57,13 @@ class DashboardBasicInfoView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 7),
                             child: Text(
-                              name ?? "(Unknown)",
+                              name ?? AppLocalizations.of(context).translate("account_dashboard_banner_title"),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
-                          Text("${studentId ?? "(Unknown)"} - ${schoolClass ?? "(Unknown)"}"),
-                          Text(specialization ?? "(unknown)"),
+                          Text(
+                              "${studentId ?? AppLocalizations.of(context).translate("data_unknown")} - ${schoolClass ?? AppLocalizations.of(context).translate("data_unknown")}"),
+                          Text(specialization ?? AppLocalizations.of(context).translate("data_unknown")),
                         ],
                       )
                     : Container(

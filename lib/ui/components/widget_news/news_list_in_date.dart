@@ -33,7 +33,9 @@ class NewsListInDate extends StatelessWidget {
             if (index == 0) {
               if (showDateInHeader) {
                 return Text(
-                  DateFormat("EE, dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(date)),
+                  DateFormat("EE, dd/MM/yyyy", Localizations.localeOf(context).toString()).format(
+                    DateTime.fromMillisecondsSinceEpoch(date),
+                  ),
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 17,

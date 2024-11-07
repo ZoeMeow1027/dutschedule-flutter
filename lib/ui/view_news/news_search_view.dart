@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
+import '../../utils/app_localizations.dart';
+import '../../utils/string_utils.dart';
 import '../../viewmodel/news_search_instance.dart';
 import '../components/widget_news/news_list.dart';
 import 'news_detail_view.dart';
@@ -18,42 +20,53 @@ class NewsSearchView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          controller: TextEditingController(text: newsSearchInstance.searchQuery),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: "Type here to search",
-          ),
-          readOnly: true,
-          onTap: () async {
-            newsSearchInstance.newsSearchQueryTextControl.clear();
-            await Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  final fadeInOut = CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeInOut,
-                  );
+        title: _titleBar(
+            context: context,
+            newsSearchInstance: newsSearchInstance,
+            onTap: () async {
+              newsSearchInstance.newsSearchQueryTextControl.clear();
+              await Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    final fadeInOut = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    );
 
-                  return FadeTransition(
-                    opacity: fadeInOut,
-                    child: child,
-                  );
-                },
-              ),
-            );
-            newsSearchInstance.newsSearchQueryTextControl.clear();
-          },
-        ),
+                    return FadeTransition(
+                      opacity: fadeInOut,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            }),
         actions: [
           newsSearchInstance.searchQuery.isNotEmpty
               ? Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: IconButton(
-                    onPressed: () {
-                      newsSearchInstance.fetchSearchRun(startOver: true);
+                    onPressed: () async {
+                      newsSearchInstance.newsSearchQueryTextControl.clear();
+                      await Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            final fadeInOut = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeInOut,
+                            );
+
+                            return FadeTransition(
+                              opacity: fadeInOut,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
                     },
                     icon: newsSearchInstance.searchProcessState == ProcessState.running
                         ? SizedBox(
@@ -61,7 +74,7 @@ class NewsSearchView extends StatelessWidget {
                             height: 24,
                             child: CircularProgressIndicator(),
                           )
-                        : Icon(Icons.refresh),
+                        : Icon(Icons.search),
                   ),
                 )
               : Container(),
@@ -94,13 +107,69 @@ class NewsSearchView extends StatelessWidget {
     );
   }
 
+  Widget _titleBar({
+    required BuildContext context,
+    required NewsSearchInstance newsSearchInstance,
+    Function()? onTap,
+  }) {
+    if (newsSearchInstance.searchProcessState != ProcessState.notRunYet) {
+      return InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                newsSearchInstance.searchQuery.isNotEmpty
+                    ? newsSearchInstance.searchQuery
+                    : AppLocalizations.of(context).translate("data_nodata"),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Text(
+                StringUtils.capitalizeFirstLetter(StringUtils.formatString(
+                  AppLocalizations.of(context).translate("news_search_searchoption_history_data"),
+                  [
+                    newsSearchInstance.searchMethod == NewsSearchMethod.byTitle
+                        ? AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")
+                        : AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
+                    newsSearchInstance.newsType == NewsType.global
+                        ? AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")
+                        : AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
+                  ],
+                )),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return TextField(
+        controller: TextEditingController(text: newsSearchInstance.searchQuery),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: AppLocalizations.of(context).translate("news_search_searchbox_placeholder"),
+        ),
+        readOnly: true,
+        onTap: onTap,
+      );
+    }
+  }
+
   Widget _notRunYet(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           Spacer(),
-          Text("Tap search box at the top of screen to continue."),
+          Text(
+            AppLocalizations.of(context).translate("news_search_getstarted"),
+            textAlign: TextAlign.center,
+          ),
           Spacer(),
         ],
       ),
@@ -108,12 +177,17 @@ class NewsSearchView extends StatelessWidget {
   }
 
   Widget _noAnyResult(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           Spacer(),
-          Text("No results."),
+          Text(
+            AppLocalizations.of(context).translate("news_search_noavailablenews"),
+            textAlign: TextAlign.center,
+          ),
           Spacer(),
         ],
       ),

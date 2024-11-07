@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../../main.dart';
 import '../../model/scaffold_nav.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/get_device_type.dart';
@@ -112,17 +111,17 @@ class _MyHomePageState extends State<MainScreenView> {
     return ScaffoldNavigationList(itemList: [
       ScaffoldNavigationItem(
         id: 0,
-        label: AppLocalizations.of(context).translate("mainview_tab_dashboard"),
+        label: AppLocalizations.of(context).translate("main_dashboard_title"),
         iconData: Icons.home,
       ),
       ScaffoldNavigationItem(
         id: 1,
-        label: AppLocalizations.of(context).translate("mainview_tab_news"),
+        label: AppLocalizations.of(context).translate("news_title"),
         iconData: Icons.newspaper,
       ),
       ScaffoldNavigationItem(
         id: 2,
-        label: AppLocalizations.of(context).translate("mainview_tab_account"),
+        label: AppLocalizations.of(context).translate("account_title"),
         iconData: Icons.account_circle_outlined,
       ),
     ]);

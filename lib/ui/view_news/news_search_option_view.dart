@@ -2,6 +2,7 @@ import 'package:dutwrapper/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/app_localizations.dart';
 import '../../viewmodel/news_search_instance.dart';
 import '../components/widget_news/news_search_history_item.dart';
 
@@ -19,7 +20,7 @@ class NewsSearchOptionView extends StatelessWidget {
           onChanged: (text) => newsSearchInstance.changeNewsSearchOption(query: text),
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            hintText: "Type here to search",
+            hintText: AppLocalizations.of(context).translate("news_search_searchbox_placeholder"),
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -47,7 +48,7 @@ class NewsSearchOptionView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "News type",
+              AppLocalizations.of(context).translate("news_search_searchoption_type"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
@@ -55,15 +56,21 @@ class NewsSearchOptionView extends StatelessWidget {
               width: double.infinity,
               child: SegmentedButton<NewsType>(
                 segments: <ButtonSegment<NewsType>>[
-                  ButtonSegment(value: NewsType.global, label: Text("Global news")),
-                  ButtonSegment(value: NewsType.subject, label: Text("Subject news")),
+                  ButtonSegment(
+                    value: NewsType.global,
+                    label: Text(AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")),
+                  ),
+                  ButtonSegment(
+                    value: NewsType.subject,
+                    label: Text(AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject")),
+                  ),
                 ],
                 selected: <NewsType>{newsSearchInstance.newsType},
                 onSelectionChanged: (value) => newsSearchInstance.changeNewsSearchOption(newsType: value.first),
               ),
             ),
             Text(
-              "Search by",
+              AppLocalizations.of(context).translate("news_search_searchoption_method"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
@@ -71,15 +78,21 @@ class NewsSearchOptionView extends StatelessWidget {
               width: double.infinity,
               child: SegmentedButton<NewsSearchMethod>(
                 segments: <ButtonSegment<NewsSearchMethod>>[
-                  ButtonSegment(value: NewsSearchMethod.byTitle, label: Text("By title")),
-                  ButtonSegment(value: NewsSearchMethod.byContent, label: Text("By content")),
+                  ButtonSegment(
+                    value: NewsSearchMethod.byTitle,
+                    label: Text(AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")),
+                  ),
+                  ButtonSegment(
+                    value: NewsSearchMethod.byContent,
+                    label: Text(AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent")),
+                  ),
                 ],
                 selected: <NewsSearchMethod>{newsSearchInstance.searchMethod},
                 onSelectionChanged: (value) => newsSearchInstance.changeNewsSearchOption(searchMethod: value.first),
               ),
             ),
             Text(
-              "Search history",
+              AppLocalizations.of(context).translate("news_search_searchoption_history"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Expanded(
