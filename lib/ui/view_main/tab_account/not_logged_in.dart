@@ -2,9 +2,10 @@ import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../global_variables.dart';
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
-import '../../../utils/launch_url.dart';
+import '../../../utils/app_utils.dart';
 import '../../../utils/theme_tools.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import '../../../viewmodel/main_view_model.dart';
@@ -55,7 +56,7 @@ class AccountNotLoggedInView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: TextField(
                 enabled: accountSession.accountSession.state != ProcessState.running,
                 onChanged: (changed) {
@@ -155,8 +156,8 @@ class AccountNotLoggedInView extends StatelessWidget {
                 ),
                 onTap: () {
                   if (accountSession.accountSession.state != ProcessState.running) {
-                    launchOwnUrl(
-                      "https://github.com/ZoeMeow1027/DutSchedule/wiki/Changing-Password-In-DUT#qu%C3%AAn-m%E1%BA%ADt-kh%E1%BA%A9u",
+                    AppUtils.launchOwnUrl(
+                      GlobalVariables.repoLinkForgotPassword,
                       onFailed: () {
                         context.clearSnackBars();
                         context.showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).translate("link_failed"))));

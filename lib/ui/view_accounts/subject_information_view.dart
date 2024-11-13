@@ -22,6 +22,7 @@ class SubjectInformationView extends StatelessWidget {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_subjectinfo_title")),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: (accountSession.subjectInformationList.state == ProcessState.running &&
               accountSession.subjectInformationList.data.isEmpty)
           ? null

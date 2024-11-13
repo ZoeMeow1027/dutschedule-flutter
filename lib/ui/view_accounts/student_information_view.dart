@@ -20,6 +20,7 @@ class StudentInformationView extends StatelessWidget {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_accinfo_title")),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: (accountSession.studentInformation.state == ProcessState.running &&
               accountSession.studentInformation.data == null)
           ? null
@@ -29,7 +30,6 @@ class StudentInformationView extends StatelessWidget {
                   ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
                   : const Icon(Icons.refresh),
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       bottomNavigationBar: BottomAppBar(
         color: Colors.transparent,
         child: Row(

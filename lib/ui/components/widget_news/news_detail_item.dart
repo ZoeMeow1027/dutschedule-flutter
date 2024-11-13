@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/app_localizations.dart';
-import '../../../utils/launch_url.dart';
+import '../../../utils/app_utils.dart';
 import '../../../utils/theme_tools.dart';
 
 class NewsDetailItem extends StatelessWidget {
@@ -89,7 +89,7 @@ class NewsDetailItem extends StatelessWidget {
                                     if (data[index].url == null) {
                                       return;
                                     }
-                                    launchOwnUrl(
+                                    AppUtils.launchOwnUrl(
                                       data[index].url!,
                                       onFailed: () {
                                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

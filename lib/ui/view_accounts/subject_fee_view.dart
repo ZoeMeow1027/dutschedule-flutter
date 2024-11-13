@@ -22,6 +22,7 @@ class SubjectFeeView extends StatelessWidget {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_subjectfee_title")),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton:
           (accountSession.subjectFeeList.state == ProcessState.running && accountSession.subjectFeeList.data.isEmpty)
               ? null

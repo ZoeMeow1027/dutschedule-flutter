@@ -109,6 +109,7 @@ class NewsSummaryListView extends StatelessWidget {
             ),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
         floatingActionButton: FloatingActionButton(
           child: ((mainViewModel.newsCurrentPage == NewsTabLocation.globalNews &&
                       newsCacheInstance.newsGlobal.state == ProcessState.running) ||
@@ -144,7 +145,6 @@ class NewsSummaryListView extends StatelessWidget {
             }
           },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
         bottomNavigationBar: Padding(
           padding: EdgeInsets.only(right: 60),
           child: BottomAppBar(

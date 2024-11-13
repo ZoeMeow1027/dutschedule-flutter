@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ListViewOptionItem extends StatelessWidget {
-  const ListViewOptionItem({
+class OptionItem extends StatelessWidget {
+  const OptionItem({
     super.key,
     required this.title,
+    this.paddingInside = EdgeInsets.zero,
     this.description,
     this.leading,
     this.trailing,
     this.onClick,
   });
 
+  final EdgeInsets paddingInside;
   final String title;
   final String? description;
   final Widget? leading;
@@ -23,7 +25,7 @@ class ListViewOptionItem extends StatelessWidget {
       child: InkWell(
         onTap: () => onClick?.call(),
         child: Padding(
-          padding: const EdgeInsets.only(top: 12, bottom: 15, left: 20, right: 20),
+          padding: paddingInside,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
