@@ -5,7 +5,7 @@ import '../../model/enum/background_image_option.dart';
 import '../../utils/app_localizations.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/listview_group_item.dart';
-import '../components/listview_option_item.dart';
+import '../components/list_view_option_item.dart';
 
 class WallpaperAndStyleView extends StatelessWidget {
   const WallpaperAndStyleView({super.key});

@@ -9,7 +9,8 @@ import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/listview_group_item.dart';
-import '../components/listview_option_item.dart';
+import '../components/list_view_option_item.dart';
+import 'about_view.dart';
 import 'languages_view.dart';
 import 'wallpaper_and_style_view.dart';
 
@@ -172,6 +173,12 @@ class SettingsView extends StatelessWidget {
                           )
                         : AppLocalizations.of(context).translate("data_unknown"),
                     leading: Icon(Icons.info),
+                    onClick: () async => await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AboutSettingsView(),
+                      ),
+                    ),
                   ),
                 ),
               ],

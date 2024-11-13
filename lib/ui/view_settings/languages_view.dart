@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../utils/app_languages.dart';
 import '../../utils/app_localizations.dart';
 import '../../viewmodel/settings_instance.dart';
-import '../components/listview_option_item.dart';
+import '../components/list_view_option_item.dart';
 
 class LanguageSettingsView extends StatelessWidget {
   const LanguageSettingsView({super.key});

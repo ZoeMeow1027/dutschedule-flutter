@@ -10,6 +10,7 @@ import '../../components/widget_account/dashboard_basic_info_view.dart';
 import '../../view_accounts/student_information_view.dart';
 import '../../view_accounts/subject_fee_view.dart';
 import '../../view_accounts/subject_information_view.dart';
+import '../../view_accounts/training_result_view.dart';
 
 class AccountDashboardView extends StatelessWidget {
   const AccountDashboardView({super.key});
@@ -90,7 +91,12 @@ class AccountDashboardView extends StatelessWidget {
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_accounttrainstats")),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TrainingResultView()),
+              );
+            },
           ),
           _customButton(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),

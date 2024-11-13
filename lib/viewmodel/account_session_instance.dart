@@ -119,6 +119,7 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
         subjectInformationList.resetValue();
         subjectFeeList.resetValue();
         studentInformation.resetValue();
+        trainingResult.resetValue();
         log("[Account] [Session - Logout] Cleared all cached data.");
       } else {
         log("[Account] [Session - Logout] It looks like you don't have any account session.");
