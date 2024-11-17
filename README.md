@@ -32,6 +32,7 @@
     - [Visual Studio Code](https://code.visualstudio.com/) with [Dart](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code) and [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) extension.
     - [Android Studio](https://developer.android.com/studio).
     - [IntelliJ IDEA Community](https://www.jetbrains.com/idea/).
+  - If you got errors while building, you can try to clear package cache first by running command `dart pub cache clean`.
 - Building/Running on CLI:
   - Just build or run with command `flutter build ...` or `flutter run` in your project directory. No extras arguments required. For more information, navigate to [Flutter document](https://docs.flutter.dev/).
 

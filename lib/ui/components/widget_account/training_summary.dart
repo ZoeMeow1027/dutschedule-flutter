@@ -40,12 +40,14 @@ class TrainingSummary extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 44,
+                          color: Theme.of(context).colorScheme.primary,
                         )),
                     TextSpan(
                         text: "/4",
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 30,
+                          color: Theme.of(context).colorScheme.primary,
                         )),
                   ],
                 ),
