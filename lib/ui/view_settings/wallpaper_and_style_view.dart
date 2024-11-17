@@ -47,7 +47,8 @@ class WallpaperAndStyleView extends StatelessWidget {
                   ),
                 ),
                 ListViewOptionItem(
-                  title: AppLocalizations.of(context).translate("settings_wallpaperandcontrols_choice_currentwallpaper"),
+                  title:
+                      AppLocalizations.of(context).translate("settings_wallpaperandcontrols_choice_currentwallpaper"),
                   description: null, // TODO: Check if qualified.
                   onClick: () {
                     // TODO: Check if can continue.

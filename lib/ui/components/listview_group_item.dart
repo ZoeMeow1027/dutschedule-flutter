@@ -39,8 +39,8 @@ class ListViewGroupItem extends StatelessWidget {
             } else if (index == children.length + 1) {
               return dividerOnBottom
                   ? Divider(
-                      color: ThemeTool.isAppDarkMode(context) ? Colors.white : Colors.black,
-                      thickness: 1,
+                      color: Theme.of(context).colorScheme.secondary,
+                      thickness: 1.5,
                       height: 0,
                     )
                   : Container();

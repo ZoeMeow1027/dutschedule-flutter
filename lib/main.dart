@@ -44,13 +44,23 @@ class MainApplication extends StatelessWidget {
           title: "DutSchedule",
           scrollBehavior: CustomScrollBehavior(),
           theme: ThemeData(
-            primarySwatch: lightDynamic != null ? null : Colors.blue,
-            colorScheme: lightDynamic,
+            primarySwatch: lightDynamic != null ? null : Colors.deepPurple,
+            colorScheme: settingsInstance.accentColor
+                ? lightDynamic
+                : ColorScheme.fromSeed(
+                    seedColor: Colors.deepPurple,
+                  ),
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
-            primarySwatch: darkDynamic != null ? null : Colors.blue,
-            colorScheme: darkDynamic,
+            primarySwatch: darkDynamic != null ? null : Colors.deepPurple,
+            colorScheme: settingsInstance.accentColor
+                ? darkDynamic?.copyWith(surface: settingsInstance.blackBackground ? Colors.black : null)
+                : ColorScheme.fromSeed(
+                    seedColor: Colors.deepPurple,
+                    brightness: Brightness.dark,
+                    surface: settingsInstance.blackBackground ? Colors.black : null,
+                  ),
             useMaterial3: true,
           ),
           localizationsDelegates: [

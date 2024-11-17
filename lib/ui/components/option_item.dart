@@ -24,8 +24,9 @@ class OptionItem extends StatelessWidget {
       width: double.infinity,
       child: InkWell(
         onTap: () => onClick?.call(),
-        child: Padding(
+        child: Container(
           padding: paddingInside,
+          alignment: Alignment.centerLeft,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,7 +46,8 @@ class OptionItem extends StatelessWidget {
                         title,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
-                      description != null ? Text(description!) : Container(),
+                      if (description != null) Text(description!),
+                      // description != null ? Text(description!) : Container(),
                     ],
                   ),
                 ),

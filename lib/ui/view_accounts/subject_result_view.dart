@@ -8,7 +8,7 @@ import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../components/info_card.dart';
 import '../components/widget_account/subject_result_bottom_sheet.dart';
-import '../components/widget_account/switch_button.dart';
+import '../components/switch_button.dart';
 
 class SubjectResultView extends StatefulWidget {
   const SubjectResultView({super.key});

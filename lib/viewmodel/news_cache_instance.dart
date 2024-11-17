@@ -39,18 +39,18 @@ class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
     Function()? onDone,
   }) async {
     if (!newsGlobal.isSuccessfulRequestExpired() && !forceRequest) {
-      log("News global: Running denied because of timeout. Force this request to continue.");
+      log("[News global] Running denied because of timeout. Force this request to continue.");
       return;
     }
     if (newsGlobal.state == ProcessState.running) {
-      log("News global: Running denied because of running...");
+      log("[News global] Running denied because of running...");
       return;
     }
 
     newsGlobal.state = ProcessState.running;
     notifyListeners();
 
-    log("News global: Running...");
+    log("[News global] Running...");
 
     List<NewsGlobal> latestNews = [];
     try {
@@ -135,12 +135,12 @@ class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
 
       newsGlobal.state = ProcessState.successful;
       newsGlobal.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("News global: Running successful!");
+      log("[News global] Running successful!");
     } catch (ex) {
       newsGlobal.state = ProcessState.failed;
-      log("News global: Running failed!");
+      log("[News global] Running failed!");
     } finally {
-      log("News global: Done running! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, current count: ${newsGlobal.data.length}");
+      log("[News global] Done running! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, current count: ${newsGlobal.data.length}");
       notifyListeners();
       onDone?.call();
     }
@@ -152,18 +152,18 @@ class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
     Function()? onDone,
   }) async {
     if (!newsSubject.isSuccessfulRequestExpired() && !forceRequest) {
-      log("News subject: Running denied because of timeout. Force this request to continue.");
+      log("[News subject] Running denied because of timeout. Force this request to continue.");
       return;
     }
     if (newsSubject.state == ProcessState.running) {
-      log("News subject: Running denied because of running...");
+      log("[News subject] Running denied because of running...");
       return;
     }
 
     newsSubject.state = ProcessState.running;
     notifyListeners();
 
-    log("News subject: Running...");
+    log("[News subject] Running...");
 
     List<NewsSubject> latestNews = [];
     try {
@@ -248,12 +248,12 @@ class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
 
       newsSubject.state = ProcessState.successful;
       newsSubject.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("News subject: Running successful!");
+      log("[News subject] Running successful!");
     } catch (ex) {
       newsSubject.state = ProcessState.failed;
-      log("News subject: Running failed!");
+      log("[News subject] Running failed!");
     } finally {
-      log("News subject: End run. Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, current count: ${newsSubject.data.length}");
+      log("[News subject] End run. Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, current count: ${newsSubject.data.length}");
       notifyListeners();
       onDone?.call();
     }
