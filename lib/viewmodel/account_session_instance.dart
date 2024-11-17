@@ -4,6 +4,7 @@ import 'package:dutwrapper/account_object.dart';
 import 'package:dutwrapper/account_session_object.dart';
 import 'package:flutter/material.dart';
 
+import '../global_variables.dart';
 import '../model/process_state.dart';
 import '../model/school_year.dart';
 import '../model/variable_state.dart';
@@ -152,7 +153,10 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
       log("[Account] [Subject information] Running denied because of another task itself...");
       return;
     }
-
+    if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
+      log("[Account] [Subject information] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      return;
+    }
     beforeRun?.call();
 
     try {
@@ -175,7 +179,8 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
       subjectInformationList.state = ProcessState.failed;
       log("[Account] [Subject information] Running failed!");
     } finally {
-      subjectInformationList.lastRequest = DateTime.now().millisecondsSinceEpoch;
+      subjectInformationList.lastRequest =
+          DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject information] End run.");
       notifyListeners();
       afterRun?.call();
@@ -197,6 +202,10 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
     }
     if (studentInformation.state == ProcessState.running) {
       log("[Account] [Student information] Running denied because of another task itself...");
+      return;
+    }
+    if (!studentInformation.isSuccessfulRequestExpired() && !forceRequest) {
+      log("[Account] [Student information] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -238,6 +247,10 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
     }
     if (subjectFeeList.state == ProcessState.running) {
       log("[Account] [Subject fee] Running denied because of another task itself...");
+      return;
+    }
+    if (!subjectFeeList.isSuccessfulRequestExpired() && !forceRequest) {
+      log("[Account] [Subject fee] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -285,7 +298,10 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
       log("[Account] [Training result] Running denied because of another task itself...");
       return;
     }
-
+    if (!trainingResult.isSuccessfulRequestExpired() && !forceRequest) {
+      log("[Account] [Training result] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      return;
+    }
     beforeRun?.call();
 
     try {
@@ -293,7 +309,8 @@ class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
       notifyListeners();
       log("[Account] [Training result] Running...");
 
-      var data = await accRepo.fetchTrainingResult(session: accountSession.data!);
+      var data =
+          await accRepo.fetchTrainingResult(session: accountSession.data!);
       trainingResult.data = data;
 
       trainingResult.state = ProcessState.successful;

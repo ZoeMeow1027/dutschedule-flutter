@@ -25,7 +25,7 @@ class StudentInformationView extends StatelessWidget {
               accountSession.studentInformation.data == null)
           ? null
           : FloatingActionButton(
-              onPressed: () async => await accountSession.fetchStudentInformation(),
+              onPressed: () async => await accountSession.fetchStudentInformation(forceRequest: true),
               child: accountSession.studentInformation.state == ProcessState.running
                   ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
                   : const Icon(Icons.refresh),

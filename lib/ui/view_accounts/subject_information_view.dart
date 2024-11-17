@@ -20,14 +20,16 @@ class SubjectInformationView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: Text(AppLocalizations.of(context).translate("account_subjectinfo_title")),
+        title: Text(AppLocalizations.of(context)
+            .translate("account_subjectinfo_title")),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      floatingActionButton: (accountSession.subjectInformationList.state == ProcessState.running &&
+      floatingActionButton: (accountSession.subjectInformationList.state ==
+                  ProcessState.running &&
               accountSession.subjectInformationList.data.isEmpty)
           ? null
           : FloatingActionButton(
-              onPressed: () async => await accountSession.fetchSubjectInformation(),
+              onPressed: () async => await accountSession.fetchSubjectInformation(forceRequest: true),
               child: accountSession.subjectInformationList.state == ProcessState.running
                   ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
                   : const Icon(Icons.refresh),
@@ -40,7 +42,8 @@ class SubjectInformationView extends StatelessWidget {
                 subInfoList: accountSession.subjectInformationList.data,
                 onClick: () {},
               )
-            : accountSession.subjectInformationList.state == ProcessState.running
+            : accountSession.subjectInformationList.state ==
+                    ProcessState.running
                 ? _onLoading(context)
                 : _onNoData(context),
       ),
@@ -59,9 +62,13 @@ class SubjectInformationView extends StatelessWidget {
           [
             accountSession.schoolYear.year.toString(),
             (accountSession.schoolYear.year + 1).toString(),
-            (accountSession.schoolYear.semester == 3 ? 2 : accountSession.schoolYear.semester).toString(),
+            (accountSession.schoolYear.semester == 3
+                    ? 2
+                    : accountSession.schoolYear.semester)
+                .toString(),
             accountSession.schoolYear.semester == 3
-                ? AppLocalizations.of(context).translate("account_schoolyear_summer")
+                ? AppLocalizations.of(context)
+                    .translate("account_schoolyear_summer")
                 : "",
           ],
         ),
@@ -77,7 +84,8 @@ class SubjectInformationView extends StatelessWidget {
         _header(context),
         Spacer(),
         Text(
-          AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
+          AppLocalizations.of(context)
+              .translate("account_subjectinfo_summary_nosubjects"),
           textAlign: TextAlign.center,
         ),
         Spacer(),

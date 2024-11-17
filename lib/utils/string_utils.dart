@@ -1,8 +1,8 @@
 class StringUtils {
-  static String formatString(String format, List<String> args) {
+  static String formatString(String format, List<String?> args) {
     return format.replaceAllMapped(RegExp(r"\{(\d+)\}"), (match) {
       int index = int.parse(match[1]!);
-      return args[index];
+      return args[index] ?? "null";
     });
   }
 

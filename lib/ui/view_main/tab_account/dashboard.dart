@@ -61,6 +61,7 @@ class AccountDashboardView extends StatelessWidget {
               if (accountSessionInstance.accountSession.state == ProcessState.running) {
                 return;
               }
+              accountSessionInstance.fetchStudentInformation();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => StudentInformationView()),
@@ -72,6 +73,7 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectinfo")),
             onPressed: () {
+              accountSessionInstance.fetchSubjectInformation();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectInformationView()),
@@ -82,6 +84,7 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectfee")),
             onPressed: () {
+              accountSessionInstance.fetchSubjectFee();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectFeeView()),
@@ -92,6 +95,7 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_accounttrainstats")),
             onPressed: () {
+              accountSessionInstance.fetchTrainingResult();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TrainingResultView()),

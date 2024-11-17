@@ -47,10 +47,7 @@ class AccountMobileView extends StatelessWidget {
                         context.showSnackBar(SnackBar(
                           content: Text(AppLocalizations.of(context).translate("account_login_successful")),
                         ));
-                        accountSession.fetchSubjectInformation();
-                        accountSession.fetchSubjectFee();
                         accountSession.fetchStudentInformation();
-                        accountSession.fetchTrainingResult();
                         break;
                       case ProcessState.failed:
                       case ProcessState.notRunYet:

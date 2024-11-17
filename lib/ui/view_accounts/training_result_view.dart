@@ -22,36 +22,71 @@ class TrainingResultView extends StatelessWidget {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_trainingstatus_title")),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TrainingSummary(
-                score: accountSession.trainingResult.data?.trainingSummary.avgTrainingScore4 ?? 0,
-                schoolYearUpdated: accountSession.trainingResult.data?.trainingSummary.schoolYearCurrent,
-                onClick: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SubjectResultView()),
-                  );
-                },
-              ),
-              GraduateSummary(graduateStatus: accountSession.trainingResult.data?.graduateStatus),
-            ],
-          ),
-        ),
-      ),
+      body: !_shouldShowLoadingScreen(accountSession)
+          ? _mainScreenData(context, accountSession)
+          : accountSession.trainingResult.state == ProcessState.running
+              ? _mainScreenLoading(context)
+              : _mainScreenNoData(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async => await accountSession.fetchTrainingResult(),
+        onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),
         child: accountSession.trainingResult.state == ProcessState.running
             ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
             : const Icon(Icons.refresh),
       ),
       // bottomNavigationBar: BottomAppBar(color: Colors.transparent),
+    );
+  }
+
+  bool _shouldShowLoadingScreen(AccountSessionInstance instance) {
+    return instance.trainingResult.data != null ? false : instance.trainingResult.state == ProcessState.running;
+  }
+
+  Widget _mainScreenData(BuildContext context, AccountSessionInstance accountSession) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TrainingSummary(
+              score: accountSession.trainingResult.data?.trainingSummary.avgTrainingScore4 ?? 0,
+              schoolYearUpdated: accountSession.trainingResult.data?.trainingSummary.schoolYearCurrent,
+              onClick: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SubjectResultView()),
+                );
+              },
+            ),
+            GraduateSummary(graduateStatus: accountSession.trainingResult.data?.graduateStatus),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _mainScreenLoading(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _mainScreenNoData(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Center(
+        child: Text(
+          AppLocalizations.of(context).translate("account_trainingstatus_nodata"),
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }

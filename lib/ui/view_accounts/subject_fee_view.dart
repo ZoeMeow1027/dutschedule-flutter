@@ -27,7 +27,7 @@ class SubjectFeeView extends StatelessWidget {
           (accountSession.subjectFeeList.state == ProcessState.running && accountSession.subjectFeeList.data.isEmpty)
               ? null
               : FloatingActionButton(
-                  onPressed: () async => await accountSession.fetchSubjectFee(),
+                  onPressed: () async => await accountSession.fetchSubjectFee(forceRequest: true),
                   child: accountSession.subjectFeeList.state == ProcessState.running
                       ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
                       : const Icon(Icons.refresh),
