@@ -62,10 +62,20 @@ class SettingsInstance extends ChangeNotifier with BaseViewModel {
   bool _newsBackgroundParseNewsSubject = false;
 
   /// Enable or disable app dark theme.
-  ThemeMode themeMode = ThemeMode.system;
+  ThemeMode get themeMode => _themeMode;
+  set themeMode(ThemeMode value) {
+    _themeMode = value;
+    notifyListeners();
+  }
+  ThemeMode _themeMode = ThemeMode.system;
 
-  /// Follow color from
-  bool accentColor = false;
+  /// Follow accent color from system
+  bool get accentColor => _accentColor;
+  set accentColor(bool value) {
+    _accentColor = value;
+    notifyListeners();
+  }
+  bool _accentColor = true;
 
   /// Set background image option.
   BackgroundImageOption get backgroundImageOption => _backgroundImageOption;
