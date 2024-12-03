@@ -74,10 +74,10 @@ class NewsSummaryListView extends StatelessWidget {
                     forceRequest: true,
                   );
                 } catch (ex) {
-                  context.clearSnackBars();
-                  context.showSnackBar(SnackBar(
+                  context.showCustomSnackBar(
                     content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-                  ));
+                    dismissOld: true,
+                  );
                 }
               },
             ),
@@ -100,10 +100,10 @@ class NewsSummaryListView extends StatelessWidget {
                     forceRequest: true,
                   );
                 } catch (ex) {
-                  context.clearSnackBars();
-                  context.showSnackBar(SnackBar(
+                  context.showCustomSnackBar(
                     content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-                  ));
+                    dismissOld: true,
+                  );
                 }
               },
             ),
@@ -138,10 +138,10 @@ class NewsSummaryListView extends StatelessWidget {
                   break;
               }
             } catch (ex) {
-              context.clearSnackBars();
-              context.showSnackBar(SnackBar(
+              context.showCustomSnackBar(
                 content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-              ));
+                dismissOld: true,
+              );
             }
           },
         ),

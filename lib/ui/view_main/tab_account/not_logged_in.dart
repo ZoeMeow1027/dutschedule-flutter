@@ -159,8 +159,10 @@ class AccountNotLoggedInView extends StatelessWidget {
                     AppUtils.launchOwnUrl(
                       GlobalVariables.repoLinkForgotPassword,
                       onFailed: () {
-                        context.clearSnackBars();
-                        context.showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).translate("link_failed"))));
+                        context.showCustomSnackBar(
+                          content: Text(AppLocalizations.of(context).translate("link_failed")),
+                          dismissOld: true,
+                        );
                       },
                     );
                   }

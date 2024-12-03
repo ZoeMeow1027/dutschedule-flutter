@@ -35,25 +35,26 @@ class AccountMobileView extends StatelessWidget {
                     password: mainViewModel.accountParameter["password"] as String?,
                   ),
                   beforeRun: () {
-                    context.clearSnackBars();
-                    context.showSnackBar(SnackBar(
+                    context.showCustomSnackBar(
                       content: Text(AppLocalizations.of(context).translate("account_login_loggingin")),
-                    ));
+                      dismissOld: true,
+                    );
                   },
                   afterRun: () {
-                    context.clearSnackBars();
                     switch (accountSession.accountSession.state) {
                       case ProcessState.successful:
-                        context.showSnackBar(SnackBar(
+                        context.showCustomSnackBar(
                           content: Text(AppLocalizations.of(context).translate("account_login_successful")),
-                        ));
+                          dismissOld: true,
+                        );
                         accountSession.fetchStudentInformation();
                         break;
                       case ProcessState.failed:
                       case ProcessState.notRunYet:
-                        context.showSnackBar(SnackBar(
+                        context.showCustomSnackBar(
                           content: Text(AppLocalizations.of(context).translate("account_login_failed")),
-                        ));
+                          dismissOld: true,
+                        );
                         break;
                       default:
                         break;

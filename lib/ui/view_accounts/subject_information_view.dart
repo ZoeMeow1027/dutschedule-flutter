@@ -6,6 +6,7 @@ import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
+import '../components/widget_account/subject_detail_info.dart';
 import '../components/widget_account/subject_info_item.dart';
 
 class SubjectInformationView extends StatelessWidget {
@@ -40,7 +41,15 @@ class SubjectInformationView extends StatelessWidget {
             ? _onData(
                 context: context,
                 subInfoList: accountSession.subjectInformationList.data,
-                onClick: () {},
+                onClick: (subjectInfo) async {
+                  await showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) => SubjectDetailInfo(
+                      subjectInfo: subjectInfo,
+                    ),
+                  );
+                },
               )
             : accountSession.subjectInformationList.state ==
                     ProcessState.running
@@ -108,7 +117,7 @@ class SubjectInformationView extends StatelessWidget {
   Widget _onData({
     required BuildContext context,
     required List<SubjectInformation> subInfoList,
-    Function()? onClick,
+    Function(SubjectInformation)? onClick,
   }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -122,7 +131,7 @@ class SubjectInformationView extends StatelessWidget {
                 (index) {
                   return SubjectInfoItem(
                     subjectInfo: subInfoList.elementAt(index),
-                    onClick: () => onClick?.call(),
+                    onClick: () => onClick?.call(subInfoList.elementAt(index)),
                   );
                 },
               ),

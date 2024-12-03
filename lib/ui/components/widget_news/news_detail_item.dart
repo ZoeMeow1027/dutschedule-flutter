@@ -1,3 +1,4 @@
+import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -92,9 +93,10 @@ class NewsDetailItem extends StatelessWidget {
                                     AppUtils.launchOwnUrl(
                                       data[index].url!,
                                       onFailed: () {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        context.showCustomSnackBar(
                                           content: Text(AppLocalizations.of(context).translate("link_failed")),
-                                        ));
+                                          dismissOld: true,
+                                        );
                                       },
                                     );
                                   })
