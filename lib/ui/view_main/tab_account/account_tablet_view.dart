@@ -48,18 +48,18 @@ class AccountTabletView extends StatelessWidget {
                 password: mainViewModel.accountParameter["password"] as String?,
               ),
               beforeRun: () {
-                context.clearSnackBars();
-                context.showSnackBar(SnackBar(
+                context.showCustomSnackBar(
                   content: Text(AppLocalizations.of(context).translate("account_login_loggingin")),
-                ));
+                  dismissOld: true,
+                );
               },
               afterRun: () {
-                context.clearSnackBars();
                 switch (accountSession.accountSession.state) {
                   case ProcessState.successful:
-                    context.showSnackBar(SnackBar(
+                    context.showCustomSnackBar(
                       content: Text(AppLocalizations.of(context).translate("account_login_successful")),
-                    ));
+                      dismissOld: true,
+                    );
                     accountSession.fetchSubjectInformation();
                     accountSession.fetchSubjectFee();
                     accountSession.fetchStudentInformation();
@@ -67,9 +67,10 @@ class AccountTabletView extends StatelessWidget {
                     break;
                   case ProcessState.failed:
                   case ProcessState.notRunYet:
-                    context.showSnackBar(SnackBar(
+                    context.showCustomSnackBar(
                       content: Text(AppLocalizations.of(context).translate("account_login_failed")),
-                    ));
+                      dismissOld: true,
+                    );
                     break;
                   default:
                     break;
@@ -142,10 +143,10 @@ class AccountTabletView extends StatelessWidget {
                             onPressed: () {
                               Navigator.pop(context);
                               accountSession.logout(afterRun: () {
-                                context.clearSnackBars();
-                                context.showSnackBar(SnackBar(
+                                context.showCustomSnackBar(
                                   content: Text(AppLocalizations.of(context).translate("account_logout_loggedout")),
-                                ));
+                                  dismissOld: true,
+                                );
                               });
                             },
                           ),

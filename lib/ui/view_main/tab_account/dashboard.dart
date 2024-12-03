@@ -123,10 +123,10 @@ class AccountDashboardView extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                         accountSessionInstance.logout(afterRun: () {
-                          context.clearSnackBars();
-                          context.showSnackBar(SnackBar(
+                          context.showCustomSnackBar(
                             content: Text(AppLocalizations.of(context).translate("account_logout_loggedout")),
-                          ));
+                            dismissOld: true,
+                          );
                         });
                       },
                     ),

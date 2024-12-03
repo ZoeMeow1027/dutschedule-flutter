@@ -7,7 +7,25 @@ extension BuildContextExtension on BuildContext {
     return ScaffoldMessenger.of(this).clearSnackBars();
   }
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar, {AnimationStyle? snackBarAnimationStyle}) {
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showCustomSnackBar({
+    required Widget content,
+    AnimationStyle? snackBarAnimationStyle,
+    bool dismissOld = true,
+  }) {
+    if (dismissOld) {
+      clearSnackBars();
+    }
+    return showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: content,
+      ),
+      snackBarAnimationStyle: snackBarAnimationStyle,
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar,
+      {AnimationStyle? snackBarAnimationStyle}) {
     return ScaffoldMessenger.of(this).showSnackBar(snackBar, snackBarAnimationStyle: snackBarAnimationStyle);
   }
 
@@ -17,8 +35,8 @@ extension BuildContextExtension on BuildContext {
     return screenWidth <= 600
         ? DeviceType.phone
         : screenWidth <= 1000
-        ? DeviceType.tablet
-        : DeviceType.largeTabletAndDesktop;
+            ? DeviceType.tablet
+            : DeviceType.largeTabletAndDesktop;
   }
 
   bool isDarkMode() {

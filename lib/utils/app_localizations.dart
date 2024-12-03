@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'string_utils.dart';
+
 class AppLocalizations {
   final Locale locale;
   Map<String, String> _localizedStrings = {};
@@ -30,6 +32,11 @@ class AppLocalizations {
 
   String translate(String key) {
     return _localizedStrings[key] ?? key;
+  }
+
+  String translateWithParameters(String key, List<String?> args) {
+    var stringBase = _localizedStrings[key] ?? key;
+    return StringUtils.formatString(stringBase, args);
   }
 
   static AppLocalizations of(BuildContext context) {

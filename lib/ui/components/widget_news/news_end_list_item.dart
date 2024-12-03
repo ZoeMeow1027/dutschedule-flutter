@@ -8,6 +8,7 @@ class NewsEndListItem extends StatelessWidget {
     this.isRefreshing = false,
     this.refreshRequested,
   });
+
   final bool isRefreshing;
   final Function()? refreshRequested;
 
@@ -31,14 +32,20 @@ class NewsEndListItem extends StatelessWidget {
   }
 
   Widget _clickToRefresh(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          AppLocalizations.of(context).translate("news_endoflist_title"),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Text(
+              AppLocalizations.of(context).translate("news_endoflist_title"),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -54,9 +61,11 @@ class NewsEndListItem extends StatelessWidget {
             child: CircularProgressIndicator(),
           ),
         ),
-        Text(
-          AppLocalizations.of(context).translate("news_endoflist_refreshing"),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        Flexible(
+          child: Text(
+            AppLocalizations.of(context).translate("news_endoflist_refreshing"),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
         ),
       ],
     );
