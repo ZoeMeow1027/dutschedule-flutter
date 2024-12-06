@@ -10,145 +10,188 @@ class SubjectDetailInfo extends StatelessWidget {
     super.key,
     required this.subjectInfo,
     this.onClickAddToFilter,
+    this.onAddToFilter,
   });
 
   final SubjectInformation subjectInfo;
   final Function()? onClickAddToFilter;
+  final Function()? onAddToFilter;
 
   @override
   Widget build(BuildContext context) {
-    var dateStr = DateFormat("EEEE, dd/MM/yyyy HH:mm", Localizations.localeOf(context).toString()).format(
+    var dateStr = DateFormat("EEEE, dd/MM/yyyy HH:mm",
+            Localizations.localeOf(context).toString())
+        .format(
       DateTime.fromMillisecondsSinceEpoch(subjectInfo.subjectExam.date),
     );
 
     return FractionallySizedBox(
       heightFactor: 0.75,
       child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 15),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${subjectInfo.name}\n${subjectInfo.lecturerName}",
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Text(
-                AppLocalizations.of(context).translateWithParameters("account_subjectinfo_data_id", [
-                  StringUtils.formatString("{0}.{1}.{2}.{3}", [
-                    subjectInfo.id.subjectId,
-                    subjectInfo.id.schoolYearId,
-                    subjectInfo.id.studentYearId,
-                    subjectInfo.id.classId
-                  ])
-                ]),
-              ),
-              Text(
-                AppLocalizations.of(context).translateWithParameters(
-                  "account_subjectinfo_data_credit",
-                  [subjectInfo.credit.toString()],
-                ),
-              ),
-              Text(
-                AppLocalizations.of(context).translateWithParameters(
-                  "account_subjectinfo_data_ishighquality",
-                  [subjectInfo.isHighQuality.toString()],
-                ),
-              ),
-              Text(
-                AppLocalizations.of(context).translateWithParameters(
-                  "account_subjectinfo_data_scoreformula",
-                  [subjectInfo.pointFormula],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5, bottom: 5),
-                child: Card.outlined(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context).translate("account_subjectinfo_data_schedulestudy_title"),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            AppLocalizations.of(context).translateWithParameters(
-                              "account_subjectinfo_data_schedulestudy_dayofweek",
-                              [
-                                subjectInfo.subjectStudy.subjectStudyList
-                                    .map((p) => "${p.dayOfWeek}-${p.lesson.toString()}-${p.room}")
-                                    .join(", ")
-                              ],
-                            ),
-                          ),
-                          Text(
-                            AppLocalizations.of(context).translateWithParameters(
-                              "account_subjectinfo_data_schedulestudy_weekrange",
-                              [subjectInfo.subjectStudy.weekList.map((p) => p.toString()).join(", ")],
-                            ),
-                          ),
-                        ],
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "${subjectInfo.name}\n${subjectInfo.lecturerName}",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                ),
-              ),
-              Card.outlined(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context).translate("account_subjectinfo_data_scheduleexam_title"),
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          AppLocalizations.of(context).translateWithParameters(
-                            "account_subjectinfo_data_scheduleexam_group",
-                            [
-                              subjectInfo.subjectStudy.weekList.map((p) => p.toString()).join(", "),
-                              subjectInfo.subjectExam.isGlobal
-                                  ? AppLocalizations.of(context)
-                                      .translate("account_subjectinfo_data_scheduleexam_groupglobal")
-                                  : "",
+                  Text(
+                    AppLocalizations.of(context).translateWithParameters(
+                        "account_subjectinfo_data_id", [
+                      StringUtils.formatString("{0}.{1}.{2}.{3}", [
+                        subjectInfo.id.subjectId,
+                        subjectInfo.id.schoolYearId,
+                        subjectInfo.id.studentYearId,
+                        subjectInfo.id.classId
+                      ])
+                    ]),
+                  ),
+                  Text(
+                    AppLocalizations.of(context).translateWithParameters(
+                      "account_subjectinfo_data_credit",
+                      [subjectInfo.credit.toString()],
+                    ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context).translateWithParameters(
+                      "account_subjectinfo_data_ishighquality",
+                      [subjectInfo.isHighQuality.toString()],
+                    ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context).translateWithParameters(
+                      "account_subjectinfo_data_scoreformula",
+                      [subjectInfo.pointFormula],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 5),
+                    child: Card.outlined(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 7),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalizations.of(context).translate(
+                                      "account_subjectinfo_data_schedulestudy_title"),
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)
+                                    .translateWithParameters(
+                                  "account_subjectinfo_data_schedulestudy_dayofweek",
+                                  [
+                                    subjectInfo.subjectStudy.subjectStudyList
+                                        .map((p) =>
+                                            "${p.dayOfWeek}-${p.lesson.toString()}-${p.room}")
+                                        .join(", ")
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)
+                                    .translateWithParameters(
+                                  "account_subjectinfo_data_schedulestudy_weekrange",
+                                  [
+                                    subjectInfo.subjectStudy.weekList
+                                        .map((p) => p.toString())
+                                        .join(", ")
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Text(
-                          AppLocalizations.of(context).translateWithParameters(
-                            "account_subjectinfo_data_scheduleexam_date",
-                            [dateStr],
-                          ),
-                        ),
-                        Text(
-                          AppLocalizations.of(context).translateWithParameters(
-                            "account_subjectinfo_data_scheduleexam_room",
-                            [subjectInfo.subjectExam.room],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Card.outlined(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 7),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: Text(
+                                AppLocalizations.of(context).translate(
+                                    "account_subjectinfo_data_scheduleexam_title"),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)
+                                  .translateWithParameters(
+                                "account_subjectinfo_data_scheduleexam_group",
+                                [
+                                  subjectInfo.subjectExam.group,
+                                  subjectInfo.subjectExam.isGlobal
+                                      ? AppLocalizations.of(context).translate(
+                                          "account_subjectinfo_data_scheduleexam_groupglobal")
+                                      : "",
+                                ],
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)
+                                  .translateWithParameters(
+                                "account_subjectinfo_data_scheduleexam_date",
+                                [dateStr],
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)
+                                  .translateWithParameters(
+                                "account_subjectinfo_data_scheduleexam_room",
+                                [subjectInfo.subjectExam.room],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerRight,
+              child: FloatingActionButton.extended(
+                onPressed: onAddToFilter,
+                icon: Icon(Icons.add),
+                label: Text("Add to filter"),
+              ),
+            ),
+          ],
         ),
       ),
     );
