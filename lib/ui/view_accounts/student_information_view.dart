@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/object_to_map_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../components/widget_account/student_info_item.dart';
 
@@ -64,12 +65,13 @@ class StudentInformationView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: List.generate(
-              (accountSession.studentInformation.data?.toMap().entries.length ?? 0),
+              ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.length,
+              // (accountSession.studentInformation.data?.toMap().entries.length ?? 0),
               (index) {
-                if (accountSession.studentInformation.data?.toMap().entries.elementAt(index).value != null) {
+                if (ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).value != null) {
                   return StudentInfoItem(
-                    name: accountSession.studentInformation.data?.toMap().entries.elementAt(index).key,
-                    value: accountSession.studentInformation.data?.toMap().entries.elementAt(index).value,
+                    name: ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).key,
+                    value: ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).value,
                   );
                 } else {
                   return Container();

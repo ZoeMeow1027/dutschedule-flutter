@@ -99,15 +99,15 @@ class _SubjectResultViewState extends State<SubjectResultView> {
           (_filterEnabled || _selectedFilterIndex == 0)
               ? Container()
               : Text(StringUtils.formatString(
-            AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_filteredschyear"),
-            [_allFilters.elementAt(_selectedFilterIndex)],
-          )),
+                  AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_filteredschyear"),
+                  [_allFilters.elementAt(_selectedFilterIndex)],
+                )),
           (_filterEnabled || _filterQuery.isEmpty)
               ? Container()
               : Text(StringUtils.formatString(
-            AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_filteredquery"),
-            [_filterQuery],
-          )),
+                  AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_filteredquery"),
+                  [_filterQuery],
+                )),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -188,27 +188,30 @@ class _SubjectResultViewState extends State<SubjectResultView> {
                 ),
           !_filterEnabled
               ? Container()
-              : DropdownButtonFormField<String>(
+              : Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(), // Optional: for a boxed effect
-                    contentPadding: EdgeInsets.all(12),
-                    label: Text(
-                      AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_schoolyear"),
+                  child: DropdownButtonFormField<String>(
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(), // Optional: for a boxed effect
+                      contentPadding: EdgeInsets.all(12),
+                      label: Text(
+                        AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_schoolyear"),
+                      ),
                     ),
-                  ),
-                  value: _allFilters.elementAt(_selectedFilterIndex),
-                  onChanged: (String? str) {
-                    if (str == null) {
-                      return;
-                    }
-                    setState(() {
-                      _selectedFilterIndex = _allFilters.indexOf(str) > 0 ? _allFilters.indexOf(str) : 0;
-                    });
-                  },
-                  items: _convertAllToDropdownMenuItem(
-                    context,
-                    accountSession.trainingResult.data?.subjectResultList.reversed.toList() ?? [],
+                    value: _allFilters.elementAt(_selectedFilterIndex),
+                    onChanged: (String? str) {
+                      if (str == null) {
+                        return;
+                      }
+                      setState(() {
+                        _selectedFilterIndex = _allFilters.indexOf(str) > 0 ? _allFilters.indexOf(str) : 0;
+                      });
+                    },
+                    items: _convertAllToDropdownMenuItem(
+                      context,
+                      accountSession.trainingResult.data?.subjectResultList.reversed.toList() ?? [],
+                    ),
                   ),
                 ),
           !_filterEnabled

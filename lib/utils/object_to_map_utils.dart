@@ -33,4 +33,31 @@ class ObjectToMapUtils {
       ),
     };
   }
+
+  static Map<String, String?> fromStudentInformation({
+    required BuildContext context,
+    required StudentInformation? st,
+  }) {
+    if (st == null) {
+      return {};
+    }
+    return {
+      AppLocalizations.of(context).translate("account_accinfo_item_name"): st.name,
+      AppLocalizations.of(context).translate("account_accinfo_item_dateofbirth"): st.dateOfBirth,
+      AppLocalizations.of(context).translate("account_accinfo_item_placeofbirth"): st.birthPlace,
+      AppLocalizations.of(context).translate("account_accinfo_item_gender"): st.gender,
+      AppLocalizations.of(context).translate("account_accinfo_item_citizencardid"): st.citizenIdCard,
+      AppLocalizations.of(context).translate("account_accinfo_item_citizencarddate"): st.citizenIdCardIssueDate,
+      AppLocalizations.of(context).translate("account_accinfo_item_bankcardid"): StringUtils.formatString("{0} ({1})", [
+        st.accountBankId,
+        st.accountBankName,
+      ]),
+      AppLocalizations.of(context).translate("account_accinfo_item_personalemail"): st.personalEmail,
+      AppLocalizations.of(context).translate("account_accinfo_item_phonenumber"): st.phoneNumber,
+      AppLocalizations.of(context).translate("account_accinfo_item_class"): st.schoolClass,
+      AppLocalizations.of(context).translate("account_accinfo_item_specialization"): st.specialization,
+      AppLocalizations.of(context).translate("account_accinfo_item_trainingprogramplan"): st.trainingProgramPlan,
+      AppLocalizations.of(context).translate("account_accinfo_item_schoolemail"): st.schoolEmail,
+    };
+  }
 }
