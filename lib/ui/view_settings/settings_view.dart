@@ -12,7 +12,9 @@ import '../components/listview_group_item.dart';
 import '../components/list_view_option_item.dart';
 import '../components/widget_settings/theme_mode_dialog.dart';
 import 'about_view.dart';
+import 'experiment_settings_view.dart';
 import 'languages_view.dart';
+import 'parse_news_subject_notifications_view.dart';
 import 'wallpaper_and_style_view.dart';
 
 class SettingsView extends StatelessWidget {
@@ -48,6 +50,12 @@ class SettingsView extends StatelessWidget {
                       ? AppLocalizations.of(context).translate("settings_newsnotify_parsenewssubject_enabled")
                       : AppLocalizations.of(context).translate("settings_newsnotify_parsenewssubject_disabled"),
                   leading: Icon(Icons.calendar_month),
+                  onClick: () async => await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ParseNewsSubjectNotificationsView(),
+                    ),
+                  ),
                 ),
                 ListViewOptionItem(
                   title: AppLocalizations.of(context).translate("settings_option_notificationoutside"),
@@ -166,6 +174,12 @@ class SettingsView extends StatelessWidget {
                   title: AppLocalizations.of(context).translate("settings_option_experiemntsettings"),
                   description: AppLocalizations.of(context).translate("settings_option_experiemntsettings_description"),
                   leading: Icon(Icons.science),
+                  onClick: () async => await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExperimentSettingsView(),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
@@ -18,92 +19,104 @@ class NewsSearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     final newsSearchInstance = Provider.of<NewsSearchInstance>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: _titleBar(
-            context: context,
-            newsSearchInstance: newsSearchInstance,
-            onTap: () async {
-              newsSearchInstance.newsSearchQueryTextControl.clear();
-              await Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    final fadeInOut = CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOut,
-                    );
+    // focus node to capture keyboard events
+    final FocusNode focusNode = FocusNode();
 
-                    return FadeTransition(
-                      opacity: fadeInOut,
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            }),
-        actions: [
-          newsSearchInstance.searchQuery.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: IconButton(
-                    onPressed: () async {
-                      newsSearchInstance.newsSearchQueryTextControl.clear();
-                      await Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            final fadeInOut = CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.easeInOut,
-                            );
-
-                            return FadeTransition(
-                              opacity: fadeInOut,
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    icon: newsSearchInstance.searchProcessState == ProcessState.running
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(),
-                          )
-                        : Icon(Icons.search),
-                  ),
-                )
-              : Container(),
-        ],
-      ),
-      body: newsSearchInstance.searchResult.isNotEmpty
-          ? _haveResults(
+    return KeyboardListener(
+      autofocus: true,
+      onKeyEvent: (event) {
+        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.escape) {
+          Navigator.pop(context);
+        }
+      },
+      focusNode: focusNode,
+      child: Scaffold(
+        appBar: AppBar(
+          title: _titleBar(
               context: context,
-              newsList: newsSearchInstance.searchResult,
-              isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
-              endListReached: () => newsSearchInstance.fetchSearchRun(),
-              refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
-              onClick: (news) async {
+              newsSearchInstance: newsSearchInstance,
+              onTap: () async {
+                newsSearchInstance.newsSearchQueryTextControl.clear();
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => NewsDetailView(
-                      newsItem: news,
-                      isNewsSubject: newsSearchInstance.newsType == NewsType.global,
-                    ),
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      final fadeInOut = CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      );
+
+                      return FadeTransition(
+                        opacity: fadeInOut,
+                        child: child,
+                      );
+                    },
                   ),
                 );
-              },
+              }),
+          actions: [
+            newsSearchInstance.searchQuery.isNotEmpty
+                ? Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: IconButton(
+                onPressed: () async {
+                  newsSearchInstance.newsSearchQueryTextControl.clear();
+                  await Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        final fadeInOut = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeInOut,
+                        );
+
+                        return FadeTransition(
+                          opacity: fadeInOut,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                icon: newsSearchInstance.searchProcessState == ProcessState.running
+                    ? SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                )
+                    : Icon(Icons.search),
+              ),
             )
-          : newsSearchInstance.searchProcessState == ProcessState.running
-              ? _loading(context)
-              : newsSearchInstance.searchProcessState == ProcessState.notRunYet
-                  ? _notRunYet(context)
-                  : _noAnyResult(context),
+                : Container(),
+          ],
+        ),
+        body: newsSearchInstance.searchResult.isNotEmpty
+            ? _haveResults(
+          context: context,
+          newsList: newsSearchInstance.searchResult,
+          isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
+          endListReached: () => newsSearchInstance.fetchSearchRun(),
+          refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
+          onClick: (news) async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewsDetailView(
+                  newsItem: news,
+                  isNewsSubject: newsSearchInstance.newsType == NewsType.global,
+                ),
+              ),
+            );
+          },
+        )
+            : newsSearchInstance.searchProcessState == ProcessState.running
+            ? _loading(context)
+            : newsSearchInstance.searchProcessState == ProcessState.notRunYet
+            ? _notRunYet(context)
+            : _noAnyResult(context),
+      ),
     );
   }
 
