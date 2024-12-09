@@ -35,8 +35,8 @@ class SwitchWithSurface extends StatelessWidget {
           width: width,
           decoration: BoxDecoration(
             color: isEnabled
-                ? Theme.of(context).buttonTheme.colorScheme?.onPrimary
-                : Theme.of(context).buttonTheme.colorScheme?.onSecondary,
+                ? Theme.of(context).buttonTheme.colorScheme?.primaryContainer
+                : Theme.of(context).buttonTheme.colorScheme?.secondaryContainer,
             borderRadius: BorderRadius.circular(30.0),
           ),
           alignment: Alignment.center,

@@ -12,15 +12,18 @@ class SettingsInstance extends ChangeNotifier with BaseViewModel {
   @override
   Future<void> initializing() async {}
 
-  /// News background duration (in minutes).
+  /// News background timeout duration (in minutes, must be larger than 5).
+  /// Set to 0 to disable this function.
   int get newsBackgroundDuration => _newsBackgroundDuration;
   set newsBackgroundDuration(int value) {
     if (value < 0) {
       return;
     }
 
-    if (value < 5) {
-      value = 5;
+    if (value != 0) {
+      if (value < 5) {
+        value = 5;
+      }
     }
 
     _newsBackgroundDuration = value;
@@ -51,7 +54,25 @@ class SettingsInstance extends ChangeNotifier with BaseViewModel {
   NewsBackgroundSubjectType _newsBackgroundSubjectEnabled = NewsBackgroundSubjectType.allNews;
 
   ///
-  List<BackgroundSubjectCode> newsBackgroundFilterList = [];
+  List<BackgroundSubjectCode> newsBackgroundFilterList = [
+    BackgroundSubjectCode(studentYearId: "18", classId: "12", subjectName: "Subject 1"),
+    BackgroundSubjectCode(studentYearId: "19", classId: "12", subjectName: "Subject 2"),
+    BackgroundSubjectCode(studentYearId: "20", classId: "12", subjectName: "Subject 3"),
+    BackgroundSubjectCode(studentYearId: "21", classId: "12", subjectName: "Subject 4"),
+    BackgroundSubjectCode(studentYearId: "17", classId: "12", subjectName: "Subject 5"),
+  ];
+  void addNewsBackgroundFilter(BackgroundSubjectCode filter) {
+    newsBackgroundFilterList.add(filter);
+    notifyListeners();
+  }
+  void removeNewsBackgroundFilter(BackgroundSubjectCode filter) {
+    newsBackgroundFilterList.remove(filter);
+    notifyListeners();
+  }
+  void removeAllNewsBackgroundFilters() {
+    newsBackgroundFilterList.clear();
+    notifyListeners();
+  }
 
   ///
   bool get newsBackgroundParseNewsSubject => _newsBackgroundParseNewsSubject;
