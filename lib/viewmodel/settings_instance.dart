@@ -120,7 +120,7 @@ class SettingsInstance extends ChangeNotifier with BaseViewModel {
   /// Adjust school year. This will affect almost functions in `Accounts` screen.
   SchoolYear get currentSchoolYear => _currentSchoolYear;
   set currentSchoolYear(SchoolYear value) {
-    _currentSchoolYear = value;
+    _currentSchoolYear = SchoolYear(year: value.year, semester: value.semester);
     notifyListeners();
   }
   SchoolYear _currentSchoolYear = SchoolYear(year: 24, semester: 1);
@@ -139,7 +139,12 @@ class SettingsInstance extends ChangeNotifier with BaseViewModel {
   /// * `false`: News will open in new activity.
   ///
   /// Since v2.0-draft19
-  bool openNewsInModalBottomSheet = true;
+  bool get openNewsInModalBottomSheet => _openNewsInModalBottomSheet;
+  set openNewsInModalBottomSheet(bool value) {
+    _openNewsInModalBottomSheet = value;
+    notifyListeners();
+  }
+  bool _openNewsInModalBottomSheet = true;
 
   Map<String, dynamic> toMap() {
     return {
