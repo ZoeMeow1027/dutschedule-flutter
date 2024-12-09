@@ -10,10 +10,12 @@ class ListViewOptionItem extends StatelessWidget {
     this.leading,
     this.trailing,
     this.onClick,
+    this.contentPadding = const EdgeInsets.only(top: 12, bottom: 12, left: 20, right: 20),
   });
 
   final String title;
   final String? description;
+  final EdgeInsets contentPadding;
   final Widget? leading;
   final Widget? trailing;
   final Function()? onClick;
@@ -22,7 +24,7 @@ class ListViewOptionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return OptionItem(
       title: title,
-      paddingInside: const EdgeInsets.only(top: 12, bottom: 15, left: 20, right: 20),
+      paddingInside: contentPadding,
       description: description,
       leading: leading,
       trailing: trailing,

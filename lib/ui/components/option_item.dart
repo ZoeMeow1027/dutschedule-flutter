@@ -8,15 +8,19 @@ class OptionItem extends StatelessWidget {
     this.description,
     this.leading,
     this.trailing,
+    this.color,
     this.onClick,
+    this.roundSize = 0,
   });
 
+  final Color? color;
   final EdgeInsets paddingInside;
   final String title;
   final String? description;
   final Widget? leading;
   final Widget? trailing;
   final Function()? onClick;
+  final double roundSize;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,10 @@ class OptionItem extends StatelessWidget {
         onTap: () => onClick?.call(),
         child: Container(
           padding: paddingInside,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(roundSize),
+          ),
           alignment: Alignment.centerLeft,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
