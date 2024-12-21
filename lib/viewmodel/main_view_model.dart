@@ -35,7 +35,6 @@ class MainViewModel extends ChangeNotifier with BaseViewModel {
     newsSelectedIsSubject = isNewsSubject;
     notifyListeners();
   }
-
   // End news page
 
   // Account page
@@ -45,5 +44,5 @@ class MainViewModel extends ChangeNotifier with BaseViewModel {
     accountParameter[key] = value;
     notifyListeners();
   }
-// End accôunt page
+  // End account page
 }

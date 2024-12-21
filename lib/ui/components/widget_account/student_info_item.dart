@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
+import '../../../utils/string_utils.dart';
 
 class StudentInfoItem extends StatelessWidget {
   const StudentInfoItem({
     super.key,
     required this.name,
     required this.value,
+    this.onCopy,
   });
 
   final String? name;
   final String? value;
+  final Function(String)? onCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,15 @@ class StudentInfoItem extends StatelessWidget {
               ],
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                onCopy?.call(StringUtils.formatString(
+                  "{0}: {1}",
+                  [
+                    name ?? AppLocalizations.of(context).translate("data_unknown"),
+                    value ?? AppLocalizations.of(context).translate("data_unknown")
+                  ],
+                ));
+              },
               icon: Icon(Icons.copy),
             ),
           ],

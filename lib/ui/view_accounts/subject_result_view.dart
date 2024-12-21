@@ -1,5 +1,7 @@
+import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
@@ -155,6 +157,20 @@ class _SubjectResultViewState extends State<SubjectResultView> {
                             builder: (BuildContext context) => SubjectResultBottomSheet(
                               subjectName: dataItem.name,
                               subjectResult: dataItem,
+                              onClickToCopy: (copiedString) {
+                                if (copiedString.isNotEmpty) {
+                                  Clipboard.setData(ClipboardData(text: copiedString));
+                                  context.showCustomSnackBar(
+                                    content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
+                                    dismissOld: true,
+                                  );
+                                } else {
+                                  context.showCustomSnackBar(
+                                    content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
+                                    dismissOld: true,
+                                  );
+                                }
+                              },
                             ),
                           );
                         },
