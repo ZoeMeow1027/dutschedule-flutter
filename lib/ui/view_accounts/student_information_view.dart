@@ -1,4 +1,6 @@
+import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
@@ -43,8 +45,10 @@ class StudentInformationView extends StatelessWidget {
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(8),
               ),
-              waitDuration: Duration(milliseconds: 500), // Time before tooltip shows
-              showDuration: Duration(seconds: 2), // Time tooltip stays visible
+              waitDuration: Duration(milliseconds: 500),
+              // Time before tooltip shows
+              showDuration: Duration(seconds: 2),
+              // Time tooltip stays visible
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -65,13 +69,40 @@ class StudentInformationView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: List.generate(
-              ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.length,
+              ObjectToMapUtils.fromStudentInformation(
+                context: context,
+                st: accountSession.studentInformation.data,
+              ).entries.length,
               // (accountSession.studentInformation.data?.toMap().entries.length ?? 0),
               (index) {
-                if (ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).value != null) {
+                if (ObjectToMapUtils.fromStudentInformation(
+                      context: context,
+                      st: accountSession.studentInformation.data,
+                    ).entries.elementAt(index).value !=
+                    null) {
                   return StudentInfoItem(
-                    name: ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).key,
-                    value: ObjectToMapUtils.fromStudentInformation(context: context, st: accountSession.studentInformation.data).entries.elementAt(index).value,
+                    name: ObjectToMapUtils.fromStudentInformation(
+                      context: context,
+                      st: accountSession.studentInformation.data,
+                    ).entries.elementAt(index).key,
+                    value: ObjectToMapUtils.fromStudentInformation(
+                      context: context,
+                      st: accountSession.studentInformation.data,
+                    ).entries.elementAt(index).value,
+                    onCopy: (copiedString) {
+                      if (copiedString.isNotEmpty) {
+                        Clipboard.setData(ClipboardData(text: copiedString));
+                        context.showCustomSnackBar(
+                          content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
+                          dismissOld: true,
+                        );
+                      } else {
+                        context.showCustomSnackBar(
+                          content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
+                          dismissOld: true,
+                        );
+                      }
+                    },
                   );
                 } else {
                   return Container();

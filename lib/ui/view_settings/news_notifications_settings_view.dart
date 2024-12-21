@@ -41,6 +41,73 @@ class NewsNotificationsSettingsView extends StatelessWidget {
               },
             ),
             ListViewGroupItem(
+              padding: EdgeInsets.only(top: 10),
+              title: AppLocalizations.of(context).translate("settings_newsnotify_category_notification"),
+              dividerOnBottom: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 10),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).buttonTheme.colorScheme?.primaryContainer,
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).translate("settings_newsnotify_fetchnewsinbackground_duration"),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        if (settingsInstance.newsBackgroundDuration == 0)
+                          Text(AppLocalizations.of(context)
+                              .translate("settings_newsnotify_fetchnewsinbackground_value_disabled")),
+                        if (settingsInstance.newsBackgroundDuration == 1)
+                          Text(AppLocalizations.of(context)
+                              .translate("settings_newsnotify_fetchnewsinbackground_value_enabled1")),
+                        if (settingsInstance.newsBackgroundDuration > 1)
+                          Text(AppLocalizations.of(context).translateWithParameters(
+                            "settings_newsnotify_fetchnewsinbackground_value_enabled2",
+                            [settingsInstance.newsBackgroundDuration.toString()],
+                          )),
+                        Slider(
+                          value: settingsInstance.newsBackgroundDuration.toDouble(),
+                          onChanged: (value) {
+                            settingsInstance.newsBackgroundDuration = value.toInt();
+                          },
+                          onChangeEnd: (value) {
+                            settingsInstance.newsBackgroundDuration = value.toInt();
+                            // TODO: Save changes here!
+                          },
+                          min: 0,
+                          max: 240,
+                          divisions: 241,
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 5,
+                          runSpacing: 5,
+                          children: <int>[15, 30, 60, 120, 240].map((duration) {
+                            return ActionChip(
+                              label: Text(AppLocalizations.of(context).translateWithParameters(
+                                "settings_newsnotify_fetchnewsinbackground_option_value2",
+                                [duration.toString()],
+                              )),
+                              onPressed: () {
+                                settingsInstance.newsBackgroundDuration = duration;
+                                // TODO: Save changes here!
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ListViewGroupItem(
               padding: const EdgeInsets.only(top: 10),
               title: AppLocalizations.of(context).translate("settings_newsnotify_newsglobal_title"),
               dividerOnBottom: true,

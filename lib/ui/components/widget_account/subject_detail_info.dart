@@ -93,6 +93,7 @@ class SubjectDetailInfo extends StatelessWidget {
                               Container(
                                 width: double.infinity,
                                 alignment: Alignment.center,
+                                padding: EdgeInsets.only(bottom: 5),
                                 child: Text(
                                   AppLocalizations.of(context).translate(
                                       "account_subjectinfo_data_schedulestudy_title"),
@@ -141,6 +142,7 @@ class SubjectDetailInfo extends StatelessWidget {
                             Container(
                               width: double.infinity,
                               alignment: Alignment.center,
+                              padding: EdgeInsets.only(bottom: 5),
                               child: Text(
                                 AppLocalizations.of(context).translate(
                                     "account_subjectinfo_data_scheduleexam_title"),

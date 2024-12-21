@@ -53,7 +53,7 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
     bool startOver = false,
   }) async {
     if (searchProcessState == ProcessState.running) {
-      log("[Search history] Running denied because of another task...");
+      log("[News Search] Running denied because of another task...");
       return;
     }
 
@@ -61,14 +61,14 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
     notifyListeners();
     beforeRun?.call();
 
-    log("[Search history] Running...");
+    log("[News Search] Running...");
     try {
       if (searchQueryTemp.isNotEmpty) {
         searchQuery = searchQueryTemp;
         searchQueryTemp = "";
       }
       if (searchQuery.isEmpty) {
-        log("[Search history] Running denied because search query is empty...");
+        log("[News Search] Running denied because search query is empty...");
         return;
       }
       var page = startOver ? 1 : _nextPage;
@@ -106,13 +106,13 @@ class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
       }
 
       searchProcessState = ProcessState.successful;
-      log("[Search history] Running successful!");
+      log("[News Search] Running successful!");
     } catch (ex) {
       searchProcessState = ProcessState.failed;
-      log("[Search history] Running failed!");
+      log("[News Search] Running failed!");
     } finally {
       _searchLastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Search history] End run.");
+      log("[News Search] End run.");
       notifyListeners();
       afterRun?.call();
     }

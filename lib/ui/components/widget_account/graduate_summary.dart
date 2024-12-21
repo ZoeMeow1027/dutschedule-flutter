@@ -2,15 +2,18 @@ import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
+import '../../../utils/string_utils.dart';
 import '../info_card.dart';
 
 class GraduateSummary extends StatelessWidget {
   const GraduateSummary({
     super.key,
     this.graduateStatus,
+    this.onCopy,
   });
 
   final GraduateStatus? graduateStatus;
+  final Function(String)? onCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +101,16 @@ class GraduateSummary extends StatelessWidget {
                 description: graduateStatus?.rewardsInfo,
                 showNoDataText: true,
                 trailingWidget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    onCopy?.call(StringUtils.formatString(
+                      "{0}: {1}",
+                      [
+                        AppLocalizations.of(context)
+                            .translate("account_trainingstatus_graduatebox_certandgraduateresult_rewards"),
+                        graduateStatus?.rewardsInfo ?? AppLocalizations.of(context).translate("data_unknown"),
+                      ],
+                    ));
+                  },
                   icon: Icon(Icons.copy),
                 ),
               ),
@@ -108,7 +120,16 @@ class GraduateSummary extends StatelessWidget {
                 description: graduateStatus?.disciplineInfo,
                 showNoDataText: true,
                 trailingWidget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    onCopy?.call(StringUtils.formatString(
+                      "{0}: {1}",
+                      [
+                        AppLocalizations.of(context)
+                            .translate("account_trainingstatus_graduatebox_certandgraduateresult_discipline"),
+                        graduateStatus?.disciplineInfo ?? AppLocalizations.of(context).translate("data_unknown"),
+                      ],
+                    ));
+                  },
                   icon: Icon(Icons.copy),
                 ),
               ),
@@ -118,7 +139,17 @@ class GraduateSummary extends StatelessWidget {
                 description: graduateStatus?.eligibleGraduationThesisStatus,
                 showNoDataText: true,
                 trailingWidget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    onCopy?.call(StringUtils.formatString(
+                      "{0}: {1}",
+                      [
+                        AppLocalizations.of(context).translate(
+                            "account_trainingstatus_graduatebox_certandgraduateresult_graduationthesisapproval"),
+                        graduateStatus?.eligibleGraduationThesisStatus ??
+                            AppLocalizations.of(context).translate("data_unknown"),
+                      ],
+                    ));
+                  },
                   icon: Icon(Icons.copy),
                 ),
               ),
@@ -128,7 +159,17 @@ class GraduateSummary extends StatelessWidget {
                 description: graduateStatus?.eligibleGraduationStatus,
                 showNoDataText: true,
                 trailingWidget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    onCopy?.call(StringUtils.formatString(
+                      "{0}: {1}",
+                      [
+                        AppLocalizations.of(context).translate(
+                            "account_trainingstatus_graduatebox_certandgraduateresult_graduationprocessapproval"),
+                        graduateStatus?.eligibleGraduationStatus ??
+                            AppLocalizations.of(context).translate("data_unknown"),
+                      ],
+                    ));
+                  },
                   icon: Icon(Icons.copy),
                 ),
               ),

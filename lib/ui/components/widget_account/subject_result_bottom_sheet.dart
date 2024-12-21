@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
 import '../../../utils/object_to_map_utils.dart';
+import '../../../utils/string_utils.dart';
 import '../info_card.dart';
 
 class SubjectResultBottomSheet extends StatelessWidget {
@@ -15,7 +16,7 @@ class SubjectResultBottomSheet extends StatelessWidget {
 
   final String subjectName;
   final SubjectResult subjectResult;
-  final Function()? onClickToCopy;
+  final Function(String)? onClickToCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +62,15 @@ class SubjectResultBottomSheet extends StatelessWidget {
                             child: InfoCard(
                               title: data.entries.elementAt(index).key,
                               description: data.entries.elementAt(index).value,
+                              trailingWidget: IconButton(
+                                onPressed: () {
+                                  onClickToCopy?.call(StringUtils.formatString(
+                                    "{0}: {1}",
+                                    [data.entries.elementAt(index).key, data.entries.elementAt(index).value],
+                                  ));
+                                },
+                                icon: Icon(Icons.copy),
+                              ),
                               showBorder: false,
                             ),
                           );
@@ -74,7 +84,12 @@ class SubjectResultBottomSheet extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: FilledButton(
                   onPressed: () {
-                    onClickToCopy?.call();
+                    onClickToCopy?.call(data.entries
+                        .map((p) {
+                          return StringUtils.formatString("{0}: {1}", [p.key, p.value]);
+                        })
+                        .toList()
+                        .join("\n"));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
