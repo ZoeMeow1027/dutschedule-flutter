@@ -33,6 +33,9 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
   collection: ^1.17.1
   dynamic_color: ^1.5.4
   intl: ^0.19.0
@@ -43,9 +46,7 @@ dependencies:
   theme_mode_handler: ^3.0.0
   url_launcher: ^6.1.8
   yaml: ^3.1.0
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  flutter_foreground_task: ^8.17.0
   # dutwrapper
   dutwrapper:
     git:

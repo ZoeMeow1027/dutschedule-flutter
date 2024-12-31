@@ -72,6 +72,7 @@ class ThemeModeDialog extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 25),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.info),
                     if (Platform.isAndroid)
