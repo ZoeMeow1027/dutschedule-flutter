@@ -11,6 +11,7 @@ import '../../../viewmodel/news_search_instance.dart';
 import '../../components/widget_news/news_list.dart';
 import '../../../model/enum/news_tab_location.dart';
 import '../../view_news/news_search_view.dart';
+import '../../view_settings/settings_view.dart';
 
 class NewsSummaryListView extends StatelessWidget {
   const NewsSummaryListView({
@@ -32,7 +33,7 @@ class NewsSummaryListView extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 5),
-            child: IconButton(
+            child: FilledButton.tonalIcon(
               onPressed: () async {
                 newsSearchInstance.resetQueryAndResult();
                 await Navigator.push(
@@ -40,9 +41,19 @@ class NewsSummaryListView extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => NewsSearchView()),
                 );
               },
-              icon: Icon(Icons.search),
+              icon: Icon(Icons.search, size: 26),
+              label: Text("Search news"),
             ),
-          )
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsView()),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
         ],
       ),
       body: Scaffold(

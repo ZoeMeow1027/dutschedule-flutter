@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dutwrapper/account_object.dart';
 import 'package:dutwrapper/account_session_object.dart';
-import 'package:flutter/material.dart';
 
 import '../global_variables.dart';
 import '../model/process_state.dart';
@@ -11,13 +10,16 @@ import '../model/variable_state.dart';
 import '../repository/dut_account_repository.dart';
 import 'base_view_model.dart';
 
-class AccountSessionInstance extends ChangeNotifier with BaseViewModel {
+class AccountSessionInstance extends BaseViewModel {
   late DUTAccountRepository accRepo;
 
   @override
-  Future<void> initializing() async {
+  void initializing() {
     accRepo = DUTAccountRepository();
   }
+
+  @override
+  void timerAction() {}
 
   AuthInfo? authInfo;
   SchoolYear schoolYear = SchoolYear(year: 21, semester: 3);

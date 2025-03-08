@@ -58,64 +58,64 @@ class NewsSearchView extends StatelessWidget {
           actions: [
             newsSearchInstance.searchQuery.isNotEmpty
                 ? Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: IconButton(
-                onPressed: () async {
-                  newsSearchInstance.newsSearchQueryTextControl.clear();
-                  await Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        final fadeInOut = CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeInOut,
-                        );
+                    padding: const EdgeInsets.only(right: 5),
+                    child: IconButton(
+                      onPressed: () async {
+                        newsSearchInstance.newsSearchQueryTextControl.clear();
+                        await Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => NewsSearchOptionView(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              final fadeInOut = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeInOut,
+                              );
 
-                        return FadeTransition(
-                          opacity: fadeInOut,
-                          child: child,
+                              return FadeTransition(
+                                opacity: fadeInOut,
+                                child: child,
+                              );
+                            },
+                          ),
                         );
                       },
+                      icon: newsSearchInstance.searchProcessState == ProcessState.running
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(),
+                            )
+                          : Icon(Icons.search),
                     ),
-                  );
-                },
-                icon: newsSearchInstance.searchProcessState == ProcessState.running
-                    ? SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(),
-                )
-                    : Icon(Icons.search),
-              ),
-            )
+                  )
                 : Container(),
           ],
         ),
         body: newsSearchInstance.searchResult.isNotEmpty
             ? _haveResults(
-          context: context,
-          newsList: newsSearchInstance.searchResult,
-          isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
-          endListReached: () => newsSearchInstance.fetchSearchRun(),
-          refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
-          onClick: (news) async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewsDetailView(
-                  newsItem: news,
-                  isNewsSubject: newsSearchInstance.newsType == NewsType.global,
-                ),
-              ),
-            );
-          },
-        )
+                context: context,
+                newsList: newsSearchInstance.searchResult,
+                isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
+                endListReached: () => newsSearchInstance.fetchSearchRun(),
+                refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
+                onClick: (news) async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailView(
+                        newsItem: news,
+                        isNewsSubject: newsSearchInstance.newsType == NewsType.global,
+                      ),
+                    ),
+                  );
+                },
+              )
             : newsSearchInstance.searchProcessState == ProcessState.running
-            ? _loading(context)
-            : newsSearchInstance.searchProcessState == ProcessState.notRunYet
-            ? _notRunYet(context)
-            : _noAnyResult(context),
+                ? _loading(context)
+                : newsSearchInstance.searchProcessState == ProcessState.notRunYet
+                    ? _notRunYet(context)
+                    : _noAnyResult(context),
       ),
     );
   }

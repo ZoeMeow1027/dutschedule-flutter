@@ -7,6 +7,7 @@ import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import '../../../viewmodel/main_view_model.dart';
+import '../../view_settings/settings_view.dart';
 import 'dashboard.dart';
 import 'not_logged_in.dart';
 
@@ -19,7 +20,20 @@ class AccountMobileView extends StatelessWidget {
     final accountSession = Provider.of<AccountSessionInstance>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).translate("account_title"))),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate("account_title")),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsView()),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: accountSession.accountSession.state == ProcessState.successful
           ? AccountDashboardView()
           : AccountNotLoggedInView(

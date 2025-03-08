@@ -1,4 +1,3 @@
-import 'package:dutschedule/ui/components/switch_with_surface.dart';
 
 import '../../../utils/app_localizations.dart';
 import 'package:flutter/material.dart';

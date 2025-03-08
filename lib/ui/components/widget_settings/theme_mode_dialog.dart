@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../utils/app_localizations.dart';
-import '../../../viewmodel/settings_instance.dart';
 import '../option_item.dart';
 
 class ThemeModeDialog extends StatelessWidget {

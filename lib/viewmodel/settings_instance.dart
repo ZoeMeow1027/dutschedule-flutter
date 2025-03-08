@@ -8,9 +8,12 @@ import '../model/news_background_subject_type.dart';
 import '../model/school_year.dart';
 import 'base_view_model.dart';
 
-class SettingsInstance extends ChangeNotifier with BaseViewModel {
+class SettingsInstance extends BaseViewModel {
   @override
-  Future<void> initializing() async {}
+  void initializing() {}
+
+  @override
+  void timerAction() {}
 
   /// News background timeout duration (in minutes, must be larger than 5).
   /// Set to 0 to disable this function.
