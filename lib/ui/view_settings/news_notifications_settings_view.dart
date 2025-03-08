@@ -1,9 +1,10 @@
-import 'package:dutschedule/model/news_background_subject_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/news_background_subject_type.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/string_utils.dart';
+import '../../viewmodel/news_cache_instance.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/list_view_option_item.dart';
 import '../components/listview_group_item.dart';
@@ -15,6 +16,7 @@ class NewsNotificationsSettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final newsCacheInstance = Provider.of<NewsCacheInstance>(context);
     final settingsInstance = Provider.of<SettingsInstance>(context);
 
     return Scaffold(
@@ -35,7 +37,11 @@ class NewsNotificationsSettingsView extends StatelessWidget {
               onClick: (changedValue) {
                 if (changedValue) {
                   settingsInstance.newsBackgroundDuration = 60;
+                  newsCacheInstance.timerInterval = 60 * 60 * 1000;
+                  newsCacheInstance.startTimer(startOver: true);
                 } else {
+                  newsCacheInstance.stopTimer();
+                  newsCacheInstance.timerInterval = 0 * 60 * 1000;
                   settingsInstance.newsBackgroundDuration = 0;
                 }
               },
@@ -72,17 +78,22 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                             [settingsInstance.newsBackgroundDuration.toString()],
                           )),
                         Slider(
-                          value: settingsInstance.newsBackgroundDuration.toDouble(),
+                          value: (settingsInstance.newsBackgroundDuration - 5 < 0
+                                  ? 0
+                                  : settingsInstance.newsBackgroundDuration - 5)
+                              .toDouble(),
                           onChanged: (value) {
-                            settingsInstance.newsBackgroundDuration = value.toInt();
+                            settingsInstance.newsBackgroundDuration = (value + 5).toInt();
                           },
                           onChangeEnd: (value) {
-                            settingsInstance.newsBackgroundDuration = value.toInt();
+                            settingsInstance.newsBackgroundDuration = (value + 5).toInt();
                             // TODO: Save changes here!
+                            newsCacheInstance.timerInterval = (value + 5).toInt() * 60 * 1000;
+                            newsCacheInstance.startTimer(startOver: true);
                           },
                           min: 0,
-                          max: 240,
-                          divisions: 241,
+                          max: 235,
+                          divisions: 236,
                         ),
                         Wrap(
                           alignment: WrapAlignment.center,
@@ -95,6 +106,7 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                                 [duration.toString()],
                               )),
                               onPressed: () {
+                                newsCacheInstance.timerInterval = 1000 * 60 * duration;
                                 settingsInstance.newsBackgroundDuration = duration;
                                 // TODO: Save changes here!
                               },

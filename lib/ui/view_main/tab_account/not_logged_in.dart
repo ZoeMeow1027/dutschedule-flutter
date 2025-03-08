@@ -1,4 +1,4 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
+import '../../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

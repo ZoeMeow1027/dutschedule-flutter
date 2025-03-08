@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import '../model/enum/news_tab_location.dart';
 import 'base_view_model.dart';
 
-class MainViewModel extends ChangeNotifier with BaseViewModel {
+class MainViewModel extends BaseViewModel {
   @override
-  Future<void> initializing() async {}
+  void initializing() {}
+
+  @override
+  void timerAction() {}
 
   // News page
   NewsTabLocation newsCurrentPage = NewsTabLocation.globalNews;

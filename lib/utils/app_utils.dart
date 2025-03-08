@@ -10,9 +10,9 @@ class AppUtils {
   }
 
   static void launchOwnUrl(
-      String url, {
-        Function()? onFailed,
-      }) async {
+    String url, {
+    Function()? onFailed,
+  }) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(
         Uri.parse(url),

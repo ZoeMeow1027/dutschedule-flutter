@@ -9,9 +9,12 @@ import '../model/news_search_history.dart';
 import '../model/process_state.dart';
 import 'base_view_model.dart';
 
-class NewsSearchInstance extends ChangeNotifier with BaseViewModel {
+class NewsSearchInstance extends BaseViewModel {
   @override
-  Future<void> initializing() async {}
+  void initializing() {}
+
+  @override
+  void timerAction() {}
 
   var newsSearchQueryTextControl = TextEditingController();
 

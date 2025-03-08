@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
-import 'package:flutter/material.dart';
 
 import '../model/process_state.dart';
 import '../model/variable_state.dart';
@@ -14,11 +13,21 @@ enum NewsFetchType {
   clearCacheAndFirstPage,
 }
 
-class NewsCacheInstance extends ChangeNotifier with BaseViewModel {
+class NewsCacheInstance extends BaseViewModel {
   @override
-  Future<void> initializing() async {
-    fetchGlobalNews();
-    fetchSubjectNews();
+  void initializing() {
+    fetchGlobalNews(fetchType: NewsFetchType.nextPage);
+    fetchSubjectNews(fetchType: NewsFetchType.nextPage);
+
+    timerInterval = 60000;
+  }
+
+  @override
+  void timerAction() {
+    print("[News Cache] Triggered");
+
+    fetchGlobalNews(fetchType: NewsFetchType.firstPage);
+    fetchSubjectNews(fetchType: NewsFetchType.firstPage);
   }
 
   VariableListState<NewsGlobal> newsGlobal = VariableListState.from(

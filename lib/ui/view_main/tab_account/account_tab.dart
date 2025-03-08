@@ -1,7 +1,6 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
+import '../../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/app_localizations.dart';
 import '../../../utils/get_device_type.dart';
 import 'account_mobile_view.dart';
 import 'account_tablet_view.dart';
@@ -11,8 +10,6 @@ class AccountTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return context.getDeviceType().value > DeviceType.tablet.value
-        ? AccountTabletView()
-        : AccountMobileView();
+    return context.getDeviceType().value > DeviceType.tablet.value ? AccountTabletView() : AccountMobileView();
   }
 }

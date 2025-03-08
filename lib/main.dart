@@ -1,4 +1,4 @@
-import 'package:dutschedule/viewmodel/settings_instance.dart';
+import 'viewmodel/settings_instance.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

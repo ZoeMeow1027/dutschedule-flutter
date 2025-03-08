@@ -40,15 +40,15 @@ class NewsSplitView extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: mainViewModel.newsSelected == null
                     ? Center(
-                  child: Text(
-                    AppLocalizations.of(context).translate("news_splitview_noselected"),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                )
+                        child: Text(
+                          AppLocalizations.of(context).translate("news_splitview_noselected"),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      )
                     : NewsDetailItem(
-                  newsItem: mainViewModel.newsSelected!,
-                  isNewsSubject: mainViewModel.newsSelectedIsSubject,
-                ),
+                        newsItem: mainViewModel.newsSelected!,
+                        isNewsSubject: mainViewModel.newsSelectedIsSubject,
+                      ),
               ),
             ),
           ),

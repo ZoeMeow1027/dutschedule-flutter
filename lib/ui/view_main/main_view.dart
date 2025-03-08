@@ -1,6 +1,7 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
+import 'dart:async';
+
+import '../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/scaffold_nav.dart';
@@ -9,6 +10,7 @@ import '../../utils/get_device_type.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../../viewmodel/main_view_model.dart';
 import '../../viewmodel/news_cache_instance.dart';
+import '../../viewmodel/settings_instance.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_dashboard/dashboard_tab.dart';
 import 'tab_news/news_tab.dart';
@@ -29,37 +31,40 @@ class _MyHomePageState extends State<MainScreenView> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: _selectedPage);
-
-    // Defer initialization to after the first frame
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _initializeViewModels();
-    });
-  }
-
-  bool _isInitialized = false;
-
-  Future<void> _initializeViewModels() async {
-    if (_isInitialized) {
-      return;
-    }
-
-    final mainViewModel = Provider.of<MainViewModel>(context, listen: false);
-    final newsCacheInstance =
-        Provider.of<NewsCacheInstance>(context, listen: false);
-    final accountSessionInstance =
-        Provider.of<AccountSessionInstance>(context, listen: false);
-
-    // Initialize view models
-    await mainViewModel.initialize();
-    await newsCacheInstance.initialize();
-    await accountSessionInstance.initialize();
-
-    // Update the state to indicate initialization is complete
-    setState(() => _isInitialized = true);
   }
 
   @override
   Widget build(BuildContext context) {
+    _initializeViewModels(context);
+    if (_isViewModelInitialized) {
+      return _mainView(context);
+    } else {
+      return _loadingView(context);
+    }
+  }
+
+  Widget _loadingView(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(AppLocalizations.of(context).translate("app_name"))),
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: LinearProgressIndicator(),
+            ),
+            Text("We are setting up. Please wait a bit..."),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _mainView(BuildContext context) {
     var screenType = context.getDeviceType();
 
     return Scaffold(
@@ -105,6 +110,31 @@ class _MyHomePageState extends State<MainScreenView> {
             )
           : null,
     );
+  }
+
+  bool _isViewModelBeingInitialized = false;
+  bool _isViewModelInitialized = false;
+
+  Future<void> _initializeViewModels(BuildContext context) async {
+    if (_isViewModelBeingInitialized) {
+      return;
+    }
+    setState(() => _isViewModelBeingInitialized = true);
+
+    // Initialize view models
+    final mainViewModel = Provider.of<MainViewModel>(context, listen: false);
+    // Initialize settings instance
+    final settingsInstance = Provider.of<SettingsInstance>(context, listen: false);
+    // Initialize news cache instance
+    final newsCacheInstance = Provider.of<NewsCacheInstance>(context, listen: false);
+    newsCacheInstance.timerInterval = settingsInstance.newsBackgroundDuration * 60 * 1000;
+    // Initialize account session instance
+    final accountSessionInstance = Provider.of<AccountSessionInstance>(context, listen: false);
+
+    await Future.delayed(Duration(seconds: 10));
+
+    // Update the state to indicate initialization is triggered (to avoid issue).
+    setState(() => _isViewModelInitialized = true);
   }
 
   ScaffoldNavigationList _getNavList(BuildContext context) {
