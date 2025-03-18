@@ -1,3 +1,5 @@
+import 'ui/view_firstrun/getting_started_view.dart';
+
 import 'viewmodel/settings_instance.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,7 @@ class MainApplication extends StatelessWidget {
           title: "DutSchedule",
           scrollBehavior: CustomScrollBehavior(),
           theme: ThemeData(
+            pageTransitionsTheme: _getPageTransitionsTheme(),
             primarySwatch: lightDynamic != null ? null : Colors.deepPurple,
             colorScheme: settingsInstance.accentColor
                 ? lightDynamic
@@ -53,6 +56,7 @@ class MainApplication extends StatelessWidget {
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
+            pageTransitionsTheme: _getPageTransitionsTheme(),
             primarySwatch: darkDynamic != null ? null : Colors.deepPurple,
             colorScheme: settingsInstance.accentColor
                 ? darkDynamic?.copyWith(surface: settingsInstance.blackBackground ? Colors.black : null)
@@ -74,8 +78,20 @@ class MainApplication extends StatelessWidget {
             const Locale("vi"),
           ],
           themeMode: settingsInstance.themeMode,
-          home: const MainScreenView(),
+          home: const GettingStartedWelcome(),
         );
+      },
+    );
+  }
+
+  PageTransitionsTheme _getPageTransitionsTheme() {
+    return PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+        TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
       },
     );
   }
