@@ -15,6 +15,18 @@ class SettingsInstance extends BaseViewModel {
   @override
   void timerAction() {}
 
+  /// First run (show welcome page)
+  bool get firstRunDone => _firstRunDone;
+  set firstRunDone(bool value) {
+    if (value == _firstRunDone) {
+      return;
+    }
+
+    _firstRunDone = value;
+    notifyListeners();
+  }
+  bool _firstRunDone = false;
+
   /// News background timeout duration (in minutes, must be larger than 5).
   /// Set to 0 to disable this function.
   int get newsBackgroundDuration => _newsBackgroundDuration;
@@ -40,6 +52,10 @@ class SettingsInstance extends BaseViewModel {
   /// Since v2.0-draft17
   bool get newsBackgroundGlobalEnabled => _newsBackgroundGlobalEnabled;
   set newsBackgroundGlobalEnabled(bool value) {
+    if (value == _newsBackgroundGlobalEnabled) {
+      return;
+    }
+
     _newsBackgroundGlobalEnabled = value;
     notifyListeners();
   }
@@ -51,6 +67,10 @@ class SettingsInstance extends BaseViewModel {
   /// Since v2.0-draft17
   NewsBackgroundSubjectType get newsBackgroundSubjectEnabled => _newsBackgroundSubjectEnabled;
   set newsBackgroundSubjectEnabled(NewsBackgroundSubjectType value) {
+    if (value == _newsBackgroundSubjectEnabled) {
+      return;
+    }
+
     _newsBackgroundSubjectEnabled = value;
     notifyListeners();
   }
@@ -80,6 +100,10 @@ class SettingsInstance extends BaseViewModel {
   ///
   bool get newsBackgroundParseNewsSubject => _newsBackgroundParseNewsSubject;
   set newsBackgroundParseNewsSubject(bool value) {
+    if (value == _newsBackgroundParseNewsSubject) {
+      return;
+    }
+
     _newsBackgroundParseNewsSubject = value;
     notifyListeners();
   }
@@ -88,6 +112,10 @@ class SettingsInstance extends BaseViewModel {
   /// Enable or disable app dark theme.
   ThemeMode get themeMode => _themeMode;
   set themeMode(ThemeMode value) {
+    if (value == _themeMode) {
+      return;
+    }
+
     _themeMode = value;
     notifyListeners();
   }
@@ -96,6 +124,10 @@ class SettingsInstance extends BaseViewModel {
   /// Follow accent color from system
   bool get accentColor => _accentColor;
   set accentColor(bool value) {
+    if (value == _accentColor) {
+      return;
+    }
+
     _accentColor = value;
     notifyListeners();
   }
@@ -104,6 +136,10 @@ class SettingsInstance extends BaseViewModel {
   /// Set background image option.
   BackgroundImageOption get backgroundImageOption => _backgroundImageOption;
   set backgroundImageOption(BackgroundImageOption value) {
+    if (value == _backgroundImageOption) {
+      return;
+    }
+
     _backgroundImageOption = value;
     notifyListeners();
   }
@@ -113,6 +149,10 @@ class SettingsInstance extends BaseViewModel {
   /// This won't work if [backgroundImageOption] is different than `none`.
   bool get blackBackground => _blackBackground;
   set blackBackground(bool value) {
+    if (value == _blackBackground) {
+      return;
+    }
+
     _blackBackground = value;
     notifyListeners();
   }
@@ -172,8 +212,9 @@ class SettingsInstance extends BaseViewModel {
 
   Map<String, dynamic> toMap() {
     return {
+      "appbehavior.firstrun.done": firstRunDone,
       "appsettings.locale.auto": localeAuto,
-      "appsettings.locale.specificed": locale.toLanguageTag(),
+      "appsettings.locale.specific": locale.toLanguageTag(),
       "appsettings.appearance.thememode": themeMode == ThemeMode.system
           ? 0
           : themeMode == ThemeMode.dark
@@ -182,16 +223,16 @@ class SettingsInstance extends BaseViewModel {
       "appsettings.appearance.dynamiccolor": accentColor,
       "appsettings.appearance.blackbackground": blackBackground,
       "appsettings.appearance.backgroundimage.option": backgroundImageOption.value,
-      "appsettings.appearance.backgroundimage.backgroundopacity": backgroundImageOpacity,
-      "appsettings.appearance.backgroundimage.componentopacity": componentOpacity,
+      "appsettings.appearance.backgroundimage.opacity.background": backgroundImageOpacity,
+      "appsettings.appearance.backgroundimage.opacity.component": componentOpacity,
       "appsettings.miscellaneous.openlinkinsideapp": openLinkInsideApp,
       "appsettings.newsbackground.duration": newsBackgroundDuration,
       "appsettings.newsbackground.filterlist": newsBackgroundFilterList,
       "appsettings.newsbackground.newsglobal.enabled": newsBackgroundGlobalEnabled,
       "appsettings.newsbackground.newssubject.enabled": newsBackgroundSubjectEnabled.value,
-      "appsettings.newsbackground.parsenewssubject": newsBackgroundParseNewsSubject,
+      "appsettings.newsbackground.newssubject.parsenotification": newsBackgroundParseNewsSubject,
       "appsettings.globalvariables.schoolyear": currentSchoolYear,
-      "appsettings.behavor.clicknewsinmain": openNewsInModalBottomSheet,
+      "appsettings.behavior.bottomsheetwhenclicknews": openNewsInModalBottomSheet,
     };
   }
 

@@ -72,6 +72,7 @@ class _MyHomePageState extends State<MainScreenView> {
         children: [
           screenType.value > DeviceType.phone.value
               ? NavigationRail(
+                  // extended: true,
                   groupAlignment: 0.0,
                   destinations: _getNavList(context).convertToListNavRailDestination(),
                   selectedIndex: _selectedPage,
