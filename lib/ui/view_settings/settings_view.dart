@@ -88,7 +88,7 @@ class SettingsView extends StatelessWidget {
                         : settingsInstance.themeMode == ThemeMode.light
                             ? AppLocalizations.of(context).translate("settings_option_apptheme_choice_light")
                             : AppLocalizations.of(context).translate("settings_option_apptheme_choice_dark"),
-                    settingsInstance.accentColor
+                    settingsInstance.followAccentColor
                         ? AppLocalizations.of(context).translate("settings_option_apptheme_choice_dynamiccolorenabled")
                         : ""
                   ]),
@@ -100,9 +100,9 @@ class SettingsView extends StatelessWidget {
                       onSelectModeChanged: (value) {
                         settingsInstance.themeMode = value;
                       },
-                      accentColor: settingsInstance.accentColor,
+                      accentColor: settingsInstance.followAccentColor,
                       onAccentColorModeChanged: (value) {
-                        settingsInstance.accentColor = value;
+                        settingsInstance.followAccentColor = value;
                       },
                     ),
                   ),

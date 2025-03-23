@@ -48,7 +48,7 @@ class MainApplication extends StatelessWidget {
           theme: ThemeData(
             pageTransitionsTheme: _getPageTransitionsTheme(),
             primarySwatch: lightDynamic != null ? null : Colors.deepPurple,
-            colorScheme: settingsInstance.accentColor
+            colorScheme: settingsInstance.followAccentColor
                 ? lightDynamic
                 : ColorScheme.fromSeed(
                     seedColor: Colors.deepPurple,
@@ -58,7 +58,7 @@ class MainApplication extends StatelessWidget {
           darkTheme: ThemeData(
             pageTransitionsTheme: _getPageTransitionsTheme(),
             primarySwatch: darkDynamic != null ? null : Colors.deepPurple,
-            colorScheme: settingsInstance.accentColor
+            colorScheme: settingsInstance.followAccentColor
                 ? darkDynamic?.copyWith(surface: settingsInstance.blackBackground ? Colors.black : null)
                 : ColorScheme.fromSeed(
                     seedColor: Colors.deepPurple,
@@ -78,7 +78,7 @@ class MainApplication extends StatelessWidget {
             const Locale("vi"),
           ],
           themeMode: settingsInstance.themeMode,
-          home: const GettingStartedWelcome(),
+          home: settingsInstance.firstRunDone ? const MainScreenView() : const GettingStartedWelcome(),
         );
       },
     );

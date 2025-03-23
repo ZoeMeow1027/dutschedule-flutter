@@ -3,20 +3,14 @@ import 'package:flutter/material.dart';
 import 'app_banner.dart';
 import 'base_tab.dart';
 
-class GettingStartedSignInTab extends StatefulWidget {
-  const GettingStartedSignInTab({
+class GettingStartedFinishTab extends StatelessWidget {
+  const GettingStartedFinishTab({
     super.key,
-    this.prevPressed,
-    this.nextPressed,
+    this.finishPressed,
   });
 
-  final Function()? prevPressed, nextPressed;
+  final Function()? finishPressed;
 
-  @override
-  State<StatefulWidget> createState() => _GettingStartedSignInTab();
-}
-
-class _GettingStartedSignInTab extends State<GettingStartedSignInTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,15 +20,18 @@ class _GettingStartedSignInTab extends State<GettingStartedSignInTab> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            GettingStartedAppBanner(
+              showText: false
+            ),
             Text(
-              "Sign in",
-              style: Theme.of(context).textTheme.titleLarge,
+              "Welcome to DutSchedule",
+              style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(top: 5, bottom: 10),
               child: Text(
-                "Use your account in sv.dut.udn.vn to login.",
+                "Thanks again for using this application!",
                 style: Theme.of(context).textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
@@ -44,10 +41,11 @@ class _GettingStartedSignInTab extends State<GettingStartedSignInTab> {
       ),
       bottomNavigationBar: GettingStartedNavBarTab(
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-        backClicked: widget.prevPressed,
-        nextClicked: widget.nextPressed,
-        isNextSkip: true,
+        backEnabled: false,
+        nextClicked: finishPressed,
+        isNextFinished: true,
       ),
     );
   }
+
 }

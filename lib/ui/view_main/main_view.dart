@@ -135,7 +135,9 @@ class _MyHomePageState extends State<MainScreenView> {
     await Future.delayed(Duration(seconds: 10));
 
     // Update the state to indicate initialization is triggered (to avoid issue).
-    setState(() => _isViewModelInitialized = true);
+    if (mounted) {
+      setState(() => _isViewModelInitialized = true);
+    }
   }
 
   ScaffoldNavigationList _getNavList(BuildContext context) {

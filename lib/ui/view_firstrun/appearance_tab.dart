@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_banner.dart';
+import 'base_tab.dart';
 
 class GettingStartedAppearanceTab extends StatelessWidget {
   const GettingStartedAppearanceTab({
@@ -36,18 +37,10 @@ class GettingStartedAppearanceTab extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextButton.icon(
-            onPressed: prevPressed,
-            label: Text("Previous"),
-          ),
-          TextButton.icon(
-            onPressed: nextPressed,
-            label: Text("Next"),
-          ),
-        ],
+      bottomNavigationBar: GettingStartedNavBarTab(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+        backClicked: prevPressed,
+        nextClicked: nextPressed,
       ),
     );
   }

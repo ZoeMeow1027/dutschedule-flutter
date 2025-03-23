@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'app_banner.dart';
+import 'base_tab.dart';
 
 class GettingStartedAgreementTab extends StatefulWidget {
   const GettingStartedAgreementTab({
     super.key,
-    this.prevPressed,
     this.nextPressed,
   });
 
-  final Function()? prevPressed, nextPressed;
+  final Function()? nextPressed;
 
   @override
   State<StatefulWidget> createState() => _GettingStartedAgreementTab();
@@ -43,18 +43,10 @@ class _GettingStartedAgreementTab extends State<GettingStartedAgreementTab> {
           ),
         ],
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextButton.icon(
-            onPressed: widget.prevPressed,
-            label: Text("Previous"),
-          ),
-          TextButton.icon(
-            onPressed: widget.nextPressed,
-            label: Text("Next"),
-          ),
-        ],
+      bottomNavigationBar: GettingStartedNavBarTab(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+        backEnabled: false,
+        nextClicked: widget.nextPressed,
       ),
     );
   }
