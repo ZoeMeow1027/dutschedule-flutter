@@ -1,3 +1,7 @@
+import 'package:dutschedule/ui/view_firstrun/finish_tab.dart';
+import 'package:provider/provider.dart';
+
+import '../../viewmodel/settings_instance.dart';
 import 'agreement_tab.dart';
 import 'appearance_tab.dart';
 import 'sign_in_tab.dart';
@@ -20,6 +24,8 @@ class _GettingStartedWelcome extends State<GettingStartedWelcome> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsInstance = Provider.of<SettingsInstance>(context);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -49,8 +55,8 @@ class _GettingStartedWelcome extends State<GettingStartedWelcome> {
             nextPressed: () {
               _pageViewController.animateToPage(
                 1,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linearToEaseOut,
               );
             },
           ),
@@ -58,33 +64,53 @@ class _GettingStartedWelcome extends State<GettingStartedWelcome> {
             prevPressed: () {
               _pageViewController.animateToPage(
                 0,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linearToEaseOut,
               );
             },
             nextPressed: () {
               _pageViewController.animateToPage(
                 2,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linearToEaseOut,
               );
             },
           ),
-          GettingStartedSignInTab(
-            prevPressed: () {
-              _pageViewController.animateToPage(
-                1,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
+          GettingStartedSignInTab(prevPressed: () {
+            _pageViewController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.linearToEaseOut,
+            );
+          }, nextPressed: () {
+            _pageViewController.animateToPage(
+              3,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.linearToEaseOut,
+            );
+          }),
+          GettingStartedFinishTab(
+            finishPressed: () async {
+              settingsInstance.firstRunDone = true;
+              await Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => MainScreenView(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    final fadeInOut = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    );
+
+                    return FadeTransition(
+                      opacity: fadeInOut,
+                      child: child,
+                    );
+                  },
+                ),
+                    (route) => false,
               );
             },
-            finishPressed: () async => await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainScreenView(),
-              ),
-              (route) => false,
-            ),
           ),
         ],
       ),
