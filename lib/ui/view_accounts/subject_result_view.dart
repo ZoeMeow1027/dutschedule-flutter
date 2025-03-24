@@ -133,7 +133,9 @@ class _SubjectResultViewState extends State<SubjectResultView> {
                           "{0} - {1}",
                           [
                             ((accountSession.trainingResult.data?.subjectResultList.length ?? 0) - index).toString(),
-                            dataItem.name ?? AppLocalizations.of(context).translate("data_nodata"),
+                            dataItem.name.isNotEmpty
+                                ? dataItem.name
+                                : AppLocalizations.of(context).translate("data_nodata"),
                           ],
                         ),
                         description: StringUtils.formatString(

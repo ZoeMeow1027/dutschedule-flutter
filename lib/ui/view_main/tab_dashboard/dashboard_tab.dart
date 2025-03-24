@@ -1,8 +1,6 @@
 import '../../../utils/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../viewmodel/settings_instance.dart';
 import '../../view_settings/settings_view.dart';
 
 class DashboardTab extends StatelessWidget {
@@ -10,8 +8,6 @@ class DashboardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsInstance = Provider.of<SettingsInstance>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("app_name")),

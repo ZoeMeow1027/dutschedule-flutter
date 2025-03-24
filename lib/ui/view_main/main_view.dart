@@ -1,16 +1,10 @@
-import 'dart:async';
 
 import '../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../model/scaffold_nav.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/get_device_type.dart';
-import '../../viewmodel/account_session_instance.dart';
-import '../../viewmodel/main_view_model.dart';
-import '../../viewmodel/news_cache_instance.dart';
-import '../../viewmodel/settings_instance.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_dashboard/dashboard_tab.dart';
 import 'tab_news/news_tab.dart';
@@ -35,8 +29,7 @@ class _MyHomePageState extends State<MainScreenView> {
 
   @override
   Widget build(BuildContext context) {
-    _initializeViewModels(context);
-    if (_isViewModelInitialized) {
+    if (true) {
       return _mainView(context);
     } else {
       return _loadingView(context);
@@ -78,7 +71,11 @@ class _MyHomePageState extends State<MainScreenView> {
                   selectedIndex: _selectedPage,
                   labelType: NavigationRailLabelType.all,
                   onDestinationSelected: (index) {
-                    _controller.jumpToPage(index);
+                    _controller.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.linearToEaseOut,
+                    );
                   },
                   minWidth: 80,
                 )
@@ -106,38 +103,15 @@ class _MyHomePageState extends State<MainScreenView> {
               destinations: _getNavList(context).convertToListNavDestination(),
               selectedIndex: _selectedPage,
               onDestinationSelected: (index) {
-                _controller.jumpToPage(index);
+                _controller.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.linearToEaseOut,
+                );
               },
             )
           : null,
     );
-  }
-
-  bool _isViewModelBeingInitialized = false;
-  bool _isViewModelInitialized = false;
-
-  Future<void> _initializeViewModels(BuildContext context) async {
-    if (_isViewModelBeingInitialized) {
-      return;
-    }
-    setState(() => _isViewModelBeingInitialized = true);
-
-    // Initialize view models
-    final mainViewModel = Provider.of<MainViewModel>(context, listen: false);
-    // Initialize settings instance
-    final settingsInstance = Provider.of<SettingsInstance>(context, listen: false);
-    // Initialize news cache instance
-    final newsCacheInstance = Provider.of<NewsCacheInstance>(context, listen: false);
-    newsCacheInstance.timerInterval = settingsInstance.newsBackgroundDuration * 60 * 1000;
-    // Initialize account session instance
-    final accountSessionInstance = Provider.of<AccountSessionInstance>(context, listen: false);
-
-    await Future.delayed(Duration(seconds: 10));
-
-    // Update the state to indicate initialization is triggered (to avoid issue).
-    if (mounted) {
-      setState(() => _isViewModelInitialized = true);
-    }
   }
 
   ScaffoldNavigationList _getNavList(BuildContext context) {

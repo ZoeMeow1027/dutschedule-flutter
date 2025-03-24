@@ -21,7 +21,6 @@ class NewsSearchInstance extends BaseViewModel {
   int _nextPage = 1;
   String searchQuery = "";
   String searchQueryTemp = "";
-  int _searchLastRequest = 0;
   NewsType newsType = NewsType.global;
   ProcessState searchProcessState = ProcessState.notRunYet;
   NewsSearchMethod searchMethod = NewsSearchMethod.byTitle;
@@ -114,7 +113,6 @@ class NewsSearchInstance extends BaseViewModel {
       searchProcessState = ProcessState.failed;
       log("[News Search] Running failed!");
     } finally {
-      _searchLastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[News Search] End run.");
       notifyListeners();
       afterRun?.call();

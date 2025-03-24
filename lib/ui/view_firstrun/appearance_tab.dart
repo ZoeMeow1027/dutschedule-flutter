@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'app_banner.dart';
 import 'base_tab.dart';
 
 class GettingStartedAppearanceTab extends StatelessWidget {

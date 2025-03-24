@@ -1,3 +1,5 @@
+import 'repository/storage_repository.dart';
+
 import 'ui/view_firstrun/getting_started_view.dart';
 
 import 'viewmodel/settings_instance.dart';
@@ -14,16 +16,22 @@ import 'viewmodel/main_view_model.dart';
 import 'viewmodel/news_cache_instance.dart';
 import 'viewmodel/news_search_instance.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  // Initialize settings instance
+  var settingsInstance = SettingsInstance.fromPreviousSettings(await StorageRepository.getPreviousSettings());
+  // Initialize news cache instance
+  var newsCacheInstance = NewsCacheInstance();
+  newsCacheInstance.timerInterval = settingsInstance.newsBackgroundDuration * 60 * 1000;
 
+  // Ensure is initialized
+  WidgetsFlutterBinding.ensureInitialized();
   // Run the app with providers
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => SettingsInstance()),
+        ChangeNotifierProvider(create: (context) => settingsInstance),
         ChangeNotifierProvider(create: (context) => MainViewModel()),
-        ChangeNotifierProvider(create: (context) => NewsCacheInstance()),
+        ChangeNotifierProvider(create: (context) => newsCacheInstance),
         ChangeNotifierProvider(create: (context) => NewsSearchInstance()),
         ChangeNotifierProvider(create: (context) => AccountSessionInstance()),
       ],
@@ -77,7 +85,7 @@ class MainApplication extends StatelessWidget {
             const Locale("en"),
             const Locale("vi"),
           ],
-          themeMode: settingsInstance.themeMode,
+          themeMode: settingsInstance.themeMode.toThemeMode(),
           home: settingsInstance.firstRunDone ? const MainScreenView() : const GettingStartedWelcome(),
         );
       },
