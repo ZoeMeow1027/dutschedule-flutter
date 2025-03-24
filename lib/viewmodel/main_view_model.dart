@@ -21,8 +21,8 @@ class MainViewModel extends BaseViewModel {
     newsCurrentPage = selectedPage;
     newsPageController.animateToPage(
       selectedPage.value,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.fastOutSlowIn,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.linearToEaseOut,
     );
     notifyListeners();
   }

@@ -42,7 +42,7 @@ class NewsSummaryListView extends StatelessWidget {
                 );
               },
               icon: Icon(Icons.search, size: 26),
-              label: Text("Search news"),
+              label: Text(AppLocalizations.of(context).translate("main_news_searchnews")),
             ),
           ),
           IconButton(

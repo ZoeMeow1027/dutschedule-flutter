@@ -24,7 +24,7 @@ class NewsCacheInstance extends BaseViewModel {
 
   @override
   void timerAction() {
-    print("[News Cache] Triggered");
+    log("[News Cache] Triggered");
 
     fetchGlobalNews(fetchType: NewsFetchType.firstPage);
     fetchSubjectNews(fetchType: NewsFetchType.firstPage);

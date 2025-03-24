@@ -19,7 +19,6 @@ class GettingStartedWelcome extends StatefulWidget {
 }
 
 class _GettingStartedWelcome extends State<GettingStartedWelcome> {
-  int _currentPage = 1;
   final PageController _pageViewController = PageController(initialPage: 0);
 
   @override
@@ -47,7 +46,6 @@ class _GettingStartedWelcome extends State<GettingStartedWelcome> {
         physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (page) {
           setState(() {
-            _currentPage = page + 1;
           });
         },
         children: [

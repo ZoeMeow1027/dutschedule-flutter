@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 class CoreTimer {
   CoreTimer({Function()? action}) {
@@ -48,7 +49,7 @@ class CoreTimer {
     if (_ticks != value) {
       _ticks = value;
       _ticksCurrent = _ticks;
-      print("Timer changed to ${value}s!");
+      log("Timer changed to ${value}s!");
     }
   }
 

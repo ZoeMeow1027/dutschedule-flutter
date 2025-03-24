@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dutschedule/repository/storage_repository.dart';
+import '../model/enum/app_theme_mode.dart';
+import '../repository/storage_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../model/background_subject_code.dart';
@@ -11,10 +11,20 @@ import '../model/school_year.dart';
 import 'base_view_model.dart';
 
 class SettingsInstance extends BaseViewModel {
+  SettingsInstance();
+
+  SettingsInstance.fromPreviousSettings(Map<String, dynamic> json) {
+    importSettingsFromJson(json);
+    _isSettingsInitialized = true;
+  }
+
   @override
   void initializing() async {
-    importSettingsFromJson(await StorageRepository.getPreviousSettings());
+    // importSettingsFromJson(await StorageRepository.getPreviousSettings());
+    // _isSettingsInitialized = true;
   }
+
+  bool _isSettingsInitialized = false;
 
   @override
   void timerAction() {}
@@ -126,9 +136,9 @@ class SettingsInstance extends BaseViewModel {
   bool _newsBackgroundParseNewsSubject = false;
 
   /// Enable or disable app dark theme.
-  ThemeMode get themeMode => _themeMode;
+  AppThemeMode get themeMode => _themeMode;
 
-  set themeMode(ThemeMode value) {
+  set themeMode(AppThemeMode value) {
     if (value == _themeMode) {
       return;
     }
@@ -137,7 +147,7 @@ class SettingsInstance extends BaseViewModel {
     _settingsChanged();
   }
 
-  ThemeMode _themeMode = ThemeMode.system;
+  AppThemeMode _themeMode = AppThemeMode.followSystemSettings;
 
   /// Follow accent color from system
   bool get followAccentColor => _followAccentColor;
@@ -248,23 +258,33 @@ class SettingsInstance extends BaseViewModel {
 
   bool _openNewsInModalBottomSheet = true;
 
-  void _settingsChanged() {
+  bool _pendingChanges = false;
+
+  void _settingsChanged() async {
+    if (!_isSettingsInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
+
+    _pendingChanges = true;
     notifyListeners();
     log("[Settings] Modified changes! Saving...");
-    StorageRepository.saveSettings(settings: _toMap());
     // TODO: Save settings here!
+    await StorageRepository.saveSettings(settings: _toMap());
+
+    _pendingChanges = false;
+    notifyListeners();
   }
 
   Map<String, dynamic> _toMap() {
     return {
       "appbehavior.firstrun.done": firstRunDone,
-      "appsettings.locale.specific": locale.toLanguageTag(),
+      "appsettings.locale.specific": locale.languageCode,
       "appsettings.locale.auto": localeAuto,
-      "appsettings.appearance.thememode": themeMode == ThemeMode.system
-          ? -1
-          : themeMode == ThemeMode.dark
-              ? 0
-              : 1,
+      "appsettings.appearance.thememode": themeMode.value,
       "appsettings.appearance.dynamiccolor": followAccentColor,
       "appsettings.appearance.blackbackground": blackBackground,
       "appsettings.appearance.backgroundimage.option": backgroundImageOption.value,
@@ -272,11 +292,13 @@ class SettingsInstance extends BaseViewModel {
       "appsettings.appearance.backgroundimage.opacity.component": componentOpacity,
       "appsettings.miscellaneous.openlinkinsideapp": openLinkInsideApp,
       "appsettings.newsbackground.duration": newsBackgroundDuration,
-      "appsettings.newsbackground.filterlist": jsonEncode(newsBackgroundFilterList),
+      // "appsettings.newsbackground.filterlist": json.encode(newsBackgroundFilterList),
+      "appsettings.newsbackground.filterlist": newsBackgroundFilterList.map((p) => p.toJson()).toList(),
       "appsettings.newsbackground.newsglobal.enabled": newsBackgroundGlobalEnabled,
       "appsettings.newsbackground.newssubject.enabled": newsBackgroundSubjectEnabled.value,
       "appsettings.newsbackground.newssubject.parsenotification": newsBackgroundParseNewsSubject,
-      "appsettings.globalvariables.schoolyear": jsonEncode(currentSchoolYear),
+      // "appsettings.globalvariables.schoolyear": json.encode(currentSchoolYear),
+      "appsettings.globalvariables.schoolyear": currentSchoolYear.toJson(),
       "appsettings.behavior.bottomsheetwhenclicknews": openNewsInModalBottomSheet,
     };
   }
@@ -285,19 +307,10 @@ class SettingsInstance extends BaseViewModel {
     firstRunDone = (data["appbehavior.firstrun.done"] as bool?) ?? false;
     locale = Locale((data["appsettings.locale.specific"] as String?) ?? "en");
     localeAuto = (data["appsettings.locale.auto"] as bool?) ?? false;
-    switch ((data["appsettings.appearance.thememode"] as int?) ?? -1) {
-      case -1:
-        themeMode = ThemeMode.system;
-        break;
-      case 0:
-        themeMode = ThemeMode.dark;
-        break;
-      case 1:
-        themeMode = ThemeMode.light;
-        break;
-      default:
-        break;
-    }
+    themeMode = AppThemeMode.values
+            .where((p) => p.value == ((data["appsettings.appearance.thememode"] as int?) ?? -1))
+            .firstOrNull ??
+        AppThemeMode.followSystemSettings;
     followAccentColor = (data["appsettings.appearance.dynamiccolor"] as bool?) ?? true;
     blackBackground = (data["appsettings.appearance.blackbackground"] as bool?) ?? false;
     backgroundImageOption = BackgroundImageOption.values
@@ -308,10 +321,13 @@ class SettingsInstance extends BaseViewModel {
     componentOpacity = (data["appsettings.appearance.backgroundimage.opacity.component"] as double?) ?? 0.65;
     openLinkInsideApp = (data["appsettings.miscellaneous.openlinkinsideapp"] as bool?) ?? true;
     newsBackgroundDuration = (data["appsettings.newsbackground.duration"] as int?) ?? 0;
-    newsBackgroundFilterList = List<BackgroundSubjectCode>.from(
-        (jsonDecode((data["appsettings.newsbackground.filterlist"] as String?) ?? "[]") as List)
-            .map((p) => BackgroundSubjectCode.fromJson(p))
-            .toList());
+    // newsBackgroundFilterList = List<BackgroundSubjectCode>.from(
+    //     (json.decode((data["appsettings.newsbackground.filterlist"] as String?) ?? "[]") as List)
+    //         .map((p) => BackgroundSubjectCode.fromJson(p))
+    //         .toList());
+    newsBackgroundFilterList = (data["appsettings.newsbackground.filterlist"] as List<dynamic>? ?? [])
+        .map((p) => BackgroundSubjectCode.fromJson(p))
+        .toList();
     newsBackgroundGlobalEnabled = (data["appsettings.newsbackground.newsglobal.enabled"] as bool?) ?? true;
     newsBackgroundSubjectEnabled = NewsBackgroundSubjectType.values
             .where((p) => p.value == ((data["appsettings.newsbackground.newssubject.enabled"] as int?) ?? 0))
@@ -319,7 +335,10 @@ class SettingsInstance extends BaseViewModel {
         NewsBackgroundSubjectType.allNews;
     newsBackgroundParseNewsSubject =
         (data["appsettings.newsbackground.newssubject.parsenotification"] as bool?) ?? true;
-    currentSchoolYear = SchoolYear.fromJson(jsonDecode((data["appsettings.globalvariables.schoolyear"] as String?) ?? "{}"));
+    // currentSchoolYear =
+    //     SchoolYear.fromJson(json.decode((data["appsettings.globalvariables.schoolyear"] as String?) ?? "{}"));
+    currentSchoolYear =
+        SchoolYear.fromJson(data["appsettings.globalvariables.schoolyear"] as Map<String, dynamic>? ?? {});
     openNewsInModalBottomSheet = (data["appsettings.behavior.bottomsheetwhenclicknews"] as bool?) ?? true;
   }
 

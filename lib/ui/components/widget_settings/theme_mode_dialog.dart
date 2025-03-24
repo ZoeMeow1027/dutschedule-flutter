@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../../model/enum/app_theme_mode.dart';
 import '../../../utils/app_localizations.dart';
 import '../option_item.dart';
 
@@ -14,8 +15,8 @@ class ThemeModeDialog extends StatelessWidget {
     required this.onAccentColorModeChanged,
   });
 
-  final ThemeMode selectedMode;
-  final Function(ThemeMode)? onSelectModeChanged;
+  final AppThemeMode selectedMode;
+  final Function(AppThemeMode)? onSelectModeChanged;
   final bool accentColor;
   final Function(bool)? onAccentColorModeChanged;
 
@@ -40,7 +41,7 @@ class ThemeModeDialog extends StatelessWidget {
                       onClick: () {
                         onSelectModeChanged?.call(e.key);
                       },
-                      leading: Radio<ThemeMode>(
+                      leading: Radio<AppThemeMode>(
                         value: e.key,
                         groupValue: selectedMode,
                         onChanged: (value) {
@@ -92,11 +93,11 @@ class ThemeModeDialog extends StatelessWidget {
     );
   }
 
-  Map<ThemeMode, String> _getThemeModeOptions(BuildContext context) {
+  Map<AppThemeMode, String> _getThemeModeOptions(BuildContext context) {
     return {
-      ThemeMode.system: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_followdevice"),
-      ThemeMode.light: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_light"),
-      ThemeMode.dark: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_dark"),
+      AppThemeMode.followSystemSettings: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_followdevice"),
+      AppThemeMode.lightMode: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_light"),
+      AppThemeMode.darkMode: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_dark"),
     };
   }
 }

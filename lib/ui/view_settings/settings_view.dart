@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/enum/app_theme_mode.dart';
 import '../../model/enum/background_image_option.dart';
 import '../../utils/app_languages.dart';
 import '../../utils/app_localizations.dart';
@@ -83,9 +84,9 @@ class SettingsView extends StatelessWidget {
                 ListViewOptionItem(
                   title: AppLocalizations.of(context).translate("settings_option_apptheme"),
                   description: StringUtils.formatString("{0} {1}", [
-                    settingsInstance.themeMode == ThemeMode.system
+                    settingsInstance.themeMode == AppThemeMode.followSystemSettings
                         ? AppLocalizations.of(context).translate("settings_option_apptheme_choice_followdevice")
-                        : settingsInstance.themeMode == ThemeMode.light
+                        : settingsInstance.themeMode == AppThemeMode.lightMode
                             ? AppLocalizations.of(context).translate("settings_option_apptheme_choice_light")
                             : AppLocalizations.of(context).translate("settings_option_apptheme_choice_dark"),
                     settingsInstance.followAccentColor

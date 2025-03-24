@@ -40,16 +40,33 @@ class StorageRepository {
 
   static Future<void> saveSettings({required Map<String, dynamic> settings}) async {
     final data = await _localFile(fileName: 'settings.json');
-    await data.writeAsString(jsonEncode(settings));
+    final data1 = json.encode(settings);
+    await data.writeAsString(data1, mode: FileMode.writeOnly, flush: true);
   }
 
   static Future<Map<String, dynamic>> getPreviousSettings() async {
     try {
       final data = await _localFile(fileName: 'settings.json');
       final dataString = await data.readAsString();
-      return jsonDecode(dataString);
+      return json.decode(dataString);
     } catch (ex) {
       return {};
+    } finally {
+    }
+  }
+
+  static Map<String, dynamic> getPreviousSettingsSync() {
+    try {
+      String data = "{}";
+      _localFile(fileName: 'settings.json').then((onValue) {
+        onValue.readAsString().then((data1) {
+          data = data1;
+        });
+      });
+      return json.decode(data);
+    } catch (ex) {
+      return {};
+    } finally {
     }
   }
 }

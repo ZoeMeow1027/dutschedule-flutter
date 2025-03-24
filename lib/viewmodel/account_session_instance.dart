@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dutwrapper/account_object.dart';
@@ -181,8 +182,7 @@ class AccountSessionInstance extends BaseViewModel {
       subjectInformationList.state = ProcessState.failed;
       log("[Account] [Subject information] Running failed!");
     } finally {
-      subjectInformationList.lastRequest =
-          DateTime.now().millisecondsSinceEpoch;
+      subjectInformationList.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject information] End run.");
       notifyListeners();
       afterRun?.call();
@@ -311,8 +311,7 @@ class AccountSessionInstance extends BaseViewModel {
       notifyListeners();
       log("[Account] [Training result] Running...");
 
-      var data =
-          await accRepo.fetchTrainingResult(session: accountSession.data!);
+      var data = await accRepo.fetchTrainingResult(session: accountSession.data!);
       trainingResult.data = data;
 
       trainingResult.state = ProcessState.successful;
@@ -326,5 +325,31 @@ class AccountSessionInstance extends BaseViewModel {
       notifyListeners();
       afterRun?.call();
     }
+  }
+
+  Map<String, dynamic> _toMap() {
+    return {
+      "account.accountsession.data": jsonEncode(accountSession.data),
+      "account.accountsession.lastrequest": accountSession.lastRequest,
+      "account.accountsession.parameters": jsonEncode(accountSession.parameters),
+    };
+    // TODO: Work here!
+  }
+
+  void _fromMap(Map<String, dynamic> data) {
+
+  }
+
+  Map<String, dynamic> exportSettingsToJson() {
+    return _toMap();
+  }
+
+  void importSettingsFromJson(Map<String, dynamic> json) {
+    _fromMap(json);
+  }
+
+  void _settingsChanged() {
+    notifyListeners();
+    // TODO: Save changes to local disk.
   }
 }

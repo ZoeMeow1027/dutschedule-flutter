@@ -48,7 +48,7 @@ class NewsNotificationsSettingsView extends StatelessWidget {
             ),
             ListViewGroupItem(
               padding: EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_newsnotify_category_notification"),
+              title: AppLocalizations.of(context).translate("settings_newsnotify_category_backgroundrefreshduration"),
               dividerOnBottom: true,
               children: [
                 Padding(
