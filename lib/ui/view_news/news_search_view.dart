@@ -36,7 +36,6 @@ class NewsSearchView extends StatelessWidget {
               context: context,
               newsSearchInstance: newsSearchInstance,
               onTap: () async {
-                newsSearchInstance.newsSearchQueryTextControl.clear();
                 await Navigator.push(
                   context,
                   PageRouteBuilder(
@@ -61,7 +60,6 @@ class NewsSearchView extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 5),
                     child: IconButton(
                       onPressed: () async {
-                        newsSearchInstance.newsSearchQueryTextControl.clear();
                         await Navigator.push(
                           context,
                           PageRouteBuilder(
@@ -80,7 +78,7 @@ class NewsSearchView extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: newsSearchInstance.searchProcessState == ProcessState.running
+                      icon: newsSearchInstance.processState == ProcessState.running
                           ? SizedBox(
                               width: 24,
                               height: 24,
@@ -96,7 +94,7 @@ class NewsSearchView extends StatelessWidget {
             ? _haveResults(
                 context: context,
                 newsList: newsSearchInstance.searchResult,
-                isRefreshing: newsSearchInstance.searchProcessState == ProcessState.running,
+                isRefreshing: newsSearchInstance.processState == ProcessState.running,
                 endListReached: () => newsSearchInstance.fetchSearchRun(),
                 refreshRequired: () => newsSearchInstance.fetchSearchRun(startOver: true),
                 onClick: (news) async {
@@ -111,9 +109,9 @@ class NewsSearchView extends StatelessWidget {
                   );
                 },
               )
-            : newsSearchInstance.searchProcessState == ProcessState.running
+            : newsSearchInstance.processState == ProcessState.running
                 ? _loading(context)
-                : newsSearchInstance.searchProcessState == ProcessState.notRunYet
+                : newsSearchInstance.processState == ProcessState.notRunYet
                     ? _notRunYet(context)
                     : _noAnyResult(context),
       ),
@@ -125,7 +123,7 @@ class NewsSearchView extends StatelessWidget {
     required NewsSearchInstance newsSearchInstance,
     Function()? onTap,
   }) {
-    if (newsSearchInstance.searchProcessState != ProcessState.notRunYet) {
+    if (newsSearchInstance.processState != ProcessState.notRunYet) {
       return InkWell(
         onTap: onTap,
         child: SizedBox(

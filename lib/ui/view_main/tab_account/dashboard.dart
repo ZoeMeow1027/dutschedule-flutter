@@ -1,9 +1,9 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
+import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import '../../components/message_card.dart';
 import '../../components/widget_account/dashboard_basic_info_view.dart';

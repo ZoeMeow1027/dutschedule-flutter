@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
 import 'news_end_list_item.dart';
 import 'news_list_in_date.dart';
 
@@ -43,30 +44,47 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
           color: widget.color,
           alignment: Alignment.topCenter,
           child: RefreshIndicator(
-            child: ListView.builder(
-              controller: widget.scrollController,
-              itemCount: tmp.length + 1,
-              itemBuilder: (context, index) {
-                if (index == tmp.length) {
-                  return NewsEndListItem(
-                    isRefreshing: widget.isRefreshing,
-                    refreshRequested: () {
-                      if (widget.endListReached != null) {
-                        widget.endListReached!();
+            child: tmp.isNotEmpty
+                ? ListView.builder(
+                    controller: widget.scrollController,
+                    itemCount: tmp.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == tmp.length) {
+                        return NewsEndListItem(
+                          isRefreshing: widget.isRefreshing,
+                          refreshRequested: () {
+                            if (widget.endListReached != null) {
+                              widget.endListReached!();
+                            }
+                          },
+                        );
+                      } else {
+                        return NewsListInDate(
+                          date: tmp.keys.elementAt(index),
+                          newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
+                          color: widget.color,
+                          onClick: widget.onClick,
+                          showDateInHeader: widget.showDateInHeader,
+                        );
                       }
                     },
-                  );
-                } else {
-                  return NewsListInDate(
-                    date: tmp.keys.elementAt(index),
-                    newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
-                    color: widget.color,
-                    onClick: widget.onClick,
-                    showDateInHeader: widget.showDateInHeader,
-                  );
-                }
-              },
-            ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      widget.isRefreshing
+                          // If loading
+                          ? CircularProgressIndicator()
+                          // If no internet
+                          : Text(
+                              AppLocalizations.of(context).translate("main_news_nonews_nointernet"),
+                              textAlign: TextAlign.center,
+                            ),
+                      // TODO: Need information about can't reaching to server here.
+                      Spacer(),
+                    ],
+                  ),
             onRefresh: () async {
               if (widget.refreshRequested != null) {
                 await widget.refreshRequested!();

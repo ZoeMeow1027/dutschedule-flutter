@@ -7,33 +7,63 @@ import '../../utils/app_localizations.dart';
 import '../../viewmodel/news_search_instance.dart';
 import '../components/widget_news/news_search_history_item.dart';
 
-class NewsSearchOptionView extends StatelessWidget {
+class NewsSearchOptionView extends StatefulWidget {
   const NewsSearchOptionView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _NewsSearchOptionView();
+}
+
+class _NewsSearchOptionView extends State<NewsSearchOptionView> {
+  final _searchQueryControl = TextEditingController();
+
+  // focus node to capture keyboard events
+  final FocusNode _focusNode = FocusNode();
+  // focus node for detect TextField is focus.
+  final FocusNode _focusNodeTextField = FocusNode();
+
+  // Temporary query for placeholder.
+  String _searchQuery = "";
+  NewsType _newsType = NewsType.global;
+  NewsSearchMethod _searchMethod = NewsSearchMethod.byTitle;
 
   @override
   Widget build(BuildContext context) {
     final newsSearchInstance = Provider.of<NewsSearchInstance>(context);
 
-    // focus node to capture keyboard events
-    final FocusNode focusNode = FocusNode();
-
     return KeyboardListener(
       autofocus: true,
       onKeyEvent: (event) {
-        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.escape) {
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+          if (_focusNodeTextField.hasFocus) {
+            if (_searchQuery.isNotEmpty) {
+              newsSearchInstance.changeNewsSearchOption(
+                query: _searchQuery,
+                newsType: _newsType,
+                searchMethod: _searchMethod,
+              );
+              newsSearchInstance.fetchSearchRun(startOver: true);
+              Navigator.pop(context);
+            }
+          }
+        } else if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.escape) {
           Navigator.pop(context);
         }
       },
-      focusNode: focusNode,
+      focusNode: _focusNode,
       child: Scaffold(
         appBar: AppBar(
           title: TextField(
-            controller: newsSearchInstance.newsSearchQueryTextControl,
-            onChanged: (text) => newsSearchInstance.changeNewsSearchOption(query: text),
+            controller: _searchQueryControl,
+            onChanged: (text) => setState(() {
+              _searchQuery = text;
+            }),
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               hintText: AppLocalizations.of(context).translate("news_search_searchbox_placeholder"),
             ),
+            focusNode: _focusNodeTextField,
           ),
           backgroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
@@ -43,7 +73,12 @@ class NewsSearchOptionView extends StatelessWidget {
               padding: const EdgeInsets.only(right: 5),
               child: IconButton(
                 onPressed: () {
-                  if (newsSearchInstance.searchQueryTemp.isNotEmpty) {
+                  if (_searchQuery.isNotEmpty) {
+                    newsSearchInstance.changeNewsSearchOption(
+                      query: _searchQuery,
+                      newsType: _newsType,
+                      searchMethod: _searchMethod,
+                    );
                     newsSearchInstance.fetchSearchRun(startOver: true);
                     Navigator.pop(context);
                   }
@@ -77,8 +112,10 @@ class NewsSearchOptionView extends StatelessWidget {
                       label: Text(AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject")),
                     ),
                   ],
-                  selected: <NewsType>{newsSearchInstance.newsType},
-                  onSelectionChanged: (value) => newsSearchInstance.changeNewsSearchOption(newsType: value.first),
+                  selected: <NewsType>{_newsType},
+                  onSelectionChanged: (value) => setState(() {
+                    _newsType = value.first;
+                  }),
                 ),
               ),
               Text(
@@ -99,8 +136,10 @@ class NewsSearchOptionView extends StatelessWidget {
                       label: Text(AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent")),
                     ),
                   ],
-                  selected: <NewsSearchMethod>{newsSearchInstance.searchMethod},
-                  onSelectionChanged: (value) => newsSearchInstance.changeNewsSearchOption(searchMethod: value.first),
+                  selected: <NewsSearchMethod>{_searchMethod},
+                  onSelectionChanged: (value) => setState(() {
+                    _searchMethod = value.first;
+                  }),
                 ),
               ),
               Text(

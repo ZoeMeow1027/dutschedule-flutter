@@ -1,13 +1,13 @@
-
-import '../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/scaffold_nav.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/build_context_extension.dart';
 import '../../utils/get_device_type.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_dashboard/dashboard_tab.dart';
 import 'tab_news/news_tab.dart';
+import 'tab_notifications/notifications_tab.dart';
 
 class MainScreenView extends StatefulWidget {
   const MainScreenView({super.key});
@@ -19,45 +19,22 @@ class MainScreenView extends StatefulWidget {
 class _MyHomePageState extends State<MainScreenView> {
   int _selectedPage = 0;
 
-  late PageController _controller;
+  // late PageController _controller;
+  final List<Widget> _pages = const <Widget>[
+    DashboardTab(),
+    NewsTab(),
+    NotificationsTab(),
+    AccountTab(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _controller = PageController(initialPage: _selectedPage);
+    // _controller = PageController(initialPage: _selectedPage);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (true) {
-      return _mainView(context);
-    } else {
-      return _loadingView(context);
-    }
-  }
-
-  Widget _loadingView(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).translate("app_name"))),
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: LinearProgressIndicator(),
-            ),
-            Text("We are setting up. Please wait a bit..."),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _mainView(BuildContext context) {
     var screenType = context.getDeviceType();
 
     return Scaffold(
@@ -65,54 +42,113 @@ class _MyHomePageState extends State<MainScreenView> {
         children: [
           screenType.value > DeviceType.phone.value
               ? NavigationRail(
-                  // extended: true,
-                  groupAlignment: 0.0,
-                  destinations: _getNavList(context).convertToListNavRailDestination(),
+                  leading: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: ClipOval(
+                      child: Image(
+                        image: AssetImage('assets/app_icon_512.png'),
+                        width: 96,
+                        height: 96,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  useIndicator: true,
+                  extended: true,
+                  groupAlignment: -1.0,
+                  destinations: _getNavList(context).toNavRailDestinationList(),
                   selectedIndex: _selectedPage,
-                  labelType: NavigationRailLabelType.all,
+                  labelType: NavigationRailLabelType.none,
                   onDestinationSelected: (index) {
-                    _controller.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.linearToEaseOut,
-                    );
+                    setState(() {
+                      _selectedPage = index;
+                    });
                   },
                   minWidth: 80,
                 )
               : const Center(),
           Expanded(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _controller,
-              onPageChanged: (page) {
-                setState(() {
-                  _selectedPage = page;
-                });
-              },
-              children: const <Widget>[
-                DashboardTab(),
-                NewsTab(),
-                AccountTab(),
-              ],
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 150),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+              child: _pages[_selectedPage],
             ),
           ),
         ],
       ),
       bottomNavigationBar: screenType.value <= DeviceType.phone.value
           ? NavigationBar(
-              destinations: _getNavList(context).convertToListNavDestination(),
+              destinations: _getNavList(context).toListNavDestinationList(),
               selectedIndex: _selectedPage,
               onDestinationSelected: (index) {
-                _controller.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.linearToEaseOut,
-                );
+                setState(() {
+                  _selectedPage = index;
+                });
               },
             )
           : null,
     );
   }
+
+  // Widget _buildv1() {
+  //   var screenType = context.getDeviceType();
+
+  //   return Scaffold(
+  //     body: Row(
+  //       children: [
+  //         screenType.value > DeviceType.phone.value
+  //             ? NavigationRail(
+  //                 // extended: true,
+  //                 groupAlignment: 0.0,
+  //                 destinations: _getNavList(context).convertToListNavRailDestination(),
+  //                 selectedIndex: _selectedPage,
+  //                 labelType: NavigationRailLabelType.all,
+  //                 onDestinationSelected: (index) {
+  //                   _controller.animateToPage(
+  //                     index,
+  //                     duration: const Duration(milliseconds: 300),
+  //                     curve: Curves.fastLinearToSlowEaseIn,
+  //                   );
+  //                 },
+  //                 minWidth: 80,
+  //               )
+  //             : const Center(),
+  //         Expanded(
+  //           child: PageView(
+  //             physics: const NeverScrollableScrollPhysics(),
+  //             controller: _controller,
+  //             onPageChanged: (page) {
+  //               setState(() {
+  //                 _selectedPage = page;
+  //               });
+  //             },
+  //             children: const <Widget>[
+  //               DashboardTab(),
+  //               NewsTab(),
+  //               NotificationsTab(),
+  //               AccountTab(),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     bottomNavigationBar: screenType.value <= DeviceType.phone.value
+  //         ? NavigationBar(
+  //             destinations: _getNavList(context).convertToListNavDestination(),
+  //             selectedIndex: _selectedPage,
+  //             onDestinationSelected: (index) {
+  //               _controller.animateToPage(
+  //                 index,
+  //                 duration: const Duration(milliseconds: 300),
+  //                 curve: Curves.fastLinearToSlowEaseIn,
+  //               );
+  //             },
+  //           )
+  //         : null,
+  //   );
+  // }
 
   ScaffoldNavigationList _getNavList(BuildContext context) {
     return ScaffoldNavigationList(itemList: [
@@ -128,6 +164,11 @@ class _MyHomePageState extends State<MainScreenView> {
       ),
       ScaffoldNavigationItem(
         id: 2,
+        label: AppLocalizations.of(context).translate("notification_panel_title"),
+        iconData: Icons.notifications,
+      ),
+      ScaffoldNavigationItem(
+        id: 3,
         label: AppLocalizations.of(context).translate("account_title"),
         iconData: Icons.account_circle_outlined,
       ),

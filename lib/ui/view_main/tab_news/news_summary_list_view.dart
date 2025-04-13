@@ -1,15 +1,15 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/enum/news_tab_location.dart';
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
+import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/main_view_model.dart';
 import '../../../viewmodel/news_cache_instance.dart';
 import '../../../viewmodel/news_search_instance.dart';
 import '../../components/widget_news/news_list.dart';
-import '../../../model/enum/news_tab_location.dart';
 import '../../view_news/news_search_view.dart';
 import '../../view_settings/settings_view.dart';
 

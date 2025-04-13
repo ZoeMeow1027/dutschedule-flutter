@@ -90,7 +90,7 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "ZoeMeow" "\0"
-            VALUE "FileDescription", "DutSchedule [Flutter]" "\0"
+            VALUE "FileDescription", "DutSchedule" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "DutSchedule" "\0"
             VALUE "LegalCopyright", "" "\0"
