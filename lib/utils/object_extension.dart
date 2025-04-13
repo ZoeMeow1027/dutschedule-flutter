@@ -1,3 +1,0 @@
-extension ObjectExtension on Object {
-
-}

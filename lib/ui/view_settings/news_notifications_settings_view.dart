@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/background_subject_code.dart';
 import '../../model/news_background_subject_type.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/news_cache_instance.dart';
 import '../../viewmodel/settings_instance.dart';
@@ -11,8 +13,17 @@ import '../components/listview_group_item.dart';
 import '../components/option_item.dart';
 import '../components/switch_with_surface.dart';
 
-class NewsNotificationsSettingsView extends StatelessWidget {
+class NewsNotificationsSettingsView extends StatefulWidget {
   const NewsNotificationsSettingsView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _NewsNotificationsSettingsView();
+}
+
+class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView> {
+  final _tfSchoolYearId = TextEditingController();
+  final _tfClassId = TextEditingController();
+  final _tfSubjectName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +98,6 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                           },
                           onChangeEnd: (value) {
                             settingsInstance.newsBackgroundDuration = (value + 5).toInt();
-                            // TODO: Save changes here!
                             newsCacheInstance.timerInterval = (value + 5).toInt() * 60 * 1000;
                             newsCacheInstance.startTimer(startOver: true);
                           },
@@ -108,7 +118,6 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                               onPressed: () {
                                 newsCacheInstance.timerInterval = 1000 * 60 * duration;
                                 settingsInstance.newsBackgroundDuration = duration;
-                                // TODO: Save changes here!
                               },
                             );
                           }).toList(),
@@ -234,7 +243,7 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: Container(
-                    width: double.infinity,
+                    // width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
                       color: Theme.of(context).buttonTheme.colorScheme?.primaryContainer,
@@ -263,13 +272,64 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                                 color: Theme.of(context).colorScheme.onPrimary,
                                 paddingInside: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                 title: StringUtils.formatString(
-                                  "{0} - {1} - {2}",
+                                  "{2} [{0}.Nh{1}]",
                                   [filter.studentYearId, filter.classId, filter.subjectName],
                                 ),
                                 trailing: IconButton(
                                   onPressed: () {
-                                    // TODO: Show a message before deleting a item
-                                    settingsInstance.removeNewsBackgroundFilter(filter);
+                                    // Show a message before deleting a item
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) => AlertDialog(
+                                        title: Text(AppLocalizations.of(context)
+                                            .translate("settings_newsnotify_newsfilter_dialogdelete_title")),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            spacing: 8,
+                                            children: [
+                                              Text(AppLocalizations.of(context).translateWithParameters(
+                                                "settings_newsnotify_newsfilter_dialogdelete_description",
+                                                [filter.subjectName, filter.studentYearId, filter.classId],
+                                              )),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text(AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_dialogdelete_yes")),
+                                            onPressed: () {
+                                              try {
+                                                // Delete an item here!
+                                                var temp = BackgroundSubjectCode.fromJson(filter.toJson());
+                                                settingsInstance.removeNewsBackgroundFilter(filter);
+                                                context.showCustomSnackBar(
+                                                  content: Text(AppLocalizations.of(context).translateWithParameters(
+                                                    "settings_newsnotify_newsfilter_notify_delete",
+                                                    [temp.subjectName, temp.studentYearId, temp.classId],
+                                                  )),
+                                                  dismissOld: true,
+                                                );
+                                              } catch (ex) {
+                                                // TODO: Notify user error here.
+                                                // context.showCustomSnackBar(
+                                                //   content: Text(AppLocalizations.of(context).translate("link_failed")),
+                                                //   dismissOld: true,
+                                                // );
+                                              } finally {
+                                                // Dialog must be closed with any reason.
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text(AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_dialogdelete_no")),
+                                            onPressed: () => Navigator.pop(context),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   },
                                   icon: Icon(Icons.delete),
                                 ),
@@ -284,6 +344,90 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                             paddingInside: EdgeInsets.only(left: 10, right: 10, top: 10),
                             title: AppLocalizations.of(context).translate("settings_newsnotify_newsfilter_add"),
                             leading: Icon(Icons.add),
+                            onClick: () {
+                              // Clear all text in 3 text editing controller before showing dialog.
+                              _tfSchoolYearId.clear();
+                              _tfClassId.clear();
+                              _tfSubjectName.clear();
+                              // Show dialog as usual.
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text(AppLocalizations.of(context)
+                                      .translate("settings_newsnotify_newsfilter_dialogadd_title")),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      spacing: 8,
+                                      children: [
+                                        Text(AppLocalizations.of(context)
+                                            .translate("settings_newsnotify_newsfilter_dialogadd_description")),
+                                        TextField(
+                                          controller: _tfSchoolYearId,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_dialogadd_schyear"),
+                                          ),
+                                        ),
+                                        TextField(
+                                          controller: _tfClassId,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_dialogadd_class"),
+                                          ),
+                                        ),
+                                        TextField(
+                                          controller: _tfSubjectName,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_dialogadd_schname"),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text(AppLocalizations.of(context).translate("action_ok")),
+                                      onPressed: () {
+                                        try {
+                                          // Add an item here! If successful, dialog will disappear.
+                                          settingsInstance.addNewsBackgroundFilter(BackgroundSubjectCode(
+                                            studentYearId: _tfSchoolYearId.text,
+                                            classId: _tfClassId.text,
+                                            subjectName: _tfSubjectName.text,
+                                          ));
+                                          context.showCustomSnackBar(
+                                            content: Text(AppLocalizations.of(context).translateWithParameters(
+                                              "settings_newsnotify_newsfilter_notify_add",
+                                              [
+                                                _tfSubjectName.text,
+                                                _tfSchoolYearId.text,
+                                                _tfClassId.text,
+                                              ],
+                                            )),
+                                            dismissOld: true,
+                                          );
+                                          Navigator.pop(context);
+                                        } catch (ex) {
+                                          // TODO: Notify user error here.
+                                          // context.showCustomSnackBar(
+                                          //   content: Text(AppLocalizations.of(context).translate("link_failed")),
+                                          //   dismissOld: true,
+                                          // );
+                                        }
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text(AppLocalizations.of(context).translate("action_cancel")),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Padding(
@@ -294,8 +438,54 @@ class NewsNotificationsSettingsView extends StatelessWidget {
                             title: AppLocalizations.of(context).translate("settings_newsnotify_newsfilter_deleteall"),
                             leading: Icon(Icons.delete),
                             onClick: () {
-                              // TODO: Show a message before deleting all items
-                              settingsInstance.removeAllNewsBackgroundFilters();
+                              // Show a message before deleting all items
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text(AppLocalizations.of(context)
+                                      .translate("settings_newsnotify_newsfilter_dialogdeleteall_title")),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      spacing: 8,
+                                      children: [
+                                        Text(AppLocalizations.of(context)
+                                            .translate("settings_newsnotify_newsfilter_dialogdeleteall_description")),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text(AppLocalizations.of(context)
+                                          .translate("settings_newsnotify_newsfilter_dialogdelete_yes")),
+                                      onPressed: () {
+                                        try {
+                                          // Clear all subject filter here!
+                                          settingsInstance.removeAllNewsBackgroundFilters();
+                                          context.showCustomSnackBar(
+                                            content: Text(AppLocalizations.of(context)
+                                                .translate("settings_newsnotify_newsfilter_notify_deleteall")),
+                                            dismissOld: true,
+                                          );
+                                        } catch (ex) {
+                                          // TODO: Notify user error here.
+                                          // context.showCustomSnackBar(
+                                          //   content: Text(AppLocalizations.of(context).translate("link_failed")),
+                                          //   dismissOld: true,
+                                          // );
+                                        } finally {
+                                          // Dialog must be closed with any reason.
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text(AppLocalizations.of(context)
+                                          .translate("settings_newsnotify_newsfilter_dialogdelete_no")),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                           ),
                         ),

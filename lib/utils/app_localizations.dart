@@ -6,6 +6,15 @@ import 'package:flutter/services.dart';
 import 'string_utils.dart';
 
 class AppLocalizations {
+  static final Map<String, String> availableLocaleList = {
+    'en': 'English',
+    'vi': 'Tiếng Việt',
+  };
+
+  static String getLocaleDisplayName(Locale locale) {
+    return availableLocaleList[locale.languageCode] ?? locale.languageCode;
+  }
+
   final Locale locale;
   Map<String, String> _localizedStrings = {};
 

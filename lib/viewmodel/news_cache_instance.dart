@@ -16,10 +16,10 @@ enum NewsFetchType {
 class NewsCacheInstance extends BaseViewModel {
   @override
   void initializing() {
-    fetchGlobalNews(fetchType: NewsFetchType.nextPage);
-    fetchSubjectNews(fetchType: NewsFetchType.nextPage);
+    // fetchGlobalNews(fetchType: NewsFetchType.firstPage);
+    // fetchSubjectNews(fetchType: NewsFetchType.firstPage);
 
-    timerInterval = 60000;
+    // timerInterval = 60000;
   }
 
   @override
@@ -45,7 +45,7 @@ class NewsCacheInstance extends BaseViewModel {
   Future<void> fetchGlobalNews({
     NewsFetchType fetchType = NewsFetchType.nextPage,
     bool forceRequest = false,
-    Function()? onDone,
+    Function(bool)? onDone,
   }) async {
     if (!newsGlobal.isSuccessfulRequestExpired() && !forceRequest) {
       log("[News global] Running denied because of timeout. Force this request to continue.");
@@ -64,9 +64,7 @@ class NewsCacheInstance extends BaseViewModel {
     List<NewsGlobal> latestNews = [];
     try {
       var listFromInternet = await News.getNewsGlobal(
-        page: fetchType == NewsFetchType.nextPage
-            ? (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1)
-            : 1,
+        page: fetchType == NewsFetchType.nextPage ? (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
 
       if (fetchType == NewsFetchType.clearCacheAndFirstPage) {
@@ -98,8 +96,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsGlobal.data
-                .firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsGlobal.data.firstWhere((p) => p.date == item.date && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -127,14 +124,11 @@ class NewsCacheInstance extends BaseViewModel {
         // Increase by 1
         case NewsFetchType.nextPage:
           newsGlobal.parameters["nextPage"] =
-              ((int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) + 1)
-                  .toString();
+              ((int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) + 1).toString();
           break;
         // Just keep current
         case NewsFetchType.firstPage:
-          newsGlobal.parameters["nextPage"] =
-              (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1)
-                  .toString();
+          newsGlobal.parameters["nextPage"] = (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1).toString();
           break;
         // Set to 2
         case NewsFetchType.clearCacheAndFirstPage:
@@ -151,14 +145,14 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News global] Done running! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, current count: ${newsGlobal.data.length}");
       notifyListeners();
-      onDone?.call();
+      onDone?.call(newsGlobal.state == ProcessState.successful);
     }
   }
 
   Future<void> fetchSubjectNews({
     NewsFetchType fetchType = NewsFetchType.nextPage,
     bool forceRequest = false,
-    Function()? onDone,
+    Function(bool)? onDone,
   }) async {
     if (!newsSubject.isSuccessfulRequestExpired() && !forceRequest) {
       log("[News subject] Running denied because of timeout. Force this request to continue.");
@@ -177,9 +171,7 @@ class NewsCacheInstance extends BaseViewModel {
     List<NewsSubject> latestNews = [];
     try {
       var listFromInternet = await News.getNewsSubject(
-        page: fetchType == NewsFetchType.nextPage
-            ? (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1)
-            : 1,
+        page: fetchType == NewsFetchType.nextPage ? (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
 
       if (fetchType == NewsFetchType.clearCacheAndFirstPage) {
@@ -239,15 +231,11 @@ class NewsCacheInstance extends BaseViewModel {
         // Increase by 1
         case NewsFetchType.nextPage:
           newsSubject.parameters["nextPage"] =
-              ((int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) +
-                      1)
-                  .toString();
+              ((int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) + 1).toString();
           break;
         // Just keep current
         case NewsFetchType.firstPage:
-          newsSubject.parameters["nextPage"] =
-              (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1)
-                  .toString();
+          newsSubject.parameters["nextPage"] = (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1).toString();
           break;
         // Set to 2
         case NewsFetchType.clearCacheAndFirstPage:
@@ -264,7 +252,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News subject] End run. Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, current count: ${newsSubject.data.length}");
       notifyListeners();
-      onDone?.call();
+      onDone?.call(newsSubject.state == ProcessState.successful);
     }
   }
 }

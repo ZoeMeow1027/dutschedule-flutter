@@ -1,28 +1,25 @@
 import 'dart:developer';
 
-import '../model/enum/app_theme_mode.dart';
-import '../repository/storage_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../model/background_subject_code.dart';
+import '../model/enum/app_theme_mode.dart';
 import '../model/enum/background_image_option.dart';
 import '../model/news_background_subject_type.dart';
 import '../model/school_year.dart';
+import '../repository/storage_repository.dart';
 import 'base_view_model.dart';
 
 class SettingsInstance extends BaseViewModel {
   SettingsInstance();
 
   SettingsInstance.fromPreviousSettings(Map<String, dynamic> json) {
-    importSettingsFromJson(json);
+    _fromMap(json);
     _isSettingsInitialized = true;
   }
 
   @override
-  void initializing() async {
-    // importSettingsFromJson(await StorageRepository.getPreviousSettings());
-    // _isSettingsInitialized = true;
-  }
+  void initializing() async {}
 
   bool _isSettingsInitialized = false;
 
@@ -30,6 +27,8 @@ class SettingsInstance extends BaseViewModel {
   void timerAction() {}
 
   /// First run (show welcome page)
+  ///
+  /// **Settings name:** appbehavior.firstrun.done
   bool get firstRunDone => _firstRunDone;
 
   set firstRunDone(bool value) {
@@ -45,6 +44,8 @@ class SettingsInstance extends BaseViewModel {
 
   /// News background timeout duration (in minutes, must be larger than 5).
   /// Set to 0 to disable this function.
+  ///
+  /// **Settings name:** appsettings.newsbackground.duration
   int get newsBackgroundDuration => _newsBackgroundDuration;
 
   set newsBackgroundDuration(int value) {
@@ -64,9 +65,10 @@ class SettingsInstance extends BaseViewModel {
 
   int _newsBackgroundDuration = 0;
 
-  /// Is global news notify you?
+  /// Enable or disable news background notification for global news
   ///
-  /// Since v2.0-draft17
+  /// **Settings name:** appsettings.newsbackground.newsglobal.enabled
+  /// **Since:** v2.0-draft17
   bool get newsBackgroundGlobalEnabled => _newsBackgroundGlobalEnabled;
 
   set newsBackgroundGlobalEnabled(bool value) {
@@ -82,8 +84,9 @@ class SettingsInstance extends BaseViewModel {
 
   /// Is subject news notify you?
   ///
-  /// Related: [newsBackgroundFilterList]
-  /// Since v2.0-draft17
+  /// **Related:** [newsBackgroundFilterList]
+  /// **Settings name:** appsettings.newsbackground.newssubject.enabled
+  /// **Since:** v2.0-draft17
   NewsBackgroundSubjectType get newsBackgroundSubjectEnabled => _newsBackgroundSubjectEnabled;
 
   set newsBackgroundSubjectEnabled(NewsBackgroundSubjectType value) {
@@ -98,6 +101,8 @@ class SettingsInstance extends BaseViewModel {
   NewsBackgroundSubjectType _newsBackgroundSubjectEnabled = NewsBackgroundSubjectType.allNews;
 
   ///
+  ///
+  /// **Settings name:** appsettings.newsbackground.filterlist
   List<BackgroundSubjectCode> newsBackgroundFilterList = [
     BackgroundSubjectCode(studentYearId: "18", classId: "12", subjectName: "Subject 1"),
     BackgroundSubjectCode(studentYearId: "19", classId: "12", subjectName: "Subject 2"),
@@ -122,6 +127,8 @@ class SettingsInstance extends BaseViewModel {
   }
 
   ///
+  ///
+  /// **Settings name:** appsettings.newsbackground.newssubject.parsenotification
   bool get newsBackgroundParseNewsSubject => _newsBackgroundParseNewsSubject;
 
   set newsBackgroundParseNewsSubject(bool value) {
@@ -136,6 +143,8 @@ class SettingsInstance extends BaseViewModel {
   bool _newsBackgroundParseNewsSubject = false;
 
   /// Enable or disable app dark theme.
+  ///
+  /// **Settings name:** appsettings.appearance.thememode
   AppThemeMode get themeMode => _themeMode;
 
   set themeMode(AppThemeMode value) {
@@ -150,6 +159,8 @@ class SettingsInstance extends BaseViewModel {
   AppThemeMode _themeMode = AppThemeMode.followSystemSettings;
 
   /// Follow accent color from system
+  ///
+  /// **Settings name:** appsettings.appearance.dynamiccolor
   bool get followAccentColor => _followAccentColor;
 
   set followAccentColor(bool value) {
@@ -164,6 +175,8 @@ class SettingsInstance extends BaseViewModel {
   bool _followAccentColor = true;
 
   /// Set background image option.
+  ///
+  /// **Settings name:** appsettings.appearance.backgroundimage.option
   BackgroundImageOption get backgroundImageOption => _backgroundImageOption;
 
   set backgroundImageOption(BackgroundImageOption value) {
@@ -179,6 +192,8 @@ class SettingsInstance extends BaseViewModel {
 
   /// Make app background to black color. Only in dark mode.
   /// This won't work if [backgroundImageOption] is different than `none`.
+  ///
+  /// **Settings name:** appsettings.appearance.blackbackground
   bool get blackBackground => _blackBackground;
 
   set blackBackground(bool value) {
@@ -193,13 +208,19 @@ class SettingsInstance extends BaseViewModel {
   bool _blackBackground = false;
 
   ///
+  ///
+  /// **Settings name:** appsettings.appearance.backgroundimage.opacity.background
   double backgroundImageOpacity = 0.65;
 
   ///
+  ///
+  /// **Settings name:** appsettings.appearance.backgroundimage.opacity.component
   double componentOpacity = 0.65;
 
   // Miscellaneous
   /// Automatically find locale and set language from that.
+  ///
+  /// **Settings name:** appsettings.locale.auto
   bool get localeAuto => _localeAuto;
 
   set localeAuto(bool value) {
@@ -210,6 +231,8 @@ class SettingsInstance extends BaseViewModel {
   bool _localeAuto = true;
 
   /// Set locale manually.
+  ///
+  /// **Settings name:** appsettings.locale.specific
   Locale get locale => _locale;
 
   set locale(Locale lo) {
@@ -272,7 +295,6 @@ class SettingsInstance extends BaseViewModel {
     _pendingChanges = true;
     notifyListeners();
     log("[Settings] Modified changes! Saving...");
-    // TODO: Save settings here!
     await StorageRepository.saveSettings(settings: _toMap());
 
     _pendingChanges = false;
@@ -340,13 +362,5 @@ class SettingsInstance extends BaseViewModel {
     currentSchoolYear =
         SchoolYear.fromJson(data["appsettings.globalvariables.schoolyear"] as Map<String, dynamic>? ?? {});
     openNewsInModalBottomSheet = (data["appsettings.behavior.bottomsheetwhenclicknews"] as bool?) ?? true;
-  }
-
-  Map<String, dynamic> exportSettingsToJson() {
-    return _toMap();
-  }
-
-  void importSettingsFromJson(Map<String, dynamic> json) {
-    _fromMap(json);
   }
 }

@@ -53,7 +53,7 @@ class AccountTabletView extends StatelessWidget {
                   dismissOld: true,
                 );
               },
-              afterRun: () {
+              afterRun: (successful) {
                 switch (accountSession.accountSession.state) {
                   case ProcessState.successful:
                     context.showCustomSnackBar(

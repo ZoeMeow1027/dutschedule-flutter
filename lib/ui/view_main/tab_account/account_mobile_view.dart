@@ -34,7 +34,7 @@ class AccountMobileView extends StatelessWidget {
           ),
         ],
       ),
-      body: accountSession.accountSession.state == ProcessState.successful
+      body: _checkIfDashboardShouldShown(context)
           ? AccountDashboardView()
           : AccountNotLoggedInView(
               onAuthInfoChanged: (user, pass, remember) {
@@ -54,7 +54,7 @@ class AccountMobileView extends StatelessWidget {
                       dismissOld: true,
                     );
                   },
-                  afterRun: () {
+                  afterRun: (successful) {
                     switch (accountSession.accountSession.state) {
                       case ProcessState.successful:
                         context.showCustomSnackBar(
@@ -78,5 +78,21 @@ class AccountMobileView extends StatelessWidget {
               },
             ),
     );
+  }
+
+  bool _checkIfDashboardShouldShown(BuildContext context) {
+    final accountSession = Provider.of<AccountSessionInstance>(context);
+    if (accountSession.accountSession.state == ProcessState.successful) {
+      return true;
+    }
+
+    if (accountSession.accountSession.data != null) {
+      if (accountSession.accountSession.data?.sessionId != null) {
+        return true;
+      }
+      return false;
+    }
+
+    return false;
   }
 }

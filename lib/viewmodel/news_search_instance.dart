@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
-import 'package:flutter/material.dart';
 
 import '../model/news_search_history.dart';
 import '../model/process_state.dart';
+import '../repository/storage_repository.dart';
 import 'base_view_model.dart';
 
 class NewsSearchInstance extends BaseViewModel {
@@ -16,25 +17,75 @@ class NewsSearchInstance extends BaseViewModel {
   @override
   void timerAction() {}
 
-  var newsSearchQueryTextControl = TextEditingController();
+  NewsSearchInstance();
+
+  NewsSearchInstance.fromPreviousSettings({required Map<String, dynamic> newsSearchJson}) {
+    _fromMap(newsSearchJson);
+    _isSettingsInitialized = true;
+  }
+
+  bool _isSettingsInitialized = false;
+
+  void _fromMap(Map<String, dynamic> data) {
+    newsHistoryList = (data["searchhistory.newshistorylist"] as List<dynamic>? ?? {})
+        .map((p) => NewsSearchHistory.fromJson(p))
+        .toList()
+        .sorted((p, q) => q.lastRequest.compareTo(p.lastRequest))
+        .toList();
+    _isSettingsInitialized = true;
+    notifyListeners();
+  }
+
+  Map<String, dynamic> _toMap() {
+    return {
+      "searchhistory.newshistorylist": newsHistoryList.map((p) => p.toJson()).toList(),
+    };
+  }
+
+  bool _pendingChanges = false;
+
+  void _settingsChanged() async {
+    if (!_isSettingsInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
+
+    _pendingChanges = true;
+    notifyListeners();
+    log("[Search History] Modified changes! Saving...");
+    await StorageRepository.saveNewsSearchHistory(searchHistory: _toMap());
+
+    _pendingChanges = false;
+    notifyListeners();
+  }
 
   int _nextPage = 1;
-  String searchQuery = "";
-  String searchQueryTemp = "";
-  NewsType newsType = NewsType.global;
-  ProcessState searchProcessState = ProcessState.notRunYet;
-  NewsSearchMethod searchMethod = NewsSearchMethod.byTitle;
+
+  String _searchQuery = "";
+  String get searchQuery => _searchQuery;
+
+  NewsType _newsType = NewsType.global;
+  NewsType get newsType => _newsType;
+
+  ProcessState _processState = ProcessState.notRunYet;
+  ProcessState get processState => _processState;
+
+  NewsSearchMethod _searchMethod = NewsSearchMethod.byTitle;
+  NewsSearchMethod get searchMethod => _searchMethod;
+
   List<NewsGlobal> searchResult = [];
   List<NewsSearchHistory> newsHistoryList = [];
 
   void resetQueryAndResult() {
-    searchQuery = "";
-    newsType = NewsType.global;
-    searchMethod = NewsSearchMethod.byTitle;
-    searchProcessState = ProcessState.notRunYet;
+    _searchQuery = "";
+    _newsType = NewsType.global;
+    _searchMethod = NewsSearchMethod.byTitle;
+    _processState = ProcessState.notRunYet;
     _nextPage = 1;
     searchResult.clear();
-    newsSearchQueryTextControl.clear();
     notifyListeners();
   }
 
@@ -43,9 +94,9 @@ class NewsSearchInstance extends BaseViewModel {
     NewsType? newsType,
     NewsSearchMethod? searchMethod,
   }) {
-    if (query != null) searchQueryTemp = query;
-    if (newsType != null) this.newsType = newsType;
-    if (searchMethod != null) this.searchMethod = searchMethod;
+    if (query != null) _searchQuery = query;
+    if (newsType != null) _newsType = newsType;
+    if (searchMethod != null) _searchMethod = searchMethod;
     notifyListeners();
   }
 
@@ -54,22 +105,18 @@ class NewsSearchInstance extends BaseViewModel {
     Function()? afterRun,
     bool startOver = false,
   }) async {
-    if (searchProcessState == ProcessState.running) {
+    if (processState == ProcessState.running) {
       log("[News Search] Running denied because of another task...");
       return;
     }
 
-    searchProcessState = ProcessState.running;
+    _processState = ProcessState.running;
     notifyListeners();
     beforeRun?.call();
 
     log("[News Search] Running...");
     try {
-      if (searchQueryTemp.isNotEmpty) {
-        searchQuery = searchQueryTemp;
-        searchQueryTemp = "";
-      }
-      if (searchQuery.isEmpty) {
+      if (_searchQuery.isEmpty) {
         log("[News Search] Running denied because search query is empty...");
         return;
       }
@@ -78,12 +125,12 @@ class NewsSearchInstance extends BaseViewModel {
       final session = newsType == NewsType.global
           ? await News.getNewsGlobal(
               page: page,
-              newsSearchQuery: searchQuery,
+              newsSearchQuery: _searchQuery,
               newsSearchMethod: searchMethod,
             )
           : await News.getNewsSubject(
               page: page,
-              newsSearchQuery: searchQuery,
+              newsSearchQuery: _searchQuery,
               newsSearchMethod: searchMethod,
             );
 
@@ -98,23 +145,26 @@ class NewsSearchInstance extends BaseViewModel {
         _nextPage += 1;
       }
 
-      final searchHistory = NewsSearchHistory(
-        query: searchQuery,
-        newsType: newsType,
-        searchMethod: searchMethod,
-      );
-      if (!newsHistoryList.any((p) => p.equals(searchHistory))) {
+      if (startOver) {
+        final searchHistory = NewsSearchHistory(
+          query: _searchQuery,
+          newsType: newsType,
+          searchMethod: searchMethod,
+          lastRequest: DateTime.now().toUtc().millisecondsSinceEpoch,
+        );
+        newsHistoryList.removeWhere((p) => p.equals(searchHistory));
         newsHistoryList.add(searchHistory);
       }
+      newsHistoryList.sort((p, q) => q.lastRequest.compareTo(p.lastRequest));
 
-      searchProcessState = ProcessState.successful;
+      _processState = ProcessState.successful;
       log("[News Search] Running successful!");
     } catch (ex) {
-      searchProcessState = ProcessState.failed;
+      _processState = ProcessState.failed;
       log("[News Search] Running failed!");
     } finally {
       log("[News Search] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }

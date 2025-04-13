@@ -1,4 +1,3 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,11 +5,12 @@ import 'package:provider/provider.dart';
 
 import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../components/info_card.dart';
-import '../components/widget_account/subject_result_bottom_sheet.dart';
 import '../components/switch_button.dart';
+import '../components/widget_account/subject_result_bottom_sheet.dart';
 
 class SubjectResultView extends StatefulWidget {
   const SubjectResultView({super.key});

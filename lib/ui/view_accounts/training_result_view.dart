@@ -1,11 +1,15 @@
 import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/enum/background_image_option.dart';
 import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
+import '../../viewmodel/settings_instance.dart';
 import '../components/widget_account/graduate_summary.dart';
 import '../components/widget_account/training_summary.dart';
 import 'subject_result_view.dart';
@@ -16,6 +20,7 @@ class TrainingResultView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accountSession = Provider.of<AccountSessionInstance>(context);
+    final settingsInstance = Provider.of<SettingsInstance>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -29,6 +34,37 @@ class TrainingResultView extends StatelessWidget {
           : accountSession.trainingResult.state == ProcessState.running
               ? _mainScreenLoading(context)
               : _mainScreenNoData(context),
+      bottomNavigationBar: BottomAppBar(
+        color: settingsInstance.backgroundImageOption == BackgroundImageOption.none ? null : Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.history),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 7),
+                    child: Text(StringUtils.formatString(
+                      AppLocalizations.of(context).translate("time_last_request"),
+                      [
+                        accountSession.trainingResult.lastRequest == 0
+                            ? AppLocalizations.of(context).translate("data_unknown")
+                            : DateFormat("dd/MM/yyyy HH:mm")
+                                .format(DateTime.fromMillisecondsSinceEpoch(accountSession.trainingResult.lastRequest))
+                      ],
+                    )),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: FloatingActionButton(
         onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),

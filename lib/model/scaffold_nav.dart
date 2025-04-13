@@ -11,17 +11,18 @@ class ScaffoldNavigationItem {
     this.id = 0,
   });
 
-  NavigationDestination convertToNavDestination() {
+  NavigationDestination toNavDestination() {
     return NavigationDestination(
       icon: Icon(iconData),
       label: label,
     );
   }
 
-  NavigationRailDestination convertToNavRailDestination() {
+  NavigationRailDestination toNavRailDestination() {
     return NavigationRailDestination(
       icon: Icon(iconData),
       label: Text(label),
+      padding: EdgeInsets.symmetric(vertical: 4),
     );
   }
 }
@@ -31,11 +32,15 @@ class ScaffoldNavigationList {
 
   List<ScaffoldNavigationItem> itemList;
 
-  List<NavigationDestination> convertToListNavDestination() {
-    return itemList.map((e) => e.convertToNavDestination()).toList();
+  List<NavigationDestination> toListNavDestinationList() {
+    return itemList.map((e) => e.toNavDestination()).toList();
   }
 
-  List<NavigationRailDestination> convertToListNavRailDestination() {
-    return itemList.map((e) => e.convertToNavRailDestination()).toList();
+  List<NavigationRailDestination> toNavRailDestinationList() {
+    return itemList.map((e) => e.toNavRailDestination()).toList();
+  }
+
+  int get count {
+    return itemList.length;
   }
 }

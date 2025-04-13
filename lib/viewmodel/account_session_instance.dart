@@ -9,15 +9,28 @@ import '../model/process_state.dart';
 import '../model/school_year.dart';
 import '../model/variable_state.dart';
 import '../repository/dut_account_repository.dart';
+import '../repository/storage_repository.dart';
 import 'base_view_model.dart';
 
 class AccountSessionInstance extends BaseViewModel {
   late DUTAccountRepository accRepo;
 
+  AccountSessionInstance();
+
+  AccountSessionInstance.fromPreviousSettings({Map<String, dynamic>? accountSessionJson}) {
+    if (accountSessionJson != null) {
+      _fromMapAccountSession(accountSessionJson);
+    }
+    _isSettingsInitialized = true;
+  }
+
   @override
   void initializing() {
     accRepo = DUTAccountRepository();
+    _isSettingsInitialized = true;
   }
+
+  bool _isSettingsInitialized = false;
 
   @override
   void timerAction() {}
@@ -32,7 +45,7 @@ class AccountSessionInstance extends BaseViewModel {
 
   Future<void> reLogin({
     Function()? beforeRun,
-    Function()? afterRun,
+    Function(bool)? afterRun,
     bool forceRequest = false,
   }) async {
     if (authInfo == null) {
@@ -46,7 +59,6 @@ class AccountSessionInstance extends BaseViewModel {
 
     log("[Account] [Session - ReLogin] Calling Account - Login...");
     login(
-      authInfo: authInfo!,
       beforeRun: beforeRun,
       afterRun: afterRun,
       forceRequest: forceRequest,
@@ -54,40 +66,44 @@ class AccountSessionInstance extends BaseViewModel {
   }
 
   Future<void> login({
-    required AuthInfo authInfo,
+    AuthInfo? authInfo,
     Function()? beforeRun,
-    Function()? afterRun,
+    Function(bool)? afterRun,
     bool forceRequest = false,
   }) async {
-    if (accountSession.data != null) {
-      log("[Account] [Session - Login] Running denied because of existing account. Logout and try again.");
+    if (accountSession.data == null && authInfo == null) {
+      log("[Account] [Session - Login] Running denied because of no session. Please login with \"authInfo\" parameters.");
       return;
     }
+    // if (accountSession.data != null && authInfo != null) {
+    //   log("[Account] [Session - Login] Running denied because of existing session. Logout and try again.");
+    //   return;
+    // }
     if (accountSession.state == ProcessState.running) {
       log("[Account] [Session - Login] Running denied because account session is running another task...");
       return;
     }
 
     accountSession.state = ProcessState.running;
-    notifyListeners();
+    _settingsChanged();
     beforeRun?.call();
 
     log("[Account] [Session - Login] Running...");
     try {
-      final session = await accRepo.login(account: authInfo);
+      final session = await accRepo.login(account: authInfo!);
       accountSession.data = session;
       this.authInfo = authInfo;
       accountSession.state = ProcessState.successful;
       log("[Account] [Session - Login] Running successful!");
       log("[Account] [Session - Login] Session ID: ${session.sessionId}");
     } catch (ex) {
-      accountSession.state = ProcessState.notRunYet;
+      accountSession.state = authInfo != null ? ProcessState.notRunYet : ProcessState.failed;
       log("[Account] [Session - Login] Running failed!");
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Session - Login] End run.");
-      notifyListeners();
-      afterRun?.call();
+      _settingsChanged();
+      afterRun?.call(accountSession.state == ProcessState.successful);
     }
   }
 
@@ -110,13 +126,12 @@ class AccountSessionInstance extends BaseViewModel {
     log("[Account] [Session - Logout] Running...");
     try {
       if (accountSession.data != null) {
-        accountSession.state = ProcessState.running;
-        notifyListeners();
-
         // Logout account
-        accRepo.logout(session: accountSession.data!);
-        accountSession.data = null;
-        accountSession.state = ProcessState.notRunYet;
+        authInfo = null;
+        if (accountSession.data?.sessionId != null) {
+          accRepo.logout(session: accountSession.data!);
+        }
+        accountSession.resetValue();
         log("[Account] [Session - Logout] Running successful!");
 
         // Clear old data from another variables
@@ -134,7 +149,7 @@ class AccountSessionInstance extends BaseViewModel {
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Session - Logout] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }
@@ -164,7 +179,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     try {
       subjectInformationList.state = ProcessState.running;
-      notifyListeners();
+      _settingsChanged();
       log("[Account] [Subject information] Running...");
 
       var data = await accRepo.fetchSubjectInformation(
@@ -184,7 +199,7 @@ class AccountSessionInstance extends BaseViewModel {
     } finally {
       subjectInformationList.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject information] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }
@@ -214,7 +229,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     try {
       studentInformation.state = ProcessState.running;
-      notifyListeners();
+      _settingsChanged();
       log("[Account] [Student information] Running...");
 
       var data = await accRepo.fetchStudentInformation(
@@ -229,7 +244,7 @@ class AccountSessionInstance extends BaseViewModel {
     } finally {
       studentInformation.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Student information] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }
@@ -259,7 +274,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     try {
       subjectFeeList.state = ProcessState.running;
-      notifyListeners();
+      _settingsChanged();
       log("[Account] [Subject fee] Running...");
 
       var data = await accRepo.fetchSubjectFee(
@@ -278,7 +293,7 @@ class AccountSessionInstance extends BaseViewModel {
     } finally {
       subjectFeeList.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject fee] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }
@@ -308,7 +323,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     try {
       trainingResult.state = ProcessState.running;
-      notifyListeners();
+      _settingsChanged();
       log("[Account] [Training result] Running...");
 
       var data = await accRepo.fetchTrainingResult(session: accountSession.data!);
@@ -322,34 +337,68 @@ class AccountSessionInstance extends BaseViewModel {
     } finally {
       trainingResult.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Training result] End run.");
-      notifyListeners();
+      _settingsChanged();
       afterRun?.call();
     }
   }
 
-  Map<String, dynamic> _toMap() {
+  Map<String, dynamic> _toMapAccountSession() {
     return {
-      "account.accountsession.data": jsonEncode(accountSession.data),
+      "account.authinfo.username": authInfo?.username,
+      "account.authinfo.password": authInfo?.password,
+      "account.accountsession.data": accountSession.data?.toMap(),
       "account.accountsession.lastrequest": accountSession.lastRequest,
-      "account.accountsession.parameters": jsonEncode(accountSession.parameters),
+      "account.accountsession.parameters": accountSession.parameters,
     };
-    // TODO: Work here!
   }
 
-  void _fromMap(Map<String, dynamic> data) {
+  void _fromMapAccountSession(Map<String, dynamic> data) {
+    authInfo = AuthInfo(
+      username: data["account.authinfo.username"] as String?,
+      password: data["account.authinfo.password"] as String?,
+    );
+    if (authInfo?.username == null || authInfo?.password == null) {
+      authInfo = null;
+    }
 
+    accountSession.data = AccountSession.fromMap(data["account.accountsession.data"] as Map<String, dynamic>? ?? {});
+    try {
+      accountSession.data?.ensureValidLoginForm();
+      accountSession.data?.ensureValidSessionId();
+
+      accountSession.state = ProcessState.successful;
+      accountSession.lastRequest = (data["account.accountsession.lastrequest"] as int?) ?? 0;
+      accountSession.parameters.clear();
+      ((data["account.accountsession.parameters"] as Map<String, dynamic>?) ?? {}).forEach((p, q) {
+        accountSession.parameters.addAll({p: q});
+      });
+
+      log(json.encode(accountSession.data));
+    } catch (ex) {
+      accountSession.data = null;
+      accountSession.state = ProcessState.notRunYet;
+      accountSession.lastRequest = 0;
+    }
+    _settingsChanged();
   }
 
-  Map<String, dynamic> exportSettingsToJson() {
-    return _toMap();
-  }
+  bool _pendingChanges = false;
 
-  void importSettingsFromJson(Map<String, dynamic> json) {
-    _fromMap(json);
-  }
+  void _settingsChanged() async {
+    if (!_isSettingsInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
 
-  void _settingsChanged() {
+    _pendingChanges = true;
     notifyListeners();
-    // TODO: Save changes to local disk.
+    log("[Account Session] Modified changes! Saving...");
+    StorageRepository.saveAccountSession(accountSession: _toMapAccountSession());
+
+    _pendingChanges = false;
+    notifyListeners();
   }
 }
