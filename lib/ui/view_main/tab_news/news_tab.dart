@@ -1,7 +1,7 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/build_context_extension.dart';
 import '../../../utils/get_device_type.dart';
 import '../../../viewmodel/settings_instance.dart';
 import '../../components/widget_news/news_detail_item.dart';

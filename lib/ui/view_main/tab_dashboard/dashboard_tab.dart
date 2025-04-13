@@ -10,7 +10,7 @@ class DashboardTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("app_name")),
+        title: Text(AppLocalizations.of(context).translate("main_dashboard_title")),
         actions: [
           IconButton(
             onPressed: () {

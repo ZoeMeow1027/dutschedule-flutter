@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../model/enum/app_theme_mode.dart';
 import '../../model/enum/background_image_option.dart';
-import '../../utils/app_languages.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
@@ -151,7 +150,7 @@ class SettingsView extends StatelessWidget {
                   description: StringUtils.formatString("{0}", [
                     settingsInstance.localeAuto
                         ? AppLocalizations.of(context).translate("settings_option_applanguage_auto")
-                        : AppLanguages.getLocaleDisplayName(settingsInstance.locale),
+                        : AppLocalizations.getLocaleDisplayName(settingsInstance.locale),
                   ]),
                   leading: Icon(Icons.language),
                   onClick: () async => await Navigator.push(

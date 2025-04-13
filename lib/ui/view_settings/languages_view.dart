@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/app_languages.dart';
 import '../../utils/app_localizations.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/list_view_option_item.dart';
@@ -20,7 +19,7 @@ class _LanguageSettingsView extends State<LanguageSettingsView> {
   @override
   Widget build(BuildContext context) {
     final settingsInstance = Provider.of<SettingsInstance>(context);
-    var searchResult = AppLanguages.localeCodeList.entries.where((p) {
+    var searchResult = AppLocalizations.availableLocaleList.entries.where((p) {
       if (p.key.toLowerCase().contains(_searchQuery)) {
         return true;
       } else if (p.value.toLowerCase().contains(_searchQuery)) {

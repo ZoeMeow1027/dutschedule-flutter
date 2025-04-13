@@ -7,4 +7,9 @@ class GlobalVariables {
   static String repoLinkCredits = '$repoLink?tab=readme-ov-file#credits-and-license';
   static String repoLinkReleases = '$repoLink/releases';
   static String repoLinkChangelog = '$repoLink/blob/stable/CHANGELOG.md';
+
+  static String appDirRoot = 'ZoeMeow.DutSchedule';
+  static String appPathFileSettings = 'settings.json';
+  static String appPathFileNewsSearchHistory = 'news.searchhistory.json';
+  static String appPathFileAccountSession = 'account.session.json';
 }

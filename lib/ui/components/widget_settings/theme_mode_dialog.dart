@@ -41,14 +41,17 @@ class ThemeModeDialog extends StatelessWidget {
                       onClick: () {
                         onSelectModeChanged?.call(e.key);
                       },
-                      leading: Radio<AppThemeMode>(
-                        value: e.key,
-                        groupValue: selectedMode,
-                        onChanged: (value) {
-                          if (value != null) {
-                            onSelectModeChanged?.call(e.key);
-                          }
-                        },
+                      leading: Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Radio<AppThemeMode>(
+                          value: e.key,
+                          groupValue: selectedMode,
+                          onChanged: (value) {
+                            if (value != null) {
+                              onSelectModeChanged?.call(e.key);
+                            }
+                          },
+                        ),
                       ),
                     ),
                   )
@@ -95,7 +98,8 @@ class ThemeModeDialog extends StatelessWidget {
 
   Map<AppThemeMode, String> _getThemeModeOptions(BuildContext context) {
     return {
-      AppThemeMode.followSystemSettings: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_followdevice"),
+      AppThemeMode.followSystemSettings:
+          AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_followdevice"),
       AppThemeMode.lightMode: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_light"),
       AppThemeMode.darkMode: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_dark"),
     };
