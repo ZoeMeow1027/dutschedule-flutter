@@ -3,10 +3,10 @@
 - Continuing from [DutSchedule](https://github.com/ZoeMeow1027/DutSchedule), but written with Dart/Flutter.
 
 ## Version
-- Release version [![https://github.com/ZoeMeow1027/dutschedule-flutter](https://img.shields.io/github/v/release/ZoeMeow1027/dutschedule-flutter)](https://github.com/ZoeMeow1027/dutschedule-flutter/releases)
-- Pre-release version [![https://github.com/ZoeMeow1027/dutschedule-flutter/tree/draft](https://img.shields.io/github/v/tag/ZoeMeow1027/dutschedule-flutter?label=pre-release%20tag)](https://github.com/ZoeMeow1027/dutschedule-flutter/tree/draft)
-- [Summary change log](CHANGELOG.md) / [Entire source code changes](https://github.com/ZoeMeow1027/dutschedule-flutter/commits)
-- Badge provided by [shields.io](https://shields.io/)
+- You're viewing v0.5.4+250413
+- Latest release version [![https://github.com/ZoeMeow1027/dutschedule-flutter](https://img.shields.io/github/v/release/ZoeMeow1027/dutschedule-flutter)](https://github.com/ZoeMeow1027/dutschedule-flutter/releases)
+- [Entire source code changes](https://github.com/ZoeMeow1027/dutschedule-flutter/commits)
+<!--[Summary change log](CHANGELOG.md) / -->
 
 ## Downloads
 - Navigate to release (at right of this README) or click [here](https://github.com/ZoeMeow1027/dutschedule-flutter/releases) to download app.
@@ -41,5 +41,6 @@
 - DISCLAIMER:
   - This project - dutschedule-flutter - is not affiliated with [Da Nang University of Science and Technology school](http://dut.udn.vn).
   - DUT, Da Nang University of Technology, web materials and web contents are trademarks and copyrights of [Da Nang University of Science and Technology school](http://dut.udn.vn).
+- Badge indicator powered by [shields.io](https://shields.io/)
 - References
   - https://github.com/flutter/flutter/issues/53229#issuecomment-1452057539
