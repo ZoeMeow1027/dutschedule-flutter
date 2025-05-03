@@ -1,18 +1,23 @@
+import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../utils/app_localizations.dart';
-import '../../../viewmodel/main_view_model.dart';
 import '../../components/widget_news/news_detail_item.dart';
 import 'news_summary_list_view.dart';
 
-class NewsSplitView extends StatelessWidget {
+class NewsSplitView extends StatefulWidget {
   const NewsSplitView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final mainViewModel = Provider.of<MainViewModel>(context);
+  State<StatefulWidget> createState() => _NewsSplitView();
+}
 
+class _NewsSplitView extends State<NewsSplitView> {
+  NewsGlobal? _newsSelected;
+  bool _newsSelectedIsSubject = false;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -21,10 +26,10 @@ class NewsSplitView extends StatelessWidget {
           width: 450,
           child: NewsSummaryListView(
             onClick: (news, isNewsSubject) {
-              mainViewModel.setNewsSelected(
-                news: news,
-                isNewsSubject: isNewsSubject,
-              );
+              setState(() {
+                _newsSelected = news;
+                _newsSelectedIsSubject = isNewsSubject;
+              });
             },
           ),
         ),
@@ -38,7 +43,7 @@ class NewsSplitView extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: mainViewModel.newsSelected == null
+                child: _newsSelected == null
                     ? Center(
                         child: Text(
                           AppLocalizations.of(context).translate("news_splitview_noselected"),
@@ -46,8 +51,8 @@ class NewsSplitView extends StatelessWidget {
                         ),
                       )
                     : NewsDetailItem(
-                        newsItem: mainViewModel.newsSelected!,
-                        isNewsSubject: mainViewModel.newsSelectedIsSubject,
+                        newsItem: _newsSelected!,
+                        isNewsSubject: _newsSelectedIsSubject,
                       ),
               ),
             ),

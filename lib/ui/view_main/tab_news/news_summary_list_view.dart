@@ -6,14 +6,13 @@ import '../../../model/enum/news_tab_location.dart';
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
-import '../../../viewmodel/main_view_model.dart';
 import '../../../viewmodel/news_cache_instance.dart';
 import '../../../viewmodel/news_search_instance.dart';
 import '../../components/widget_news/news_list.dart';
 import '../../view_news/news_search_view.dart';
 import '../../view_settings/settings_view.dart';
 
-class NewsSummaryListView extends StatelessWidget {
+class NewsSummaryListView extends StatefulWidget {
   const NewsSummaryListView({
     super.key,
     this.onClick,
@@ -22,10 +21,53 @@ class NewsSummaryListView extends StatelessWidget {
   final Function(NewsGlobal, bool)? onClick;
 
   @override
+  State<StatefulWidget> createState() => _NewsSummaryListView();
+}
+
+class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProviderStateMixin {
+  late NewsTabLocation _newsCurrentPage;
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _newsCurrentPage = NewsTabLocation.globalNews;
+    _tabController = TabController(length: 5, vsync: this);
+    _tabController.addListener(_newsTabChanged);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_newsTabChanged);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _newsTabChanged() {
+    setState(() {
+      _newsCurrentPage = switch (_tabController.index) {
+        0 => NewsTabLocation.globalNews,
+        1 => NewsTabLocation.subjectNews,
+        2 => NewsTabLocation.studentAffairs,
+        3 => NewsTabLocation.examination,
+        4 => NewsTabLocation.tuitionFee,
+        _ => NewsTabLocation.globalNews,
+      };
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final mainViewModel = Provider.of<MainViewModel>(context);
     final newsCacheInstance = Provider.of<NewsCacheInstance>(context);
     final newsSearchInstance = Provider.of<NewsSearchInstance>(context);
+
+    bool shouldFABRunning() {
+      return switch (_newsCurrentPage) {
+        NewsTabLocation.globalNews => newsCacheInstance.newsGlobal.state == ProcessState.running,
+        NewsTabLocation.subjectNews => newsCacheInstance.newsSubject.state == ProcessState.running,
+        _ => false,
+      };
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -55,147 +97,112 @@ class NewsSummaryListView extends StatelessWidget {
             icon: const Icon(Icons.settings),
           ),
         ],
-      ),
-      body: Scaffold(
-        body: PageView(
-          controller: mainViewModel.newsPageController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          onPageChanged: (page) {
-            mainViewModel.setNewsCurrentPage(
-              selectedPage: page == 0 ? NewsTabLocation.globalNews : NewsTabLocation.subjectNews,
-            );
-          },
-          children: [
-            NewsList(
-              newsList: newsCacheInstance.newsGlobal.data,
-              isRefreshing: newsCacheInstance.newsGlobal.state == ProcessState.running,
-              onClick: (news) {
-                onClick?.call(news, false);
-              },
-              endListReached: () {
-                newsCacheInstance.fetchGlobalNews(
-                  fetchType: NewsFetchType.nextPage,
-                  forceRequest: true,
-                );
-              },
-              refreshRequested: () {
-                try {
-                  newsCacheInstance.fetchGlobalNews(
-                    fetchType: NewsFetchType.clearCacheAndFirstPage,
-                    forceRequest: true,
-                  );
-                } catch (ex) {
-                  context.showCustomSnackBar(
-                    content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-                    dismissOld: true,
-                  );
-                }
-              },
-            ),
-            NewsList(
-              newsList: newsCacheInstance.newsSubject.data,
-              isRefreshing: newsCacheInstance.newsSubject.state == ProcessState.running,
-              onClick: (news) {
-                onClick?.call(news, true);
-              },
-              endListReached: () {
-                newsCacheInstance.fetchSubjectNews(
-                  fetchType: NewsFetchType.nextPage,
-                  forceRequest: true,
-                );
-              },
-              refreshRequested: () {
-                try {
-                  newsCacheInstance.fetchSubjectNews(
-                    fetchType: NewsFetchType.clearCacheAndFirstPage,
-                    forceRequest: true,
-                  );
-                } catch (ex) {
-                  context.showCustomSnackBar(
-                    content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-                    dismissOld: true,
-                  );
-                }
-              },
-            ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(icon: Icon(Icons.cloud_outlined)),
+            Tab(icon: Icon(Icons.cloud_outlined)),
+            Tab(icon: Icon(Icons.cloud_outlined)),
+            Tab(icon: Icon(Icons.cloud_outlined)),
+            Tab(icon: Icon(Icons.cloud_outlined)),
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-        floatingActionButton: FloatingActionButton(
-          child: ((mainViewModel.newsCurrentPage == NewsTabLocation.globalNews &&
-                      newsCacheInstance.newsGlobal.state == ProcessState.running) ||
-                  (mainViewModel.newsCurrentPage == NewsTabLocation.subjectNews &&
-                      newsCacheInstance.newsSubject.state == ProcessState.running))
-              ? SizedBox(
-                  width: 25,
-                  height: 25,
-                  child: CircularProgressIndicator(),
-                )
-              : const Icon(Icons.refresh),
-          onPressed: () {
-            try {
-              switch (mainViewModel.newsCurrentPage) {
-                case NewsTabLocation.globalNews:
-                  newsCacheInstance.fetchGlobalNews(
-                    fetchType: NewsFetchType.clearCacheAndFirstPage,
-                    forceRequest: true,
-                  );
-                  break;
-                case NewsTabLocation.subjectNews:
-                  newsCacheInstance.fetchSubjectNews(
-                    fetchType: NewsFetchType.clearCacheAndFirstPage,
-                    forceRequest: true,
-                  );
-                  break;
-              }
-            } catch (ex) {
-              context.showCustomSnackBar(
-                content: Text(AppLocalizations.of(context).translate("news_search_failed")),
-                dismissOld: true,
-              );
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButton: FloatingActionButton(
+        child: shouldFABRunning()
+            ? SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(),
+              )
+            : const Icon(Icons.refresh),
+        onPressed: () {
+          try {
+            switch (_newsCurrentPage) {
+              case NewsTabLocation.globalNews:
+                newsCacheInstance.fetchGlobalNews(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+                break;
+              case NewsTabLocation.subjectNews:
+                newsCacheInstance.fetchSubjectNews(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+                break;
+              default:
+                break;
             }
-          },
-        ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.only(right: 60),
-          child: BottomAppBar(
-            color: Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SegmentedButton<NewsTabLocation>(
-                  segments: [
-                    ButtonSegment(
-                      value: NewsTabLocation.globalNews,
-                      label: Text(AppLocalizations.of(context).translate("news_tabname_global")),
-                    ),
-                    ButtonSegment(
-                      value: NewsTabLocation.subjectNews,
-                      label: Text(AppLocalizations.of(context).translate("news_tabname_subject")),
-                    ),
-                  ],
-                  selected: <NewsTabLocation>{mainViewModel.newsCurrentPage},
-                  onSelectionChanged: (selected) {
-                    // setState(() {
-                    //   // By default there is only a single segment that can be
-                    //   // selected at one time, so its value is always the first
-                    //   // item in the selected set.
-                    //   _currentPage = selected.first;
-                    //
-                    //   _pageController.animateToPage(
-                    //     _currentPage.value,
-                    //     duration: const Duration(milliseconds: 400),
-                    //     curve: Curves.fastOutSlowIn,
-                    //   );
-                    // });
-                    mainViewModel.setNewsCurrentPage(selectedPage: selected.first);
-                  },
-                ),
-              ],
-            ),
+          } catch (ex) {
+            context.showCustomSnackBar(
+              content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+              dismissOld: true,
+            );
+          }
+        },
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          NewsList(
+            newsList: newsCacheInstance.newsGlobal.data,
+            isRefreshing: newsCacheInstance.newsGlobal.state == ProcessState.running,
+            onClick: (news) {
+              widget.onClick?.call(news, false);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchGlobalNews(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchGlobalNews(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
           ),
-        ),
+          NewsList(
+            newsList: newsCacheInstance.newsSubject.data,
+            isRefreshing: newsCacheInstance.newsSubject.state == ProcessState.running,
+            onClick: (news) {
+              widget.onClick?.call(news, true);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchSubjectNews(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchSubjectNews(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
+          // TODO: Add news here
+          Center(child: Text("It's cloudy here")),
+          Center(child: Text("It's rainy here")),
+          Center(child: Text("It's sunny here")),
+        ],
       ),
     );
   }

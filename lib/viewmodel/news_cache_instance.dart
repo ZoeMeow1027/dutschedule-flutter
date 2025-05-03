@@ -42,6 +42,24 @@ class NewsCacheInstance extends BaseViewModel {
     parameters: {"nextPage": "1"},
   );
 
+  VariableListState<NewsGlobal> newsStudentAffairs = VariableListState.from(
+    data: [],
+    lastRequest: 0,
+    parameters: {"nextPage": "1"},
+  );
+
+  VariableListState<NewsGlobal> newsExamination = VariableListState.from(
+    data: [],
+    lastRequest: 0,
+    parameters: {"nextPage": "1"},
+  );
+
+  VariableListState<NewsGlobal> newsTuitions = VariableListState.from(
+    data: [],
+    lastRequest: 0,
+    parameters: {"nextPage": "1"},
+  );
+
   Future<void> fetchGlobalNews({
     NewsFetchType fetchType = NewsFetchType.nextPage,
     bool forceRequest = false,
