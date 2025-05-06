@@ -1,4 +1,3 @@
-import '../../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,23 +5,25 @@ import '../../../global_variables.dart';
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/app_utils.dart';
+import '../../../utils/build_context_extension.dart';
 import '../../../utils/theme_tools.dart';
 import '../../../viewmodel/account_session_instance.dart';
-import '../../../viewmodel/main_view_model.dart';
+import 'account_tab.dart';
 
 class AccountNotLoggedInView extends StatelessWidget {
   const AccountNotLoggedInView({
     super.key,
+    this.accTemp,
     required this.onAuthInfoChanged,
     required this.loginRequested,
   });
 
+  final AccountLoginTemporary? accTemp;
   final Function(String, String, bool) onAuthInfoChanged;
   final Function() loginRequested;
 
   @override
   Widget build(BuildContext context) {
-    final mainViewModel = Provider.of<MainViewModel>(context);
     final accountSession = Provider.of<AccountSessionInstance>(context);
 
     return Center(
@@ -62,8 +63,8 @@ class AccountNotLoggedInView extends StatelessWidget {
                 onChanged: (changed) {
                   onAuthInfoChanged(
                     changed,
-                    mainViewModel.accountParameter["password"] as String? ?? "",
-                    mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
+                    accTemp?.password ?? "",
+                    accTemp?.rememberLogin ?? false,
                   );
                 },
                 decoration: InputDecoration(
@@ -78,9 +79,9 @@ class AccountNotLoggedInView extends StatelessWidget {
                 enabled: accountSession.accountSession.state != ProcessState.running,
                 onChanged: (changed) {
                   onAuthInfoChanged(
-                    mainViewModel.accountParameter["username"] as String? ?? "",
+                    accTemp?.username ?? "",
                     changed,
-                    mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
+                    accTemp?.rememberLogin ?? false,
                   );
                 },
                 obscureText: true,
@@ -97,9 +98,9 @@ class AccountNotLoggedInView extends StatelessWidget {
                     ? null
                     : () {
                         onAuthInfoChanged(
-                          mainViewModel.accountParameter["username"] as String? ?? "",
-                          mainViewModel.accountParameter["password"] as String? ?? "",
-                          !(mainViewModel.accountParameter["rememberLogin"] as bool? ?? false),
+                          accTemp?.username ?? "",
+                          accTemp?.password ?? "",
+                          !(accTemp?.rememberLogin ?? false),
                         );
                       },
                 child: Container(
@@ -115,12 +116,12 @@ class AccountNotLoggedInView extends StatelessWidget {
                               ? null
                               : (checked) {
                                   onAuthInfoChanged(
-                                    mainViewModel.accountParameter["username"] as String? ?? "",
-                                    mainViewModel.accountParameter["password"] as String? ?? "",
-                                    checked ?? !(mainViewModel.accountParameter["rememberLogin"] as bool? ?? false),
+                                    accTemp?.username ?? "",
+                                    accTemp?.password ?? "",
+                                    checked ?? !(accTemp?.rememberLogin ?? false),
                                   );
                                 },
-                          value: mainViewModel.accountParameter["rememberLogin"] as bool? ?? false,
+                          value: accTemp?.rememberLogin ?? false,
                         ),
                         Text(AppLocalizations.of(context).translate("account_login_rememberpassword"))
                       ],

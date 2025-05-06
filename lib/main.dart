@@ -10,7 +10,6 @@ import 'utils/app_localizations.dart';
 import 'utils/build_context_extension.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'viewmodel/account_session_instance.dart';
-import 'viewmodel/main_view_model.dart';
 import 'viewmodel/news_cache_instance.dart';
 import 'viewmodel/news_search_instance.dart';
 import 'viewmodel/settings_instance.dart';
@@ -37,7 +36,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => settingsInstance),
-        ChangeNotifierProvider(create: (context) => MainViewModel()),
         ChangeNotifierProvider(create: (context) => newsCacheInstance),
         ChangeNotifierProvider(create: (context) => newsSearchInstance),
         ChangeNotifierProvider(create: (context) => accountSessionInstance),
@@ -167,6 +165,45 @@ class _PreloadApplication extends State<PreloadApplication> {
           // Notify error for user about unsuccessful preload news subject.
           context.showCustomSnackBar(
             content: Text(AppLocalizations.of(context).translate("main_preload_preloadfailed_subjectnews")),
+            dismissOld: false,
+          );
+        }
+      },
+    );
+    newsCacheInstance.fetchNewsStudentAffairs(
+      fetchType: NewsFetchType.firstPage,
+      onDone: (successful) {
+        if (!successful) {
+          // Notify error for user about unsuccessful preload news subject.
+          context.showCustomSnackBar(
+            // TODO: Change error text
+            content: Text(AppLocalizations.of(context).translate("main_preload_preloadfailed_globalnews")),
+            dismissOld: false,
+          );
+        }
+      },
+    );
+    newsCacheInstance.fetchNewsExamination(
+      fetchType: NewsFetchType.firstPage,
+      onDone: (successful) {
+        if (!successful) {
+          // Notify error for user about unsuccessful preload news subject.
+          context.showCustomSnackBar(
+            // TODO: Change error text
+            content: Text(AppLocalizations.of(context).translate("main_preload_preloadfailed_globalnews")),
+            dismissOld: false,
+          );
+        }
+      },
+    );
+    newsCacheInstance.fetchNewsTuitionFee(
+      fetchType: NewsFetchType.firstPage,
+      onDone: (successful) {
+        if (!successful) {
+          // Notify error for user about unsuccessful preload news subject.
+          context.showCustomSnackBar(
+            // TODO: Change error text
+            content: Text(AppLocalizations.of(context).translate("main_preload_preloadfailed_globalnews")),
             dismissOld: false,
           );
         }
