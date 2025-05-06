@@ -82,6 +82,57 @@ class SettingsInstance extends BaseViewModel {
 
   bool _newsBackgroundGlobalEnabled = true;
 
+  /// Enable or disable news background notification for sutduent affairs news
+  ///
+  /// **Settings name:** appsettings.newsbackground.studentaffairs.enabled
+  /// **Since:** v2.5.5-250506
+  bool get newsBackgroundStudentAffairsEnabled => _newsBackgroundStudentAffairsEnabled;
+
+  set newsBackgroundStudentAffairsEnabled(bool value) {
+    if (value == _newsBackgroundStudentAffairsEnabled) {
+      return;
+    }
+
+    _newsBackgroundStudentAffairsEnabled = value;
+    _settingsChanged();
+  }
+
+  bool _newsBackgroundStudentAffairsEnabled = true;
+
+  /// Enable or disable news background notification for examination news
+  ///
+  /// **Settings name:** appsettings.newsbackground.examination.enabled
+  /// **Since:** v2.5.5-250506
+  bool get newsBackgroundExaminationEnabled => _newsBackgroundExaminationEnabled;
+
+  set newsBackgroundExaminationEnabled(bool value) {
+    if (value == _newsBackgroundExaminationEnabled) {
+      return;
+    }
+
+    _newsBackgroundExaminationEnabled = value;
+    _settingsChanged();
+  }
+
+  bool _newsBackgroundExaminationEnabled = true;
+
+  /// Enable or disable news background notification for tuition fee news
+  ///
+  /// **Settings name:** appsettings.newsbackground.tuitionfee.enabled
+  /// **Since:** v2.0-draft17
+  bool get newsBackgroundTuitionFeeEnabled => _newsBackgroundTuitionFeeEnabled;
+
+  set newsBackgroundTuitionFeeEnabled(bool value) {
+    if (value == _newsBackgroundTuitionFeeEnabled) {
+      return;
+    }
+
+    _newsBackgroundTuitionFeeEnabled = value;
+    _settingsChanged();
+  }
+
+  bool _newsBackgroundTuitionFeeEnabled = true;
+
   /// Is subject news notify you?
   ///
   /// **Related:** [newsBackgroundFilterList]
@@ -319,6 +370,9 @@ class SettingsInstance extends BaseViewModel {
       "appsettings.newsbackground.newsglobal.enabled": newsBackgroundGlobalEnabled,
       "appsettings.newsbackground.newssubject.enabled": newsBackgroundSubjectEnabled.value,
       "appsettings.newsbackground.newssubject.parsenotification": newsBackgroundParseNewsSubject,
+      "appsettings.newsbackground.studentaffairs.enabled": newsBackgroundStudentAffairsEnabled,
+      "appsettings.newsbackground.examination.enabled": newsBackgroundExaminationEnabled,
+      "appsettings.newsbackground.tuitionfee.enabled": newsBackgroundTuitionFeeEnabled,
       // "appsettings.globalvariables.schoolyear": json.encode(currentSchoolYear),
       "appsettings.globalvariables.schoolyear": currentSchoolYear.toJson(),
       "appsettings.behavior.bottomsheetwhenclicknews": openNewsInModalBottomSheet,
@@ -357,6 +411,9 @@ class SettingsInstance extends BaseViewModel {
         NewsBackgroundSubjectType.allNews;
     newsBackgroundParseNewsSubject =
         (data["appsettings.newsbackground.newssubject.parsenotification"] as bool?) ?? true;
+    newsBackgroundStudentAffairsEnabled = (data["appsettings.newsbackground.studentaffairs.enabled"] as bool?) ?? true;
+    newsBackgroundExaminationEnabled = (data["appsettings.newsbackground.examination.enabled"] as bool?) ?? true;
+    newsBackgroundTuitionFeeEnabled = (data["appsettings.newsbackground.tuitionfee.enabled"] as bool?) ?? true;
     // currentSchoolYear =
     //     SchoolYear.fromJson(json.decode((data["appsettings.globalvariables.schoolyear"] as String?) ?? "{}"));
     currentSchoolYear =

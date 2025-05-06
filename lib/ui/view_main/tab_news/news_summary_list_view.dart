@@ -65,7 +65,9 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
       return switch (_newsCurrentPage) {
         NewsTabLocation.globalNews => newsCacheInstance.newsGlobal.state == ProcessState.running,
         NewsTabLocation.subjectNews => newsCacheInstance.newsSubject.state == ProcessState.running,
-        _ => false,
+        NewsTabLocation.studentAffairs => newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
+        NewsTabLocation.examination => newsCacheInstance.newsExamination.state == ProcessState.running,
+        NewsTabLocation.tuitionFee => newsCacheInstance.newsTuitions.state == ProcessState.running,
       };
     }
 
@@ -100,11 +102,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(icon: Icon(Icons.cloud_outlined)),
-            Tab(icon: Icon(Icons.cloud_outlined)),
-            Tab(icon: Icon(Icons.cloud_outlined)),
-            Tab(icon: Icon(Icons.cloud_outlined)),
-            Tab(icon: Icon(Icons.cloud_outlined)),
+            Tab(
+              child: Text(AppLocalizations.of(context).translate("news_tabname_global")),
+            ),
+            Tab(
+              child: Text(AppLocalizations.of(context).translate("news_tabname_subject")),
+            ),
+            Tab(
+              child: Text(AppLocalizations.of(context).translate("news_tabname_studentaffairs")),
+            ),
+            Tab(
+              child: Text(AppLocalizations.of(context).translate("news_tabname_examination")),
+            ),
+            Tab(
+              child: Text(AppLocalizations.of(context).translate("news_tabname_tuition")),
+            ),
           ],
         ),
       ),
@@ -132,7 +144,23 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
                   forceRequest: true,
                 );
                 break;
-              default:
+              case NewsTabLocation.studentAffairs:
+                newsCacheInstance.fetchNewsStudentAffairs(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+                break;
+              case NewsTabLocation.examination:
+                newsCacheInstance.fetchNewsExamination(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+                break;
+              case NewsTabLocation.tuitionFee:
+                newsCacheInstance.fetchNewsTuitionFee(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
                 break;
             }
           } catch (ex) {
@@ -198,10 +226,84 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
               }
             },
           ),
-          // TODO: Add news here
-          Center(child: Text("It's cloudy here")),
-          Center(child: Text("It's rainy here")),
-          Center(child: Text("It's sunny here")),
+          NewsList(
+            newsList: newsCacheInstance.newsStudentAffairs.data,
+            isRefreshing: newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
+            onClick: (news) {
+              widget.onClick?.call(news, false);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchNewsStudentAffairs(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchNewsStudentAffairs(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
+          NewsList(
+            newsList: newsCacheInstance.newsExamination.data,
+            isRefreshing: newsCacheInstance.newsExamination.state == ProcessState.running,
+            onClick: (news) {
+              widget.onClick?.call(news, false);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchNewsExamination(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchNewsExamination(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
+          NewsList(
+            newsList: newsCacheInstance.newsTuitions.data,
+            isRefreshing: newsCacheInstance.newsTuitions.state == ProcessState.running,
+            onClick: (news) {
+              widget.onClick?.call(news, false);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchNewsTuitionFee(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchNewsExamination(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
         ],
       ),
     );

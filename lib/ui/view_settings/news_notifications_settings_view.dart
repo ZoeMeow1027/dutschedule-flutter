@@ -145,6 +145,48 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                     settingsInstance.newsBackgroundGlobalEnabled = !settingsInstance.newsBackgroundGlobalEnabled;
                   },
                 ),
+                ListViewOptionItem(
+                  title: AppLocalizations.of(context).translate("settings_newsnotify_newsstudentaffairs_enable"),
+                  leading: Checkbox(
+                    value: settingsInstance.newsBackgroundStudentAffairsEnabled,
+                    onChanged: (value) {
+                      settingsInstance.newsBackgroundStudentAffairsEnabled =
+                          !settingsInstance.newsBackgroundStudentAffairsEnabled;
+                    },
+                  ),
+                  onClick: () {
+                    settingsInstance.newsBackgroundStudentAffairsEnabled =
+                        !settingsInstance.newsBackgroundStudentAffairsEnabled;
+                  },
+                ),
+                ListViewOptionItem(
+                  title: AppLocalizations.of(context).translate("settings_newsnotify_newsexamination_enable"),
+                  leading: Checkbox(
+                    value: settingsInstance.newsBackgroundExaminationEnabled,
+                    onChanged: (value) {
+                      settingsInstance.newsBackgroundExaminationEnabled =
+                          !settingsInstance.newsBackgroundExaminationEnabled;
+                    },
+                  ),
+                  onClick: () {
+                    settingsInstance.newsBackgroundExaminationEnabled =
+                        !settingsInstance.newsBackgroundExaminationEnabled;
+                  },
+                ),
+                ListViewOptionItem(
+                  title: AppLocalizations.of(context).translate("settings_newsnotify_newstuition_enable"),
+                  leading: Checkbox(
+                    value: settingsInstance.newsBackgroundTuitionFeeEnabled,
+                    onChanged: (value) {
+                      settingsInstance.newsBackgroundTuitionFeeEnabled =
+                          !settingsInstance.newsBackgroundTuitionFeeEnabled;
+                    },
+                  ),
+                  onClick: () {
+                    settingsInstance.newsBackgroundTuitionFeeEnabled =
+                        !settingsInstance.newsBackgroundTuitionFeeEnabled;
+                  },
+                ),
               ],
             ),
             ListViewGroupItem(

@@ -1,18 +1,25 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/account_session_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
+import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/account_session_instance.dart';
-import '../../../viewmodel/main_view_model.dart';
 import '../../components/widget_main_tablet/clickable_card.dart';
+import 'account_tab.dart';
 import 'dashboard.dart';
 import 'not_logged_in.dart';
 
 class AccountTabletView extends StatelessWidget {
-  const AccountTabletView({super.key});
+  const AccountTabletView({
+    super.key,
+    this.accTemp,
+    this.accTempValueChanged,
+  });
+
+  final AccountLoginTemporary? accTemp;
+  final Function(AccountLoginTemporary)? accTempValueChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,6 @@ class AccountTabletView extends StatelessWidget {
   }
 
   Widget _notLoggedInView(BuildContext context) {
-    final mainViewModel = Provider.of<MainViewModel>(context);
     final accountSession = Provider.of<AccountSessionInstance>(context);
 
     return Center(
@@ -36,16 +42,19 @@ class AccountTabletView extends StatelessWidget {
         alignment: Alignment.center,
         // TODO: Need to merge with [account_tab.dart]
         child: AccountNotLoggedInView(
+          accTemp: accTemp,
           onAuthInfoChanged: (user, pass, remember) {
-            mainViewModel.setAccountValue("username", user);
-            mainViewModel.setAccountValue("password", pass);
-            mainViewModel.setAccountValue("rememberLogin", remember);
+            accTempValueChanged?.call(AccountLoginTemporary(
+              username: user,
+              password: pass,
+              rememberLogin: remember,
+            ));
           },
           loginRequested: () {
             accountSession.login(
               authInfo: AuthInfo(
-                username: mainViewModel.accountParameter["username"] as String?,
-                password: mainViewModel.accountParameter["password"] as String?,
+                username: accTemp?.username,
+                password: accTemp?.password,
               ),
               beforeRun: () {
                 context.showCustomSnackBar(

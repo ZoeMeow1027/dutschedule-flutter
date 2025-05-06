@@ -3,7 +3,8 @@
 - Continuing from [DutSchedule](https://github.com/ZoeMeow1027/DutSchedule), but written with Dart/Flutter.
 
 ## Version
-- You're viewing v0.5.5+250503
+- You're viewing v2.5.5+250506
+  - Note that we will continue from old DutSchedule project, so we will use v2.0-alpha17 as beginning for now.
 - Latest release version [![https://github.com/ZoeMeow1027/dutschedule-flutter](https://img.shields.io/github/v/release/ZoeMeow1027/dutschedule-flutter)](https://github.com/ZoeMeow1027/dutschedule-flutter/releases)
 - [Entire source code changes](https://github.com/ZoeMeow1027/dutschedule-flutter/commits)
 <!--[Summary change log](CHANGELOG.md) / -->

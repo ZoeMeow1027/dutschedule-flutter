@@ -1,53 +1,47 @@
 class NotificationHistory {
-  final List<NotificationHistoryItem> list = [];
-
-  NotificationHistory();
-}
-
-class NotificationHistoryItem {
   final String id;
   final String title;
   final String description;
   final int tag;
-  final int timestamp;
+  final int unixTime;
   final Map<String, String> parameters;
   final bool isRead;
   final bool isNotified;
 
-  NotificationHistoryItem({
+  NotificationHistory({
     required this.id,
     required this.title,
     required this.description,
     required this.tag,
-    required this.timestamp,
+    required this.unixTime,
     required this.parameters,
     required this.isRead,
     required this.isNotified,
   });
 
-  NotificationHistoryItem clone({
+  NotificationHistory clone({
     String? id,
     String? title,
     String? description,
     int? tag,
-    int? timestamp,
+    int? unixTime,
     Map<String, String>? parameters,
     bool? isRead,
     bool? isNotified,
   }) {
-    return NotificationHistoryItem(
+    return NotificationHistory(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       tag: tag ?? this.tag,
-      timestamp: timestamp ?? this.timestamp,
+      unixTime: unixTime ?? this.unixTime,
       parameters: parameters ?? this.parameters,
       isRead: isRead ?? this.isRead,
       isNotified: isNotified ?? this.isNotified,
     );
   }
 
-  bool isEqualId(NotificationHistoryItem item) {
+  bool isEqualId(NotificationHistory item) {
     return id == item.id;
   }
 }
