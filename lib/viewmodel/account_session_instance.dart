@@ -395,6 +395,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     _pendingChanges = true;
     notifyListeners();
+
     log("[Account Session] Modified changes! Saving...");
     StorageRepository.saveAccountSession(accountSession: _toMapAccountSession());
 

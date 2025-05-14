@@ -21,6 +21,7 @@ void main() async {
   var accountSessionInstance = AccountSessionInstance.fromPreviousSettings(
     accountSessionJson: await StorageRepository.loadAccountSession(),
   );
+  accountSessionInstance.schoolYear = settingsInstance.currentSchoolYear;
   // Initialize news cache instance
   var newsCacheInstance = NewsCacheInstance();
   newsCacheInstance.timerInterval = settingsInstance.newsBackgroundDuration * 60 * 1000;

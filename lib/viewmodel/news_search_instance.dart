@@ -55,6 +55,7 @@ class NewsSearchInstance extends BaseViewModel {
 
     _pendingChanges = true;
     notifyListeners();
+
     log("[Search History] Modified changes! Saving...");
     await StorageRepository.saveNewsSearchHistory(searchHistory: _toMap());
 
@@ -112,6 +113,7 @@ class NewsSearchInstance extends BaseViewModel {
 
     _processState = ProcessState.running;
     notifyListeners();
+
     beforeRun?.call();
 
     log("[News Search] Running...");
