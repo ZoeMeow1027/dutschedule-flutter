@@ -163,6 +163,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News global] Done running! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, current count: ${newsGlobal.data.length}");
       notifyListeners();
+
       onDone?.call(newsGlobal.state == ProcessState.successful);
     }
   }
@@ -270,6 +271,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News subject] End run. Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, current count: ${newsSubject.data.length}");
       notifyListeners();
+
       onDone?.call(newsSubject.state == ProcessState.successful);
     }
   }
@@ -380,6 +382,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News student affairs] Done running! Next page: ${newsStudentAffairs.parameters["nextPage"] ?? "???"}, current count: ${newsStudentAffairs.data.length}");
       notifyListeners();
+
       onDone?.call(newsStudentAffairs.state == ProcessState.successful);
     }
   }
@@ -489,6 +492,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News examination] Done running! Next page: ${newsExamination.parameters["nextPage"] ?? "???"}, current count: ${newsExamination.data.length}");
       notifyListeners();
+
       onDone?.call(newsExamination.state == ProcessState.successful);
     }
   }
@@ -597,6 +601,7 @@ class NewsCacheInstance extends BaseViewModel {
     } finally {
       log("[News tuition] Done running! Next page: ${newsTuitions.parameters["nextPage"] ?? "???"}, current count: ${newsTuitions.data.length}");
       notifyListeners();
+
       onDone?.call(newsTuitions.state == ProcessState.successful);
     }
   }

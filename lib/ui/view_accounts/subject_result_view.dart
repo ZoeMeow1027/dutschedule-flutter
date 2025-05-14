@@ -1,13 +1,16 @@
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/enum/background_image_option.dart';
 import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
+import '../../viewmodel/settings_instance.dart';
 import '../components/info_card.dart';
 import '../components/switch_button.dart';
 import '../components/widget_account/subject_result_bottom_sheet.dart';
@@ -20,6 +23,21 @@ class SubjectResultView extends StatefulWidget {
 }
 
 class _SubjectResultViewState extends State<SubjectResultView> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Post-frame callback to safely use context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      doSomething();
+    });
+  }
+
+  Future<void> doSomething() async {
+    final accountSession = Provider.of<AccountSessionInstance>(context, listen: false);
+    await accountSession.fetchTrainingResult();
+  }
+
   bool _isInitialized = false;
   bool _filterEnabled = false;
   List<String> _allFilters = [];
@@ -28,13 +46,10 @@ class _SubjectResultViewState extends State<SubjectResultView> {
   String _filterQuery = "";
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final accountSession = Provider.of<AccountSessionInstance>(context);
+    final settingsInstance = Provider.of<SettingsInstance>(context);
+
     if (!_isInitialized) {
       setState(() {
         _allFilters = _getAllFilters(
@@ -53,45 +68,80 @@ class _SubjectResultViewState extends State<SubjectResultView> {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_title")),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),
-        child: accountSession.trainingResult.state == ProcessState.running
-            ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
-            : const Icon(Icons.refresh),
-      ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
+        color: settingsInstance.backgroundImageOption == BackgroundImageOption.none ? null : Colors.transparent,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SwitchButton(
-              value: _filterEnabled,
-              onPressed: () {
-                setState(() {
-                  _filterEnabled = !_filterEnabled;
-                  _filterQueryController.text = "";
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 2),
-                      child: Icon(
-                        Icons.filter_alt,
-                        size: 30,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Transform.translate(
+                    offset: Offset(-14, 0),
+                    child: SwitchButton(
+                      value: _filterEnabled,
+                      onPressed: () {
+                        setState(() {
+                          _filterEnabled = !_filterEnabled;
+                          _filterQueryController.text = "";
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 2),
+                              child: Icon(
+                                Icons.filter_alt,
+                                size: 30,
+                              ),
+                            ),
+                            Text(AppLocalizations.of(context)
+                                .translate("account_trainingstatus_subjectresult_searchfilterbutton")),
+                          ],
+                        ),
                       ),
                     ),
-                    Text(AppLocalizations.of(context)
-                        .translate("account_trainingstatus_subjectresult_searchfilterbutton")),
-                  ],
-                ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.history, size: 24),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          StringUtils.formatString(
+                            AppLocalizations.of(context).translate("time_last_request"),
+                            [
+                              accountSession.trainingResult.lastRequest == 0
+                                  ? AppLocalizations.of(context).translate("data_unknown")
+                                  : DateFormat("dd/MM/yyyy HH:mm").format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        accountSession.trainingResult.lastRequest,
+                                      ),
+                                    ),
+                            ],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),
+              child: accountSession.trainingResult.state == ProcessState.running
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.refresh, size: 24),
             ),
           ],
         ),

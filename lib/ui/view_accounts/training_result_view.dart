@@ -1,4 +1,3 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../model/enum/background_image_option.dart';
 import '../../model/process_state.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../../viewmodel/settings_instance.dart';
@@ -14,8 +14,28 @@ import '../components/widget_account/graduate_summary.dart';
 import '../components/widget_account/training_summary.dart';
 import 'subject_result_view.dart';
 
-class TrainingResultView extends StatelessWidget {
+class TrainingResultView extends StatefulWidget {
   const TrainingResultView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _TrainingResultView();
+}
+
+class _TrainingResultView extends State<TrainingResultView> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Post-frame callback to safely use context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      doSomething();
+    });
+  }
+
+  Future<void> doSomething() async {
+    final accountSession = Provider.of<AccountSessionInstance>(context, listen: false);
+    await accountSession.fetchTrainingResult();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,41 +56,51 @@ class TrainingResultView extends StatelessWidget {
               : _mainScreenNoData(context),
       bottomNavigationBar: BottomAppBar(
         color: settingsInstance.backgroundImageOption == BackgroundImageOption.none ? null : Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.history),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7),
-                    child: Text(StringUtils.formatString(
-                      AppLocalizations.of(context).translate("time_last_request"),
-                      [
-                        accountSession.trainingResult.lastRequest == 0
-                            ? AppLocalizations.of(context).translate("data_unknown")
-                            : DateFormat("dd/MM/yyyy HH:mm")
-                                .format(DateTime.fromMillisecondsSinceEpoch(accountSession.trainingResult.lastRequest))
-                      ],
-                    )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.history, size: 24),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          StringUtils.formatString(
+                            AppLocalizations.of(context).translate("time_last_request"),
+                            [
+                              accountSession.trainingResult.lastRequest == 0
+                                  ? AppLocalizations.of(context).translate("data_unknown")
+                                  : DateFormat("dd/MM/yyyy HH:mm").format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        accountSession.trainingResult.lastRequest,
+                                      ),
+                                    ),
+                            ],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),
+              child: accountSession.trainingResult.state == ProcessState.running
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.refresh, size: 24),
+            ),
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async => await accountSession.fetchTrainingResult(forceRequest: true),
-        child: accountSession.trainingResult.state == ProcessState.running
-            ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
-            : const Icon(Icons.refresh),
       ),
       // bottomNavigationBar: BottomAppBar(color: Colors.transparent),
     );

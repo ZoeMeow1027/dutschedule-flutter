@@ -103,24 +103,39 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           controller: _tabController,
           tabs: [
             Tab(
-              child: Text(AppLocalizations.of(context).translate("news_tabname_global")),
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_global"),
+                textAlign: TextAlign.center,
+              ),
             ),
             Tab(
-              child: Text(AppLocalizations.of(context).translate("news_tabname_subject")),
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_subject"),
+                textAlign: TextAlign.center,
+              ),
             ),
             Tab(
-              child: Text(AppLocalizations.of(context).translate("news_tabname_studentaffairs")),
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_studentaffairs"),
+                textAlign: TextAlign.center,
+              ),
             ),
             Tab(
-              child: Text(AppLocalizations.of(context).translate("news_tabname_examination")),
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_examination"),
+                textAlign: TextAlign.center,
+              ),
             ),
             Tab(
-              child: Text(AppLocalizations.of(context).translate("news_tabname_tuition")),
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_tuition"),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         child: shouldFABRunning()
             ? SizedBox(

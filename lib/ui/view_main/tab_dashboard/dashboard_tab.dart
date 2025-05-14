@@ -1,7 +1,8 @@
-import '../../../utils/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_localizations.dart';
 import '../../components/card_with_title.dart';
+import '../../components/widget_main/date_time_card.dart';
 import '../../view_settings/settings_view.dart';
 
 class DashboardTab extends StatelessWidget {
@@ -26,15 +27,8 @@ class DashboardTab extends StatelessWidget {
       ),
       body: Column(
         children: [
-          CardWithTitle(
+          DateTimeCard(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-            title: "Date & time today",
-            child: Text(
-              "Date & time: <place here>"
-              "\n(based on your system settings)"
-              "\n\nSchool year: <place here> - Week: <place here>"
-              "\nCurrent lesson: <place here>",
-            ),
           ),
           CardWithTitle(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),

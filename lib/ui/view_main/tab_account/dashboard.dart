@@ -34,7 +34,8 @@ class AccountDashboardView extends StatelessWidget {
                   ),
                 )
               : Container(),
-          (accountSessionInstance.accountSession.state == ProcessState.failed)
+          (accountSessionInstance.accountSession.state == ProcessState.notRunYet ||
+                  accountSessionInstance.accountSession.state == ProcessState.failed)
               ? MessageCard.warning(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
@@ -45,7 +46,7 @@ class AccountDashboardView extends StatelessWidget {
                         ?.copyWith(color: context.isDarkMode() ? Colors.black : null),
                   ),
                   onClick: () {
-                    accountSessionInstance.reLogin();
+                    accountSessionInstance.reLogin(forceRequest: true);
                   },
                 )
               : Container(),
@@ -73,7 +74,7 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectinfo")),
             onPressed: () {
-              accountSessionInstance.fetchSubjectInformation();
+              // accountSessionInstance.fetchSubjectInformation();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectInformationView()),
@@ -84,7 +85,7 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_subjectfee")),
             onPressed: () {
-              accountSessionInstance.fetchSubjectFee();
+              // accountSessionInstance.fetchSubjectFee();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectFeeView()),
@@ -95,11 +96,13 @@ class AccountDashboardView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Text(AppLocalizations.of(context).translate("account_dashboard_button_accounttrainstats")),
             onPressed: () {
-              accountSessionInstance.fetchTrainingResult();
+              // accountSessionInstance.fetchTrainingResult();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TrainingResultView()),
-              );
+              ).whenComplete(() async {
+                await accountSessionInstance.fetchTrainingResult();
+              });
             },
           ),
           _customButton(

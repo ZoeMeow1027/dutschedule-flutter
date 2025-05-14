@@ -12,13 +12,47 @@ import '../../viewmodel/settings_instance.dart';
 import '../components/widget_account/subject_detail_info.dart';
 import '../components/widget_account/subject_info_item.dart';
 
-class SubjectInformationView extends StatelessWidget {
+class SubjectInformationView extends StatefulWidget {
   const SubjectInformationView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _SubjectInformationView();
+}
+
+class _SubjectInformationView extends State<SubjectInformationView> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Post-frame callback to safely use context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      doSomething();
+    });
+  }
+
+  Future<void> doSomething() async {
+    final accountSession = Provider.of<AccountSessionInstance>(context, listen: false);
+    await accountSession.fetchSubjectInformation();
+  }
 
   @override
   Widget build(BuildContext context) {
     final accountSession = Provider.of<AccountSessionInstance>(context);
     final settingsInstance = Provider.of<SettingsInstance>(context);
+
+    String getSemesterLabel(BuildContext context, int semester) {
+      final t = AppLocalizations.of(context).translate;
+      switch (semester) {
+        case 1:
+          return t("account_schoolyear_title_semester_1");
+        case 2:
+          return t("account_schoolyear_title_semester_2");
+        case 3:
+          return t("account_schoolyear_title_summersemester");
+        default:
+          return t("data_unknown");
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -29,62 +63,67 @@ class SubjectInformationView extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         color: settingsInstance.backgroundImageOption == BackgroundImageOption.none ? null : Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              StringUtils.formatString(
-                AppLocalizations.of(context).translate("account_schoolyear_title_main"),
-                [
-                  accountSession.schoolYear.year.toString(),
-                  (accountSession.schoolYear.year + 1).toString(),
-                  accountSession.schoolYear.semester == 1
-                      ? AppLocalizations.of(context).translate("account_schoolyear_title_semester_1")
-                      : accountSession.schoolYear.semester == 2
-                          ? AppLocalizations.of(context).translate("account_schoolyear_title_semester_2")
-                          : accountSession.schoolYear.semester == 3
-                              ? AppLocalizations.of(context).translate("account_schoolyear_title_summersemester")
-                              : AppLocalizations.of(context).translate("data_unknown"),
-                ],
-              ),
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 3),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.history),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7),
-                    child: Text(StringUtils.formatString(
-                      AppLocalizations.of(context).translate("time_last_request"),
+                  Text(
+                    StringUtils.formatString(
+                      AppLocalizations.of(context).translate("account_schoolyear_title_main"),
                       [
-                        accountSession.subjectInformationList.lastRequest == 0
-                            ? AppLocalizations.of(context).translate("data_unknown")
-                            : DateFormat("dd/MM/yyyy HH:mm").format(
-                                DateTime.fromMillisecondsSinceEpoch(accountSession.subjectInformationList.lastRequest))
+                        accountSession.schoolYear.year.toString(),
+                        (accountSession.schoolYear.year + 1).toString(),
+                        getSemesterLabel(context, accountSession.schoolYear.semester),
                       ],
-                    )),
+                    ),
+                    style: Theme.of(context).textTheme.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                  const SizedBox(height: 3),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.history, size: 24),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          StringUtils.formatString(
+                            AppLocalizations.of(context).translate("time_last_request"),
+                            [
+                              accountSession.subjectInformationList.lastRequest == 0
+                                  ? AppLocalizations.of(context).translate("data_unknown")
+                                  : DateFormat("dd/MM/yyyy HH:mm").format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        accountSession.subjectInformationList.lastRequest,
+                                      ),
+                                    ),
+                            ],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              onPressed: () async => await accountSession.fetchSubjectInformation(forceRequest: true),
+              child: accountSession.subjectInformationList.state == ProcessState.running
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.refresh, size: 24),
+            ),
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      floatingActionButton: (accountSession.subjectInformationList.state == ProcessState.running &&
-              accountSession.subjectInformationList.data.isEmpty)
-          ? null
-          : FloatingActionButton(
-              onPressed: () async => await accountSession.fetchSubjectInformation(forceRequest: true),
-              child: accountSession.subjectInformationList.state == ProcessState.running
-                  ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator())
-                  : const Icon(Icons.refresh),
-            ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: accountSession.subjectInformationList.data.isNotEmpty
