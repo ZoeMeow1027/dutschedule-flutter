@@ -148,16 +148,19 @@ class _SubjectInformationView extends State<SubjectInformationView> {
   }
 
   Widget _onNoData(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Spacer(),
-        Text(
-          AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
-          textAlign: TextAlign.center,
-        ),
-        Spacer(),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Spacer(),
+          Text(
+            AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
+            textAlign: TextAlign.center,
+          ),
+          Spacer(),
+        ],
+      ),
     );
   }
 

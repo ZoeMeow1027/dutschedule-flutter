@@ -142,16 +142,19 @@ class _SubjectFeeView extends State<SubjectFeeView> {
   }
 
   Widget _onNoData(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Spacer(),
-        Text(
-          AppLocalizations.of(context).translate("account_subjectfee_summary_nosubjects"),
-          textAlign: TextAlign.center,
-        ),
-        Spacer(),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Spacer(),
+          Text(
+            AppLocalizations.of(context).translate("account_subjectfee_summary_nosubjects"),
+            textAlign: TextAlign.center,
+          ),
+          Spacer(),
+        ],
+      ),
     );
   }
 

@@ -49,11 +49,6 @@ class _TrainingResultView extends State<TrainingResultView> {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate("account_trainingstatus_title")),
       ),
-      body: !_shouldShowLoadingScreen(accountSession)
-          ? _mainScreenData(context, accountSession)
-          : accountSession.trainingResult.state == ProcessState.running
-              ? _mainScreenLoading(context)
-              : _mainScreenNoData(context),
       bottomNavigationBar: BottomAppBar(
         color: settingsInstance.backgroundImageOption == BackgroundImageOption.none ? null : Colors.transparent,
         child: Row(
@@ -103,14 +98,15 @@ class _TrainingResultView extends State<TrainingResultView> {
         ),
       ),
       // bottomNavigationBar: BottomAppBar(color: Colors.transparent),
+      body: accountSession.trainingResult.data != null
+          ? _onData(context, accountSession)
+          : accountSession.trainingResult.state == ProcessState.running
+              ? _onLoading(context)
+              : _onNoData(context),
     );
   }
 
-  bool _shouldShowLoadingScreen(AccountSessionInstance instance) {
-    return instance.trainingResult.data != null ? false : instance.trainingResult.state == ProcessState.running;
-  }
-
-  Widget _mainScreenData(BuildContext context, AccountSessionInstance accountSession) {
+  Widget _onData(BuildContext context, AccountSessionInstance accountSession) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: SingleChildScrollView(
@@ -151,7 +147,7 @@ class _TrainingResultView extends State<TrainingResultView> {
     );
   }
 
-  Widget _mainScreenLoading(BuildContext context) {
+  Widget _onLoading(BuildContext context) {
     return Center(
       child: SizedBox(
         width: 48,
@@ -161,9 +157,9 @@ class _TrainingResultView extends State<TrainingResultView> {
     );
   }
 
-  Widget _mainScreenNoData(BuildContext context) {
+  Widget _onNoData(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Center(
         child: Text(
           AppLocalizations.of(context).translate("account_trainingstatus_nodata"),
