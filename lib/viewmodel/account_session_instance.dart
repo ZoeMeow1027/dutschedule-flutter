@@ -88,6 +88,8 @@ class AccountSessionInstance extends BaseViewModel {
     _settingsChanged();
     beforeRun?.call();
 
+    await Future.delayed(Duration(milliseconds: 500));
+
     log("[Account] [Session - Login] Running...");
     try {
       final session = await accRepo.login(account: authInfo!);
@@ -332,6 +334,7 @@ class AccountSessionInstance extends BaseViewModel {
       trainingResult.state = ProcessState.successful;
       log("[Account] [Training result] Running successful!");
     } catch (ex) {
+      trainingResult.data = null;
       trainingResult.state = ProcessState.failed;
       log("[Account] [Training result] Running failed!");
     } finally {

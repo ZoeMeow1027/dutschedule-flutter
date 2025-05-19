@@ -14,6 +14,7 @@ import '../components/widget_settings/theme_mode_dialog.dart';
 import 'about_view.dart';
 import 'experiment_settings_view.dart';
 import 'languages_view.dart';
+import 'network_check_view.dart';
 import 'news_notifications_settings_view.dart';
 import 'parse_news_subject_notifications_view.dart';
 import 'wallpaper_and_style_view.dart';
@@ -192,8 +193,20 @@ class SettingsView extends StatelessWidget {
             ),
             ListViewGroupItem(
               padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_category_about"),
+              title: AppLocalizations.of(context).translate("settings_category_aboutandtroubleshoot"),
               children: [
+                ListViewOptionItem(
+                  title: AppLocalizations.of(context).translate("settings_option_troubleshootnetwork"),
+                  description:
+                      AppLocalizations.of(context).translate("settings_option_troubleshootnetwork_description"),
+                  leading: Icon(Icons.troubleshoot),
+                  onClick: () async => await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NetworkCheckSettingsView(),
+                    ),
+                  ),
+                ),
                 FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) => ListViewOptionItem(

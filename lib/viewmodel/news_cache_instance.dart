@@ -33,31 +33,31 @@ class NewsCacheInstance extends BaseViewModel {
   VariableListState<NewsGlobal> newsGlobal = VariableListState.from(
     data: [],
     lastRequest: 0,
-    parameters: {"nextPage": "1"},
+    parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
   VariableListState<NewsSubject> newsSubject = VariableListState.from(
     data: [],
     lastRequest: 0,
-    parameters: {"nextPage": "1"},
+    parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
   VariableListState<NewsGlobal> newsStudentAffairs = VariableListState.from(
     data: [],
     lastRequest: 0,
-    parameters: {"nextPage": "1"},
+    parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
   VariableListState<NewsGlobal> newsExamination = VariableListState.from(
     data: [],
     lastRequest: 0,
-    parameters: {"nextPage": "1"},
+    parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
   VariableListState<NewsGlobal> newsTuitions = VariableListState.from(
     data: [],
     lastRequest: 0,
-    parameters: {"nextPage": "1"},
+    parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
   Future<void> fetchGlobalNews({
@@ -71,6 +71,12 @@ class NewsCacheInstance extends BaseViewModel {
     }
     if (newsGlobal.state == ProcessState.running) {
       log("[News global] Running denied because of running...");
+      return;
+    }
+
+    if (newsGlobal.parameters["endOfList"] == "1") {
+      log("[News global] You're reached end of list. "
+          "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
       return;
     }
 
@@ -154,6 +160,11 @@ class NewsCacheInstance extends BaseViewModel {
           break;
       }
 
+      // If listFromInternet is less than 30 items, might be end of list.
+      if (listFromInternet.length >= 30) {
+        newsGlobal.parameters["endOfList"] = "1";
+      }
+
       newsGlobal.state = ProcessState.successful;
       newsGlobal.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[News global] Running successful!");
@@ -179,6 +190,11 @@ class NewsCacheInstance extends BaseViewModel {
     }
     if (newsSubject.state == ProcessState.running) {
       log("[News subject] Running denied because of running...");
+      return;
+    }
+
+    if (newsSubject.parameters["endOfList"] == "1") {
+      log("[News subject] You're reached end of list. Force this request to clear cache and start over.");
       return;
     }
 
@@ -262,6 +278,11 @@ class NewsCacheInstance extends BaseViewModel {
           break;
       }
 
+      // If listFromInternet is less than 30 items, might be end of list.
+      if (listFromInternet.length >= 30) {
+        newsSubject.parameters["endOfList"] = "1";
+      }
+
       newsSubject.state = ProcessState.successful;
       newsSubject.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[News subject] Running successful!");
@@ -287,6 +308,11 @@ class NewsCacheInstance extends BaseViewModel {
     }
     if (newsStudentAffairs.state == ProcessState.running) {
       log("[News student affairs] Running denied because of running...");
+      return;
+    }
+
+    if (newsStudentAffairs.parameters["endOfList"] == "1") {
+      log("[News student affairs] You're reached end of list. Force this request to clear cache and start over.");
       return;
     }
 
@@ -373,6 +399,11 @@ class NewsCacheInstance extends BaseViewModel {
           break;
       }
 
+      // If listFromInternet is less than 30 items, might be end of list.
+      if (listFromInternet.length >= 30) {
+        newsStudentAffairs.parameters["endOfList"] = "1";
+      }
+
       newsStudentAffairs.state = ProcessState.successful;
       newsStudentAffairs.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[News student affairs] Running successful!");
@@ -398,6 +429,11 @@ class NewsCacheInstance extends BaseViewModel {
     }
     if (newsExamination.state == ProcessState.running) {
       log("[News examination] Running denied because of running...");
+      return;
+    }
+
+    if (newsExamination.parameters["endOfList"] == "1") {
+      log("[News examination] You're reached end of list. Force this request to clear cache and start over.");
       return;
     }
 
@@ -483,6 +519,11 @@ class NewsCacheInstance extends BaseViewModel {
           break;
       }
 
+      // If listFromInternet is less than 30 items, might be end of list.
+      if (listFromInternet.length >= 30) {
+        newsExamination.parameters["endOfList"] = "1";
+      }
+
       newsExamination.state = ProcessState.successful;
       newsExamination.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[News examination] Running successful!");
@@ -508,6 +549,11 @@ class NewsCacheInstance extends BaseViewModel {
     }
     if (newsTuitions.state == ProcessState.running) {
       log("[News tuition] Running denied because of running...");
+      return;
+    }
+
+    if (newsTuitions.parameters["endOfList"] == "1") {
+      log("[News tuition] You're reached end of list. Force this request to clear cache and start over.");
       return;
     }
 
@@ -590,6 +636,11 @@ class NewsCacheInstance extends BaseViewModel {
         case NewsFetchType.clearCacheAndFirstPage:
           newsTuitions.parameters["nextPage"] = 2.toString();
           break;
+      }
+
+      // If listFromInternet is less than 30 items, might be end of list.
+      if (listFromInternet.length >= 30) {
+        newsTuitions.parameters["endOfList"] = "1";
       }
 
       newsTuitions.state = ProcessState.successful;

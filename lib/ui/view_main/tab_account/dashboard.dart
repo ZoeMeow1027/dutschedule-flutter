@@ -62,7 +62,7 @@ class AccountDashboardView extends StatelessWidget {
               if (accountSessionInstance.accountSession.state == ProcessState.running) {
                 return;
               }
-              accountSessionInstance.fetchStudentInformation();
+              // accountSessionInstance.fetchStudentInformation();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => StudentInformationView()),
@@ -100,9 +100,7 @@ class AccountDashboardView extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TrainingResultView()),
-              ).whenComplete(() async {
-                await accountSessionInstance.fetchTrainingResult();
-              });
+              );
             },
           ),
           _customButton(

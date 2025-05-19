@@ -188,6 +188,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
       ),
       body: TabBarView(
         controller: _tabController,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           NewsList(
             newsList: newsCacheInstance.newsGlobal.data,

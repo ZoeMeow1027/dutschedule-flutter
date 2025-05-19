@@ -93,8 +93,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1acc9f0b2d1d3456db30894946ff32835be76bd4"
-      resolved-ref: "1acc9f0b2d1d3456db30894946ff32835be76bd4"
+      ref: "9a6923a9abc105b2728e126a6cded3084f9879b6"
+      resolved-ref: "9a6923a9abc105b2728e126a6cded3084f9879b6"
       url: "https://github.com/dutwrapper/dutwrapper-dart"
     source: git
     version: "1.0.3"

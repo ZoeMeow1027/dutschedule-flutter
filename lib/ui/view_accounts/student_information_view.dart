@@ -133,52 +133,94 @@ class _StudentInformationView extends State<StudentInformationView> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: List.generate(
-              ObjectToMapUtils.fromStudentInformation(
-                context: context,
-                st: accountSession.studentInformation.data,
-              ).entries.length,
-              // (accountSession.studentInformation.data?.toMap().entries.length ?? 0),
-              (index) {
-                if (ObjectToMapUtils.fromStudentInformation(
-                      context: context,
-                      st: accountSession.studentInformation.data,
-                    ).entries.elementAt(index).value !=
-                    null) {
-                  return StudentInfoItem(
-                    name: ObjectToMapUtils.fromStudentInformation(
-                      context: context,
-                      st: accountSession.studentInformation.data,
-                    ).entries.elementAt(index).key,
-                    value: ObjectToMapUtils.fromStudentInformation(
-                      context: context,
-                      st: accountSession.studentInformation.data,
-                    ).entries.elementAt(index).value,
-                    onCopy: (copiedString) {
-                      if (copiedString.isNotEmpty) {
-                        Clipboard.setData(ClipboardData(text: copiedString));
-                        context.showCustomSnackBar(
-                          content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
-                          dismissOld: true,
-                        );
-                      } else {
-                        context.showCustomSnackBar(
-                          content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
-                          dismissOld: true,
-                        );
-                      }
-                    },
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          ),
+        child: accountSession.studentInformation.data != null
+            ? _onData(context, accountSession)
+            : accountSession.studentInformation.state == ProcessState.running
+                ? _onLoading(context)
+                : _onNoData(context),
+      ),
+    );
+  }
+
+  Widget _onData(
+    BuildContext context,
+    AccountSessionInstance accountSession,
+  ) {
+    return SingleChildScrollView(
+      child: Column(
+        children: List.generate(
+          ObjectToMapUtils.fromStudentInformation(
+            context: context,
+            st: accountSession.studentInformation.data,
+          ).entries.length,
+          // (accountSession.studentInformation.data?.toMap().entries.length ?? 0),
+          (index) {
+            if (ObjectToMapUtils.fromStudentInformation(
+                  context: context,
+                  st: accountSession.studentInformation.data,
+                ).entries.elementAt(index).value !=
+                null) {
+              return StudentInfoItem(
+                name: ObjectToMapUtils.fromStudentInformation(
+                  context: context,
+                  st: accountSession.studentInformation.data,
+                ).entries.elementAt(index).key,
+                value: ObjectToMapUtils.fromStudentInformation(
+                  context: context,
+                  st: accountSession.studentInformation.data,
+                ).entries.elementAt(index).value,
+                onCopy: (copiedString) {
+                  if (copiedString.isNotEmpty) {
+                    Clipboard.setData(ClipboardData(text: copiedString));
+                    context.showCustomSnackBar(
+                      content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
+                      dismissOld: true,
+                    );
+                  } else {
+                    context.showCustomSnackBar(
+                      content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
+                      dismissOld: true,
+                    );
+                  }
+                },
+              );
+            } else {
+              return Container();
+            }
+          },
         ),
       ),
+    );
+  }
+
+  Widget _onNoData(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Spacer(),
+          Text(
+            AppLocalizations.of(context).translate("account_accinfo_noinfo"),
+            textAlign: TextAlign.center,
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _onLoading(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Spacer(),
+        Container(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(),
+        ),
+        Spacer(),
+      ],
     );
   }
 }
