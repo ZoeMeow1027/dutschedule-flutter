@@ -68,6 +68,7 @@
   "main_dashboard_widget_externallinks_description": "Sau đây là một số liên kết DUT mà bạn có thể cần. Một số trong đó sẽ không được cập nhật cho đến khi phiên bản ứng dụng mới được phát hành.",
   "main_news_nonews_nointernet": "Không có tin tức nào đã tải.\nVui lòng kiểm tra kết nối internet của bạn,\nvà thử lại.",
   "main_news_nonews_serverissue": "Chúng tôi không thể tải thông tin nào từ sv.dut.udn.vn.\nCó thể máy chủ không thể truy cập được.\nVui lòng thử lại sau.",
+  "main_news_endoflist": "Bạn đã đi đến tin tức cuối cùng",
   "main_news_searchnews": "Tìm kiếm tin tức",
   "main_account_notloggedin": "Chưa đăng nhập",
   "main_account_fetching": "Đang tải…",

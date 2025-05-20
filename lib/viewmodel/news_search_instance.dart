@@ -160,10 +160,10 @@ class NewsSearchInstance extends BaseViewModel {
       newsHistoryList.sort((p, q) => q.lastRequest.compareTo(p.lastRequest));
 
       _processState = ProcessState.successful;
-      log("[News Search] Running successful!");
+      log("[News Search] Task successful!");
     } catch (ex) {
       _processState = ProcessState.failed;
-      log("[News Search] Running failed!");
+      log("[News Search] Task failed!");
     } finally {
       log("[News Search] End run.");
       _settingsChanged();

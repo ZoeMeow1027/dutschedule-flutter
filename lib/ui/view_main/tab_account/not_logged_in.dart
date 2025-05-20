@@ -6,7 +6,6 @@ import '../../../model/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/build_context_extension.dart';
-import '../../../utils/theme_tools.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import 'account_tab.dart';
 
@@ -36,7 +35,7 @@ class AccountNotLoggedInView extends StatelessWidget {
             RichText(
               text: TextSpan(
                 style: TextStyle(
-                  color: ThemeTool.isAppDarkMode(context) ? Colors.white : Colors.black,
+                  color: context.isAppDarkMode() ? Colors.white : Colors.black,
                 ),
                 children: [
                   WidgetSpan(

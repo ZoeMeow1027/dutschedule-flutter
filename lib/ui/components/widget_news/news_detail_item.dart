@@ -1,4 +1,3 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/app_localizations.dart';
 import '../../../utils/app_utils.dart';
-import '../../../utils/theme_tools.dart';
+import '../../../utils/build_context_extension.dart';
 
 class NewsDetailItem extends StatelessWidget {
   const NewsDetailItem({
@@ -80,7 +79,7 @@ class NewsDetailItem extends StatelessWidget {
                               fontSize: 17,
                               color: data[index].url != null
                                   ? Colors.blueAccent
-                                  : ThemeTool.isAppDarkMode(context)
+                                  : context.isAppDarkMode()
                                       ? Colors.white
                                       : Colors.black,
                             ),

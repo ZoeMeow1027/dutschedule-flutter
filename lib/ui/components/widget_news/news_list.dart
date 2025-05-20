@@ -11,6 +11,7 @@ class NewsList extends StatefulWidget {
     super.key,
     required this.newsList,
     this.scrollController,
+    this.isEndOfList = false,
     this.color,
     this.onClick,
     this.endListReached,
@@ -21,6 +22,7 @@ class NewsList extends StatefulWidget {
 
   final List<NewsGlobal> newsList;
   final ScrollController? scrollController;
+  final bool isEndOfList;
   final Function(NewsGlobal)? onClick;
   final Color? color;
   final Function()? endListReached;
@@ -52,6 +54,7 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
                       if (index == tmp.length) {
                         return NewsEndListItem(
                           isRefreshing: widget.isRefreshing,
+                          isEndOfList: widget.isEndOfList,
                           refreshRequested: () {
                             if (widget.endListReached != null) {
                               widget.endListReached!();

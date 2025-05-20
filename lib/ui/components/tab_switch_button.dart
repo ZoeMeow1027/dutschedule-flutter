@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/theme_tools.dart';
+import '../../utils/build_context_extension.dart';
 
 class TabSwitchButton extends StatelessWidget {
   const TabSwitchButton({
@@ -35,22 +35,13 @@ class TabSwitchButton extends StatelessWidget {
               },
               style: TextButton.styleFrom(
                 backgroundColor: isFocus
-                    ? (ThemeTool.isAppDarkMode(context)
-                        ? Colors.white
-                        : Theme.of(context).primaryColor)
-                    : (ThemeTool.isAppDarkMode(context)
-                        ? Theme.of(context).primaryColor
-                        : Colors.white),
-                foregroundColor: isFocus
-                    ? (ThemeTool.isAppDarkMode(context)
-                        ? Theme.of(context).primaryColor
-                        : Colors.white)
-                    : null,
+                    ? (context.isAppDarkMode() ? Colors.white : Theme.of(context).primaryColor)
+                    : (context.isAppDarkMode() ? Theme.of(context).primaryColor : Colors.white),
+                foregroundColor:
+                    isFocus ? (context.isAppDarkMode() ? Theme.of(context).primaryColor : Colors.white) : null,
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    color: ThemeTool.isAppDarkMode(context)
-                        ? Colors.white
-                        : Theme.of(context).primaryColor,
+                    color: context.isAppDarkMode() ? Colors.white : Theme.of(context).primaryColor,
                     width: 1.5,
                     style: BorderStyle.solid,
                   ),

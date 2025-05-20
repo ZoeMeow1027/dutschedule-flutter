@@ -23,7 +23,7 @@ class NewsListInDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: showDateInHeader ? 10 : 0),
+      padding: EdgeInsets.only(top: 7, bottom: showDateInHeader ? 0 : 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -68,6 +68,7 @@
   "main_dashboard_widget_externallinks_description": "Here is some external DUT links you might need to. Some of them won't updated until a new version of applcation is published.",
   "main_news_nonews_nointernet": "No news loaded.\nPlease, check your internet connection,\nand try again.",
   "main_news_nonews_serverissue": "We couldn't fetch any information from sv.dut.udn.vn.\nMay be server isn't reachable.\nPlease try again later.",
+  "main_news_endoflist": "You're reached end of news list",
   "main_news_searchnews": "Search news",
   "main_account_notloggedin": "Not logged in",
   "main_account_fetching": "Fetching…",
