@@ -1,11 +1,10 @@
-import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/school_year.dart';
 import '../../utils/app_localizations.dart';
+import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
-import '../../utils/theme_tools.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/data_adjuster.dart';
 import '../components/list_view_option_item.dart';
@@ -78,7 +77,7 @@ class ExperimentSettingsView extends StatelessWidget {
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: ThemeTool.isAppDarkMode(context) ? Colors.black45 : Colors.white60,
+                                        color: context.isAppDarkMode() ? Colors.black45 : Colors.white60,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Column(
@@ -125,7 +124,7 @@ class ExperimentSettingsView extends StatelessWidget {
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: ThemeTool.isAppDarkMode(context) ? Colors.black45 : Colors.white60,
+                                        color: context.isAppDarkMode() ? Colors.black45 : Colors.white60,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Column(

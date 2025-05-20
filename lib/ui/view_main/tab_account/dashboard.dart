@@ -43,7 +43,7 @@ class AccountDashboardView extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
-                        ?.copyWith(color: context.isDarkMode() ? Colors.black : null),
+                        ?.copyWith(color: context.isOSDarkMode() ? Colors.black : null),
                   ),
                   onClick: () {
                     accountSessionInstance.reLogin(forceRequest: true);

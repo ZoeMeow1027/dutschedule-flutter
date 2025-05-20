@@ -6,26 +6,26 @@ class NewsEndListItem extends StatelessWidget {
   const NewsEndListItem({
     super.key,
     this.isRefreshing = false,
+    this.isEndOfList = false,
     this.refreshRequested,
   });
 
   final bool isRefreshing;
+  final bool isEndOfList;
   final Function()? refreshRequested;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: isEndOfList ? 25 : 60,
       child: InkWell(
-        onTap: isRefreshing
-            ? null
-            : () {
-                if (refreshRequested != null) {
-                  refreshRequested!();
-                }
-              },
+        onTap: (!(isRefreshing || isEndOfList)) ? () => refreshRequested?.call() : null,
         child: Center(
-          child: isRefreshing ? _refreshing(context) : _clickToRefresh(context),
+          child: isRefreshing
+              ? _refreshing(context)
+              : isEndOfList
+                  ? _endOfList(context)
+                  : _clickToRefresh(context),
         ),
       ),
     );
@@ -40,7 +40,7 @@ class NewsEndListItem extends StatelessWidget {
           Flexible(
             child: Text(
               AppLocalizations.of(context).translate("news_endoflist_title"),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               textAlign: TextAlign.center,
             ),
           ),
@@ -65,6 +65,20 @@ class NewsEndListItem extends StatelessWidget {
           child: Text(
             AppLocalizations.of(context).translate("news_endoflist_refreshing"),
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _endOfList(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Flexible(
+          child: Text(
+            AppLocalizations.of(context).translate("main_news_endoflist"),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
         ),
       ],

@@ -245,6 +245,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           NewsList(
             newsList: newsCacheInstance.newsStudentAffairs.data,
             isRefreshing: newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
+            isEndOfList: newsCacheInstance.newsStudentAffairs.parameters["endOfList"] == "1",
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
@@ -297,6 +298,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           NewsList(
             newsList: newsCacheInstance.newsTuitions.data,
             isRefreshing: newsCacheInstance.newsTuitions.state == ProcessState.running,
+            isEndOfList: newsCacheInstance.newsTuitions.parameters["endOfList"] == "1",
             onClick: (news) {
               widget.onClick?.call(news, false);
             },

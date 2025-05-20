@@ -39,7 +39,11 @@ extension BuildContextExtension on BuildContext {
             : DeviceType.largeTabletAndDesktop;
   }
 
-  bool isDarkMode() {
+  bool isAppDarkMode() {
+    return Theme.of(this).brightness == Brightness.dark;
+  }
+
+  bool isOSDarkMode() {
     return MediaQuery.of(this).platformBrightness == Brightness.dark;
   }
 }

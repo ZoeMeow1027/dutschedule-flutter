@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dutwrapper/account_object.dart';
@@ -96,11 +95,11 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.data = session;
       this.authInfo = authInfo;
       accountSession.state = ProcessState.successful;
-      log("[Account] [Session - Login] Running successful!");
+      log("[Account] [Session - Login] Task successful!");
       log("[Account] [Session - Login] Session ID: ${session.sessionId}");
     } catch (ex) {
       accountSession.state = authInfo != null ? ProcessState.notRunYet : ProcessState.failed;
-      log("[Account] [Session - Login] Running failed!");
+      log("[Account] [Session - Login] Task failed!");
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Session - Login] End run.");
@@ -134,7 +133,7 @@ class AccountSessionInstance extends BaseViewModel {
           accRepo.logout(session: accountSession.data!);
         }
         accountSession.resetValue();
-        log("[Account] [Session - Logout] Running successful!");
+        log("[Account] [Session - Logout] Task successful!");
 
         // Clear old data from another variables
         subjectInformationList.resetValue();
@@ -147,7 +146,7 @@ class AccountSessionInstance extends BaseViewModel {
       }
     } catch (ex) {
       accountSession.state = ProcessState.failed;
-      log("[Account] [Session - Logout] Running failed!");
+      log("[Account] [Session - Logout] Task failed!");
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Session - Logout] End run.");
@@ -174,7 +173,7 @@ class AccountSessionInstance extends BaseViewModel {
       return;
     }
     if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Subject information] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      log("[Account] [Subject information] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -194,10 +193,10 @@ class AccountSessionInstance extends BaseViewModel {
       subjectInformationList.data.addAll(data);
 
       subjectInformationList.state = ProcessState.successful;
-      log("[Account] [Subject information] Running successful!");
+      log("[Account] [Subject information] Task successful!");
     } catch (ex) {
       subjectInformationList.state = ProcessState.failed;
-      log("[Account] [Subject information] Running failed!");
+      log("[Account] [Subject information] Task failed!");
     } finally {
       subjectInformationList.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject information] End run.");
@@ -224,7 +223,7 @@ class AccountSessionInstance extends BaseViewModel {
       return;
     }
     if (!studentInformation.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Student information] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      log("[Account] [Student information] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -239,10 +238,10 @@ class AccountSessionInstance extends BaseViewModel {
       );
       studentInformation.data = data;
       studentInformation.state = ProcessState.successful;
-      log("[Account] [Student information] Running successful!");
+      log("[Account] [Student information] Task successful!");
     } catch (ex) {
       studentInformation.state = ProcessState.failed;
-      log("[Account] [Student information] Running failed!");
+      log("[Account] [Student information] Task failed!");
     } finally {
       studentInformation.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Student information] End run.");
@@ -269,7 +268,7 @@ class AccountSessionInstance extends BaseViewModel {
       return;
     }
     if (!subjectFeeList.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Subject fee] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      log("[Account] [Subject fee] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -288,10 +287,10 @@ class AccountSessionInstance extends BaseViewModel {
       subjectFeeList.data.addAll(data);
 
       subjectFeeList.state = ProcessState.successful;
-      log("[Account] [Subject fee] Running successful!");
+      log("[Account] [Subject fee] Task successful!");
     } catch (ex) {
       subjectFeeList.state = ProcessState.failed;
-      log("[Account] [Subject fee] Running failed!");
+      log("[Account] [Subject fee] Task failed!");
     } finally {
       subjectFeeList.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Subject fee] End run.");
@@ -318,7 +317,7 @@ class AccountSessionInstance extends BaseViewModel {
       return;
     }
     if (!trainingResult.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Training result] Running denied because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      log("[Account] [Training result] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
       return;
     }
     beforeRun?.call();
@@ -332,11 +331,11 @@ class AccountSessionInstance extends BaseViewModel {
       trainingResult.data = data;
 
       trainingResult.state = ProcessState.successful;
-      log("[Account] [Training result] Running successful!");
+      log("[Account] [Training result] Task successful!");
     } catch (ex) {
       trainingResult.data = null;
       trainingResult.state = ProcessState.failed;
-      log("[Account] [Training result] Running failed!");
+      log("[Account] [Training result] Task failed!");
     } finally {
       trainingResult.lastRequest = DateTime.now().millisecondsSinceEpoch;
       log("[Account] [Training result] End run.");
@@ -376,7 +375,8 @@ class AccountSessionInstance extends BaseViewModel {
         accountSession.parameters.addAll({p: q});
       });
 
-      log(json.encode(accountSession.data));
+      // Write account session to debug console.
+      // log(json.encode(accountSession.data));
     } catch (ex) {
       accountSession.data = null;
       accountSession.state = ProcessState.notRunYet;
