@@ -19,7 +19,15 @@ class TrainingSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Card.filled(
+      child: Material(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        // borderRadius: BorderRadius.only(
+        //   topRight: Radius.circular(20),
+        //   topLeft: Radius.circular(20),
+        //   bottomLeft: Radius.circular(20),
+        //   bottomRight: Radius.circular(20),
+        // ),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 10),
           child: Column(

@@ -40,7 +40,7 @@ class NewsEndListItem extends StatelessWidget {
           Flexible(
             child: Text(
               AppLocalizations.of(context).translate("news_endoflist_title"),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
               textAlign: TextAlign.center,
             ),
           ),
@@ -64,7 +64,7 @@ class NewsEndListItem extends StatelessWidget {
         Flexible(
           child: Text(
             AppLocalizations.of(context).translate("news_endoflist_refreshing"),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ),
       ],
@@ -78,7 +78,7 @@ class NewsEndListItem extends StatelessWidget {
         Flexible(
           child: Text(
             AppLocalizations.of(context).translate("main_news_endoflist"),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
       ],

@@ -11,7 +11,7 @@ import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/account_session_instance.dart';
 import '../../viewmodel/settings_instance.dart';
-import '../components/info_card.dart';
+import '../components/menu_list_group.dart';
 import '../components/switch_button.dart';
 import '../components/widget_account/subject_result_bottom_sheet.dart';
 
@@ -60,6 +60,12 @@ class _SubjectResultViewState extends State<SubjectResultView> {
         _isInitialized = true;
       });
     }
+
+    var data = _filterView(
+      source: accountSession.trainingResult.data?.subjectResultList.reversed.toList(),
+      schoolYear: _selectedFilterIndex == 0 ? null : _allFilters.elementAt(_selectedFilterIndex),
+      query: _filterQuery,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -162,71 +168,58 @@ class _SubjectResultViewState extends State<SubjectResultView> {
                 )),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: List.generate(
-                  _filterView(
-                    source: accountSession.trainingResult.data?.subjectResultList.reversed.toList(),
-                    schoolYear: _selectedFilterIndex == 0 ? null : _allFilters.elementAt(_selectedFilterIndex),
-                    query: _filterQuery,
-                  ).length,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: MenuListGroup(
+                itemList: List.generate(
+                  data.length,
                   (index) {
-                    var dataItem = _filterView(
-                      source: accountSession.trainingResult.data?.subjectResultList.reversed.toList(),
-                      schoolYear: _selectedFilterIndex == 0 ? null : _allFilters.elementAt(_selectedFilterIndex),
-                      query: _filterQuery,
-                    ).elementAt(index);
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: InfoCard(
-                        title: StringUtils.formatString(
-                          "{0} - {1}",
-                          [
-                            ((accountSession.trainingResult.data?.subjectResultList.length ?? 0) - index).toString(),
-                            dataItem.name.isNotEmpty
-                                ? dataItem.name
-                                : AppLocalizations.of(context).translate("data_nodata"),
-                          ],
-                        ),
-                        description: StringUtils.formatString(
-                          "{0}T10: {1} - T4: {2} - {3}: {4}",
-                          [
-                            dataItem.isReStudy == true
-                                ? "${AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_restudied")}\n"
-                                : "",
-                            dataItem.resultT10?.toString() ?? AppLocalizations.of(context).translate("data_noscore"),
-                            dataItem.resultT4?.toString() ?? AppLocalizations.of(context).translate("data_noscore"),
-                            AppLocalizations.of(context)
-                                .translate("account_trainingstatus_subjectresult_summary_bychar"),
-                            dataItem.resultByCharacter ?? AppLocalizations.of(context).translate("data_noscore"),
-                          ],
-                        ),
-                        showBorder: false,
-                        onClick: () async {
-                          await showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) => SubjectResultBottomSheet(
-                              subjectName: dataItem.name,
-                              subjectResult: dataItem,
-                              onClickToCopy: (copiedString) {
-                                if (copiedString.isNotEmpty) {
-                                  Clipboard.setData(ClipboardData(text: copiedString));
-                                  context.showCustomSnackBar(
-                                    content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
-                                    dismissOld: true,
-                                  );
-                                } else {
-                                  context.showCustomSnackBar(
-                                    content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
-                                    dismissOld: true,
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
+                    var dataItem = data.elementAt(index);
+                    return MenuListGroupItem(
+                      title: StringUtils.formatString(
+                        "{0} - {1}",
+                        [
+                          ((accountSession.trainingResult.data?.subjectResultList.length ?? 0) - index).toString(),
+                          dataItem.name.isNotEmpty
+                              ? dataItem.name
+                              : AppLocalizations.of(context).translate("data_nodata"),
+                        ],
                       ),
+                      description: StringUtils.formatString(
+                        "{0}T10: {1} - T4: {2} - {3}: {4}",
+                        [
+                          dataItem.isReStudy == true
+                              ? "${AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_restudied")}\n"
+                              : "",
+                          dataItem.resultT10?.toString() ?? AppLocalizations.of(context).translate("data_noscore"),
+                          dataItem.resultT4?.toString() ?? AppLocalizations.of(context).translate("data_noscore"),
+                          AppLocalizations.of(context).translate("account_trainingstatus_subjectresult_summary_bychar"),
+                          dataItem.resultByCharacter ?? AppLocalizations.of(context).translate("data_noscore"),
+                        ],
+                      ),
+                      onClick: () async {
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) => SubjectResultBottomSheet(
+                            subjectName: dataItem.name,
+                            subjectResult: dataItem,
+                            onClickToCopy: (copiedString) {
+                              if (copiedString.isNotEmpty) {
+                                Clipboard.setData(ClipboardData(text: copiedString));
+                                context.showCustomSnackBar(
+                                  content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
+                                  dismissOld: true,
+                                );
+                              } else {
+                                context.showCustomSnackBar(
+                                  content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
+                                  dismissOld: true,
+                                );
+                              }
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

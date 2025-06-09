@@ -49,7 +49,10 @@ class SwitchWithSurface extends StatelessWidget {
                 Flexible(
                   child: Text(
                     title,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: Theme.of(context).buttonTheme.colorScheme?.inverseSurface),
                   ),
                 ),
                 Switch(

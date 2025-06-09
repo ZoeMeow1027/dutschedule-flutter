@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news.dart';
@@ -8,6 +6,7 @@ import 'package:dutwrapper/news_object.dart';
 import '../model/news_search_history.dart';
 import '../model/process_state.dart';
 import '../repository/storage_repository.dart';
+import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
 class NewsSearchInstance extends BaseViewModel {
@@ -56,7 +55,12 @@ class NewsSearchInstance extends BaseViewModel {
     _pendingChanges = true;
     notifyListeners();
 
-    log("[Search History] Modified changes! Saving...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'NewsSearch',
+      subTag: 'History',
+      message: 'Modified changes! Saving...',
+    );
     await StorageRepository.saveNewsSearchHistory(searchHistory: _toMap());
 
     _pendingChanges = false;
@@ -107,7 +111,12 @@ class NewsSearchInstance extends BaseViewModel {
     bool startOver = false,
   }) async {
     if (processState == ProcessState.running) {
-      log("[News Search] Running denied because of another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'NewsSearch',
+        subTag: 'Search',
+        message: 'Denied this run because another same task is running...',
+      );
       return;
     }
 
@@ -116,10 +125,20 @@ class NewsSearchInstance extends BaseViewModel {
 
     beforeRun?.call();
 
-    log("[News Search] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'NewsSearch',
+      subTag: 'Search',
+      message: 'Running...',
+    );
     try {
       if (_searchQuery.isEmpty) {
-        log("[News Search] Running denied because search query is empty...");
+        AppUtils.showLogToDebug(
+          resultTag: AppLogLevel.error,
+          tag: 'NewsSearch',
+          subTag: 'Search',
+          message: 'Denied this run because search query is empty...',
+        );
         return;
       }
       var page = startOver ? 1 : _nextPage;
@@ -160,12 +179,27 @@ class NewsSearchInstance extends BaseViewModel {
       newsHistoryList.sort((p, q) => q.lastRequest.compareTo(p.lastRequest));
 
       _processState = ProcessState.successful;
-      log("[News Search] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'NewsSearch',
+        subTag: 'Search',
+        message: 'Task done successfully!',
+      );
     } catch (ex) {
       _processState = ProcessState.failed;
-      log("[News Search] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'NewsSearch',
+        subTag: 'Search',
+        message: 'Task failed!',
+      );
     } finally {
-      log("[News Search] End run.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'NewsSearch',
+        subTag: 'Search',
+        message: 'Task has ended!',
+      );
       _settingsChanged();
       afterRun?.call();
     }

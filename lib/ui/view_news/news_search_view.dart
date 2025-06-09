@@ -234,7 +234,7 @@ class NewsSearchView extends StatelessWidget {
         endListReached: endListReached,
         onClick: onClick,
         refreshRequested: refreshRequired,
-        showDateInHeader: false,
+        showDateInNewsItem: false,
       ),
     );
   }

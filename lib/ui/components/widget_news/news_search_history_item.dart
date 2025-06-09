@@ -10,6 +10,8 @@ class NewsSearchHistoryItem extends StatelessWidget {
     required this.query,
     required this.newsType,
     required this.searchMethod,
+    this.shouldRadiusOnTop = false,
+    this.shouldRadiusOnBottom = false,
     this.padding = EdgeInsets.zero,
     this.onClick,
   });
@@ -19,28 +21,41 @@ class NewsSearchHistoryItem extends StatelessWidget {
   final NewsSearchMethod searchMethod;
   final EdgeInsets padding;
   final Function()? onClick;
+  final bool shouldRadiusOnTop;
+  final bool shouldRadiusOnBottom;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      width: double.infinity,
-      child: ListTile(
-        onTap: onClick,
-        leading: Icon(Icons.search),
-        title: Text(query),
-        subtitle: Text(StringUtils.formatString(
-          AppLocalizations.of(context).translate("news_search_searchoption_history_data"),
-          [
-            searchMethod == NewsSearchMethod.byTitle
-                ? AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")
-                : AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
-            newsType == NewsType.global
-                ? AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")
-                : AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
-          ],
-        )),
-        trailing: Icon(Icons.north_west),
+    return Material(
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(shouldRadiusOnTop ? 20 : 5),
+        topLeft: Radius.circular(shouldRadiusOnTop ? 20 : 5),
+        bottomLeft: Radius.circular(shouldRadiusOnBottom ? 20 : 5),
+        bottomRight: Radius.circular(shouldRadiusOnBottom ? 20 : 5),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: 50,
+          minWidth: double.infinity,
+        ),
+        child: ListTile(
+          onTap: onClick,
+          leading: Icon(Icons.search),
+          title: Text(query),
+          subtitle: Text(StringUtils.formatString(
+            AppLocalizations.of(context).translate("news_search_searchoption_history_data"),
+            [
+              searchMethod == NewsSearchMethod.byTitle
+                  ? AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")
+                  : AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
+              newsType == NewsType.global
+                  ? AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")
+                  : AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
+            ],
+          )),
+          trailing: Icon(Icons.north_west),
+        ),
       ),
     );
   }

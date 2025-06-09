@@ -24,7 +24,15 @@ class DashboardBasicInfoView extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: padding,
-      child: Card.filled(
+      child: Material(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        // borderRadius: BorderRadius.only(
+        //   topRight: Radius.circular(20),
+        //   topLeft: Radius.circular(20),
+        //   bottomLeft: Radius.circular(20),
+        //   bottomRight: Radius.circular(20),
+        // ),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         child: InkWell(
           onTap: () => onClick?.call(),
           child: Padding(
