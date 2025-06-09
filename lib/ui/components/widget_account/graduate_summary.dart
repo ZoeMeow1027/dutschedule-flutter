@@ -19,7 +19,15 @@ class GraduateSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Card.filled(
+      child: Material(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        // borderRadius: BorderRadius.only(
+        //   topRight: Radius.circular(20),
+        //   topLeft: Radius.circular(20),
+        //   bottomLeft: Radius.circular(20),
+        //   bottomRight: Radius.circular(20),
+        // ),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 10),
           child: Column(
@@ -46,6 +54,7 @@ class GraduateSummary extends StatelessWidget {
                     side: BorderSide(color: Colors.white70, width: 1.5),
                     borderRadius: BorderRadius.circular(15),
                   ),
+                  color: Theme.of(context).colorScheme.surfaceContainerHigh,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/app_localizations.dart';
 import '../../viewmodel/news_search_instance.dart';
+import '../components/expandable_choice.dart';
 import '../components/widget_news/news_search_history_item.dart';
 
 class NewsSearchOptionView extends StatefulWidget {
@@ -26,6 +27,10 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
   String _searchQuery = "";
   NewsType _newsType = NewsType.global;
   NewsSearchMethod _searchMethod = NewsSearchMethod.byTitle;
+
+  // Search option show state
+  bool _newsTypeComboBoxShown = false;
+  bool _newsSearchMethodComboBoxShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,57 +99,74 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                AppLocalizations.of(context).translate("news_search_searchoption_type"),
-                style: Theme.of(context).textTheme.titleMedium,
+              SizedBox(height: 10),
+              ExpandableChoice<NewsType>(
+                title: AppLocalizations.of(context).translate("news_search_searchoption_type"),
+                currentValue: _newsType,
+                hideCurrentValueIfExpanded: false,
+                isExpanded: _newsTypeComboBoxShown,
+                valueList: [
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal"),
+                    value: NewsType.global,
+                  ),
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
+                    value: NewsType.subject,
+                  ),
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_bystudentaffairs"),
+                    value: NewsType.studentAffairs,
+                  ),
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_byexamination"),
+                    value: NewsType.examination,
+                  ),
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
+                    value: NewsType.tuitionFee,
+                  ),
+                ],
+                onExpandChanged: (shown) => setState(() {
+                  _newsTypeComboBoxShown = shown;
+                  _newsSearchMethodComboBoxShown = false;
+                }),
+                onClick: (newsType) => setState(() {
+                  _newsType = newsType;
+                  _newsTypeComboBoxShown = false;
+                }),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
-                width: double.infinity,
-                child: SegmentedButton<NewsType>(
-                  segments: <ButtonSegment<NewsType>>[
-                    ButtonSegment(
-                      value: NewsType.global,
-                      label: Text(AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")),
-                    ),
-                    ButtonSegment(
-                      value: NewsType.subject,
-                      label: Text(AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject")),
-                    ),
-                  ],
-                  selected: <NewsType>{_newsType},
-                  onSelectionChanged: (value) => setState(() {
-                    _newsType = value.first;
-                  }),
-                ),
+              SizedBox(height: 5),
+              ExpandableChoice<NewsSearchMethod>(
+                title: AppLocalizations.of(context).translate("news_search_searchoption_method"),
+                currentValue: _searchMethod,
+                hideCurrentValueIfExpanded: false,
+                isExpanded: _newsSearchMethodComboBoxShown,
+                valueList: [
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle"),
+                    value: NewsSearchMethod.byTitle,
+                  ),
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
+                    value: NewsSearchMethod.byContent,
+                  ),
+                ],
+                onExpandChanged: (shown) => setState(() {
+                  _newsTypeComboBoxShown = false;
+                  _newsSearchMethodComboBoxShown = shown;
+                }),
+                onClick: (newsSearchMethod) => setState(() {
+                  _searchMethod = newsSearchMethod;
+                  _newsSearchMethodComboBoxShown = false;
+                }),
               ),
-              Text(
-                AppLocalizations.of(context).translate("news_search_searchoption_method"),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
-                width: double.infinity,
-                child: SegmentedButton<NewsSearchMethod>(
-                  segments: <ButtonSegment<NewsSearchMethod>>[
-                    ButtonSegment(
-                      value: NewsSearchMethod.byTitle,
-                      label: Text(AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")),
-                    ),
-                    ButtonSegment(
-                      value: NewsSearchMethod.byContent,
-                      label: Text(AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent")),
-                    ),
-                  ],
-                  selected: <NewsSearchMethod>{_searchMethod},
-                  onSelectionChanged: (value) => setState(() {
-                    _searchMethod = value.first;
-                  }),
-                ),
-              ),
+              SizedBox(height: 15),
               Text(
                 AppLocalizations.of(context).translate("news_search_searchoption_history"),
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
               Expanded(
                 child: Padding(
@@ -152,12 +174,15 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 3,
                       children: List.generate(
                         newsSearchInstance.newsHistoryList.length,
                         (index) => NewsSearchHistoryItem(
                           query: newsSearchInstance.newsHistoryList.elementAt(index).query,
                           newsType: newsSearchInstance.newsHistoryList.elementAt(index).newsType,
                           searchMethod: newsSearchInstance.newsHistoryList.elementAt(index).searchMethod,
+                          shouldRadiusOnTop: index == 0,
+                          shouldRadiusOnBottom: index == (newsSearchInstance.newsHistoryList.length - 1),
                           onClick: () {
                             newsSearchInstance.changeNewsSearchOption(
                               query: newsSearchInstance.newsHistoryList.elementAt(index).query,

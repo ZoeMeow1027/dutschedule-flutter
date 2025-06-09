@@ -17,7 +17,7 @@ class NewsList extends StatefulWidget {
     this.endListReached,
     this.refreshRequested,
     this.isRefreshing = false,
-    this.showDateInHeader = true,
+    this.showDateInNewsItem = true,
   });
 
   final List<NewsGlobal> newsList;
@@ -28,7 +28,7 @@ class NewsList extends StatefulWidget {
   final Function()? endListReached;
   final Function()? refreshRequested;
   final bool isRefreshing;
-  final bool showDateInHeader;
+  final bool showDateInNewsItem;
 
   @override
   State<StatefulWidget> createState() => _NewsListState();
@@ -47,31 +47,40 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
           alignment: Alignment.topCenter,
           child: RefreshIndicator(
             child: tmp.isNotEmpty
-                ? ListView.builder(
+                ? ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
                     controller: widget.scrollController,
                     itemCount: tmp.length + 1,
                     itemBuilder: (context, index) {
                       if (index == tmp.length) {
-                        return NewsEndListItem(
-                          isRefreshing: widget.isRefreshing,
-                          isEndOfList: widget.isEndOfList,
-                          refreshRequested: () {
-                            if (widget.endListReached != null) {
-                              widget.endListReached!();
-                            }
-                          },
+                        return Padding(
+                          padding: EdgeInsets.only(top: 7),
+                          child: NewsEndListItem(
+                            isRefreshing: widget.isRefreshing,
+                            isEndOfList: widget.isEndOfList,
+                            refreshRequested: () {
+                              if (widget.endListReached != null) {
+                                widget.endListReached!();
+                              }
+                            },
+                          ),
                         );
                       } else {
-                        return NewsListInDate(
-                          date: tmp.keys.elementAt(index),
-                          newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
-                          color: widget.color,
-                          onClick: widget.onClick,
-                          showDateInHeader: widget.showDateInHeader,
+                        return Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: NewsListInDate(
+                            date: tmp.keys.elementAt(index),
+                            newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
+                            color: widget.color,
+                            onClick: widget.onClick,
+                            showDateInHeader: widget.showDateInNewsItem,
+                          ),
                         );
                       }
                     },
+                    separatorBuilder: (context, index) => SizedBox(),
                   )
+                // If no available news in list
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -79,11 +88,19 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
                       widget.isRefreshing
                           // If loading
                           ? CircularProgressIndicator()
-                          // If no internet
-                          : Text(
-                              AppLocalizations.of(context).translate("main_news_nonews_nointernet"),
-                              textAlign: TextAlign.center,
-                            ),
+                          // If end of list
+                          : widget.isEndOfList
+                              ? Text(
+                                  AppLocalizations.of(context).translate("main_news_nonews_nonews"),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                                  textAlign: TextAlign.center,
+                                )
+                              // If no internet
+                              : Text(
+                                  AppLocalizations.of(context).translate("main_news_nonews_nointernet"),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                                  textAlign: TextAlign.center,
+                                ),
                       // TODO: Need information about can't reaching to server here.
                       Spacer(),
                     ],

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../model/background_subject_code.dart';
@@ -8,6 +6,7 @@ import '../model/enum/background_image_option.dart';
 import '../model/news_background_subject_type.dart';
 import '../model/school_year.dart';
 import '../repository/storage_repository.dart';
+import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
 class SettingsInstance extends BaseViewModel {
@@ -345,7 +344,12 @@ class SettingsInstance extends BaseViewModel {
 
     _pendingChanges = true;
     notifyListeners();
-    log("[Settings] Modified changes! Saving...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Settings',
+      message: 'Modified changes! Saving...',
+    );
+
     await StorageRepository.saveSettings(settings: _toMap());
 
     _pendingChanges = false;

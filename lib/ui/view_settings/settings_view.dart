@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
+import '../../global_variables.dart';
 import '../../model/enum/app_theme_mode.dart';
 import '../../model/enum/background_image_option.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/settings_instance.dart';
-import '../components/listview_group_item.dart';
-import '../components/list_view_option_item.dart';
+import '../components/menu_list_group.dart';
 import '../components/widget_settings/theme_mode_dialog.dart';
 import 'about_view.dart';
 import 'experiment_settings_view.dart';
@@ -34,14 +33,13 @@ class SettingsView extends StatelessWidget {
         title: Text(AppLocalizations.of(context).translate("settings_title")),
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_category_notifications"),
-              dividerOnBottom: true,
-              children: [
-                ListViewOptionItem(
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_category_notifications"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_newsschedule"),
                   description: AppLocalizations.of(context).translate("settings_option_newsschedule_description"),
                   leading: Icon(Icons.calendar_month),
@@ -52,7 +50,7 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_parsenewssubject_title"),
                   description: settingsInstance.newsBackgroundParseNewsSubject
                       ? AppLocalizations.of(context).translate("settings_newsnotify_parsenewssubject_enabled")
@@ -65,7 +63,7 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_notificationoutside"),
                   description:
                       AppLocalizations.of(context).translate("settings_option_notificationoutside_description"),
@@ -76,12 +74,11 @@ class SettingsView extends StatelessWidget {
                 ),
               ],
             ),
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_category_appearance"),
-              dividerOnBottom: true,
-              children: [
-                ListViewOptionItem(
+            SizedBox(height: 15),
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_category_appearance"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_apptheme"),
                   description: StringUtils.formatString("{0} {1}", [
                     settingsInstance.themeMode == AppThemeMode.followSystemSettings
@@ -108,19 +105,14 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem.toggleButton(
                   title: AppLocalizations.of(context).translate("settings_option_blackbackground"),
                   description: AppLocalizations.of(context).translate("settings_option_blackbackground_description"),
                   leading: Icon(Icons.contrast),
-                  trailing: Switch(
-                    onChanged: (value) {
-                      settingsInstance.blackBackground = value;
-                    },
-                    value: settingsInstance.blackBackground,
-                  ),
-                  onClick: () => settingsInstance.blackBackground = !settingsInstance.blackBackground,
+                  switchValue: settingsInstance.blackBackground,
+                  onSwitchChanged: (newValue) => settingsInstance.blackBackground = newValue,
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_wallpaperbackground"),
                   description: StringUtils.formatString("{0}", [
                     settingsInstance.backgroundImageOption == BackgroundImageOption.none
@@ -141,12 +133,11 @@ class SettingsView extends StatelessWidget {
                 ),
               ],
             ),
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_category_miscellaneous"),
-              dividerOnBottom: true,
-              children: [
-                ListViewOptionItem(
+            SizedBox(height: 15),
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_category_miscellaneous"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_applanguage"),
                   description: StringUtils.formatString("{0}", [
                     settingsInstance.localeAuto
@@ -161,24 +152,19 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_apppermission"),
                   description: AppLocalizations.of(context).translate("settings_option_apppermission_description"),
                   leading: Icon(Icons.security),
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem.toggleButton(
                   title: AppLocalizations.of(context).translate("settings_option_openlinkinsideapp"),
                   description: AppLocalizations.of(context).translate("settings_option_openlinkinsideapp_description"),
                   leading: Icon(Icons.language),
-                  trailing: Switch(
-                    onChanged: (value) {
-                      settingsInstance.openLinkInsideApp = value;
-                    },
-                    value: settingsInstance.openLinkInsideApp,
-                  ),
-                  onClick: () => settingsInstance.openLinkInsideApp = !settingsInstance.openLinkInsideApp,
+                  switchValue: settingsInstance.openLinkInsideApp,
+                  onSwitchChanged: (newValue) => settingsInstance.openLinkInsideApp = newValue,
                 ),
-                ListViewOptionItem(
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_experiemntsettings"),
                   description: AppLocalizations.of(context).translate("settings_option_experiemntsettings_description"),
                   leading: Icon(Icons.science),
@@ -191,11 +177,11 @@ class SettingsView extends StatelessWidget {
                 ),
               ],
             ),
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_category_aboutandtroubleshoot"),
-              children: [
-                ListViewOptionItem(
+            SizedBox(height: 15),
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_category_aboutandtroubleshoot"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_option_troubleshootnetwork"),
                   description:
                       AppLocalizations.of(context).translate("settings_option_troubleshootnetwork_description"),
@@ -207,30 +193,26 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                FutureBuilder<PackageInfo>(
-                  future: PackageInfo.fromPlatform(),
-                  builder: (context, snapshot) => ListViewOptionItem(
-                    title: StringUtils.formatString(
-                      AppLocalizations.of(context).translate("settings_option_about"),
-                      [AppLocalizations.of(context).translate("app_name")],
-                    ),
-                    description: snapshot.connectionState == ConnectionState.done
-                        ? StringUtils.formatString(
-                            AppLocalizations.of(context).translate("settings_option_version_description"),
-                            [snapshot.data?.version.toString() ?? "0", snapshot.data?.buildNumber.toString() ?? "0"],
-                          )
-                        : AppLocalizations.of(context).translate("data_unknown"),
-                    leading: Icon(Icons.info),
-                    onClick: () async => await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AboutSettingsView(),
-                      ),
+                MenuListGroupItem(
+                  title: StringUtils.formatString(
+                    AppLocalizations.of(context).translate("settings_option_about"),
+                    [AppLocalizations.of(context).translate("app_name")],
+                  ),
+                  description: StringUtils.formatString(
+                    AppLocalizations.of(context).translate("settings_option_version_description"),
+                    [GlobalVariables.appVersion.toString(), GlobalVariables.appBuildNumber.toString()],
+                  ),
+                  leading: Icon(Icons.info),
+                  onClick: () async => await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AboutSettingsView(),
                     ),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 15),
           ],
         ),
       ),

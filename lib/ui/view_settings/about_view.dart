@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../global_variables.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
-import '../components/list_view_option_item.dart';
+import '../components/menu_list_group.dart';
 
 class AboutSettingsView extends StatelessWidget {
   const AboutSettingsView({super.key});
@@ -22,6 +21,7 @@ class AboutSettingsView extends StatelessWidget {
       body: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,42 +47,41 @@ class AboutSettingsView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
-                child: FutureBuilder<PackageInfo>(
-                  future: PackageInfo.fromPlatform(),
-                  builder: (context, snapshot) => Text(
-                    snapshot.connectionState == ConnectionState.done
-                        ? StringUtils.formatString(
-                            AppLocalizations.of(context).translate("settings_option_version_description"),
-                            [snapshot.data?.version.toString() ?? "0", snapshot.data?.buildNumber.toString() ?? "0"],
-                          )
-                        : "(Unknown)",
-                    style: Theme.of(context).textTheme.titleMedium,
+                child: Text(
+                  StringUtils.formatString(
+                    AppLocalizations.of(context).translate("settings_option_version_description"),
+                    [GlobalVariables.appVersion.toString(), GlobalVariables.appBuildNumber.toString()],
                   ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              ListViewOptionItem(
-                title: AppLocalizations.of(context).translate("settings_about_changelog"),
-                description: AppLocalizations.of(context).translate("settings_about_changelog_description"),
-                leading: Icon(Icons.restore_rounded),
-                onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkChangelog),
-              ),
-              ListViewOptionItem(
-                title: AppLocalizations.of(context).translate("settings_about_license"),
-                description: AppLocalizations.of(context).translate("settings_about_license_mit"),
-                leading: Icon(Icons.info),
-                onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkLicense),
-              ),
-              ListViewOptionItem(
-                title: AppLocalizations.of(context).translate("settings_about_credit"),
-                description: AppLocalizations.of(context).translate("settings_about_credit_description"),
-                leading: Icon(Icons.info),
-                onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkCredits),
-              ),
-              ListViewOptionItem(
-                title: AppLocalizations.of(context).translate("settings_about_github"),
-                description: GlobalVariables.repoLink,
-                leading: Icon(Icons.science),
-                onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLink),
+              MenuListGroup(
+                itemList: [
+                  MenuListGroupItem(
+                    title: AppLocalizations.of(context).translate("settings_about_changelog"),
+                    description: AppLocalizations.of(context).translate("settings_about_changelog_description"),
+                    leading: Icon(Icons.restore_rounded),
+                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkChangelog),
+                  ),
+                  MenuListGroupItem(
+                    title: AppLocalizations.of(context).translate("settings_about_license"),
+                    description: AppLocalizations.of(context).translate("settings_about_license_mit"),
+                    leading: Icon(Icons.info),
+                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkLicense),
+                  ),
+                  MenuListGroupItem(
+                    title: AppLocalizations.of(context).translate("settings_about_credit"),
+                    description: AppLocalizations.of(context).translate("settings_about_credit_description"),
+                    leading: Icon(Icons.info),
+                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkCredits),
+                  ),
+                  MenuListGroupItem(
+                    title: AppLocalizations.of(context).translate("settings_about_github"),
+                    description: GlobalVariables.repoLink,
+                    leading: Icon(Icons.science),
+                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLink),
+                  ),
+                ],
               ),
             ],
           ),

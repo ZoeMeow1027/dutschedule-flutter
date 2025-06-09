@@ -26,6 +26,7 @@ class InfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(top: 3),
       child: Card.filled(
+        color: Theme.of(context).colorScheme.surfaceContainerHigh,
         shape: showBorder
             ? RoundedRectangleBorder(
                 side: BorderSide(color: Colors.white70, width: 1.5),

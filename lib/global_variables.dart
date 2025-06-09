@@ -8,8 +8,13 @@ class GlobalVariables {
   static String repoLinkReleases = '$repoLink/releases';
   static String repoLinkChangelog = '$repoLink/blob/stable/CHANGELOG.md';
 
+  static String appDisplayName = 'DutSchedule';
   static String appDirRoot = 'ZoeMeow.DutSchedule';
   static String appPathFileSettings = 'settings.json';
   static String appPathFileNewsSearchHistory = 'news.searchhistory.json';
   static String appPathFileAccountSession = 'account.session.json';
+
+  // Initialize this from main()
+  static String appVersion = '0.0.0';
+  static String appBuildNumber = '0';
 }

@@ -150,16 +150,18 @@ class _SubjectInformationView extends State<SubjectInformationView> {
   Widget _onNoData(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Spacer(),
-          Text(
-            AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
-            textAlign: TextAlign.center,
-          ),
-          Spacer(),
-        ],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Spacer(),
+            Text(
+              AppLocalizations.of(context).translate("account_subjectinfo_summary_nosubjects"),
+              textAlign: TextAlign.center,
+            ),
+            Spacer(),
+          ],
+        ),
       ),
     );
   }
@@ -187,18 +189,17 @@ class _SubjectInformationView extends State<SubjectInformationView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(
-                subInfoList.length,
-                (index) {
-                  return SubjectInfoItem(
-                    subjectInfo: subInfoList.elementAt(index),
-                    onClick: () => onClick?.call(subInfoList.elementAt(index)),
-                  );
-                },
-              ),
-            ),
+          child: ListView.separated(
+            itemCount: subInfoList.length,
+            itemBuilder: (context, index) {
+              return SubjectInfoItem(
+                subjectInfo: subInfoList.elementAt(index),
+                onClick: () => onClick?.call(subInfoList.elementAt(index)),
+                shouldRadiusOnTop: index == 0,
+                shouldRadiusOnBottom: index == (subInfoList.length - 1),
+              );
+            },
+            separatorBuilder: (context, index) => SizedBox(height: 3),
           ),
         )
       ],

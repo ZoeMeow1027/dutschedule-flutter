@@ -20,7 +20,7 @@ class ParseNewsSubjectNotificationsView extends StatelessWidget {
         title: Text(AppLocalizations.of(context).translate("settings_parsenewssubject_title")),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 15),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -30,7 +30,7 @@ class ParseNewsSubjectNotificationsView extends StatelessWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),

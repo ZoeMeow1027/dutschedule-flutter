@@ -43,7 +43,7 @@ class _DateTimeCard extends State<DateTimeCard> {
 
   void _updateTime(Timer timer) {
     setState(() {
-      dateTimeStr = DateFormat('y/MM/d kk:mm:ss').format(DateTime.now());
+      dateTimeStr = DateFormat('y/MM/d HH:mm:ss').format(DateTime.now());
       currentLesson = switch (CustomClock.current().toDUTLesson()) {
         -2 => AppLocalizations.of(context).translate("main_dashboard_widget_datetime_notyetstarted"),
         -1 => AppLocalizations.of(context).translate("main_dashboard_widget_datetime_atnoon"),

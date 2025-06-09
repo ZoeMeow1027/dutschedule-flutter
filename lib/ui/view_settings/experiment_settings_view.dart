@@ -5,10 +5,10 @@ import '../../model/school_year.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
+import '../../viewmodel/account_session_instance.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/data_adjuster.dart';
-import '../components/list_view_option_item.dart';
-import '../components/listview_group_item.dart';
+import '../components/menu_list_group.dart';
 
 class ExperimentSettingsView extends StatelessWidget {
   const ExperimentSettingsView({super.key});
@@ -16,6 +16,7 @@ class ExperimentSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsInstance = Provider.of<SettingsInstance>(context);
+    final accountSessionInstance = Provider.of<AccountSessionInstance>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,14 +26,13 @@ class ExperimentSettingsView extends StatelessWidget {
         title: Text(AppLocalizations.of(context).translate("settings_experiment_title")),
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_experiment_category_globalvar"),
-              dividerOnBottom: true,
-              children: [
-                ListViewOptionItem(
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_experiment_category_globalvar"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_experiment_option_currentschyear"),
                   description: AppLocalizations.of(context).translateWithParameters(
                     "settings_experiment_option_currentschyear_description",
@@ -183,6 +183,10 @@ class ExperimentSettingsView extends StatelessWidget {
                                     year: tempSchYear.year,
                                     semester: tempSchYear.semester,
                                   );
+                                  accountSessionInstance.schoolYear = SchoolYear(
+                                    year: tempSchYear.year,
+                                    semester: tempSchYear.semester,
+                                  );
                                 },
                               ),
                               TextButton(
@@ -198,32 +202,24 @@ class ExperimentSettingsView extends StatelessWidget {
                 ),
               ],
             ),
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_experiment_category_news"),
-              dividerOnBottom: true,
-              children: [
-                ListViewOptionItem(
+            SizedBox(height: 15),
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_experiment_category_news"),
+              itemList: [
+                MenuListGroupItem.toggleButton(
                   title: AppLocalizations.of(context).translate("settings_experiment_option_opennewsinpopup"),
                   description:
                       AppLocalizations.of(context).translate("settings_experiment_option_opennewsinpopup_description"),
-                  trailing: Switch(
-                    onChanged: (value) {
-                      settingsInstance.openNewsInModalBottomSheet = value;
-                    },
-                    value: settingsInstance.openNewsInModalBottomSheet,
-                  ),
-                  onClick: () =>
-                      settingsInstance.openNewsInModalBottomSheet = !settingsInstance.openNewsInModalBottomSheet,
+                  switchValue: settingsInstance.openNewsInModalBottomSheet,
+                  onSwitchChanged: (newValue) => settingsInstance.openNewsInModalBottomSheet = newValue,
                 ),
               ],
             ),
-            ListViewGroupItem(
-              padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context).translate("settings_experiment_category_troubleshooting"),
-              dividerOnBottom: false,
-              children: [
-                ListViewOptionItem(
+            SizedBox(height: 15),
+            MenuListGroup(
+              groupTitle: AppLocalizations.of(context).translate("settings_experiment_category_troubleshooting"),
+              itemList: [
+                MenuListGroupItem(
                   title: AppLocalizations.of(context).translate("settings_experiment_option_debuglog"),
                   description:
                       AppLocalizations.of(context).translate("settings_experiment_option_debuglog_description"),

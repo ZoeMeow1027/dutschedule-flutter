@@ -144,16 +144,18 @@ class _SubjectFeeView extends State<SubjectFeeView> {
   Widget _onNoData(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Spacer(),
-          Text(
-            AppLocalizations.of(context).translate("account_subjectfee_summary_nosubjects"),
-            textAlign: TextAlign.center,
-          ),
-          Spacer(),
-        ],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Spacer(),
+            Text(
+              AppLocalizations.of(context).translate("account_subjectfee_summary_nosubjects"),
+              textAlign: TextAlign.center,
+            ),
+            Spacer(),
+          ],
+        ),
       ),
     );
   }
@@ -182,18 +184,17 @@ class _SubjectFeeView extends State<SubjectFeeView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(
-                subFeeList.length,
-                (index) {
-                  return SubjectFeeItem(
-                    subjectFee: subFeeList.elementAt(index),
-                    onClick: () => onClick?.call(),
-                  );
-                },
-              ),
-            ),
+          child: ListView.separated(
+            itemCount: subFeeList.length,
+            itemBuilder: (context, index) {
+              return SubjectFeeItem(
+                subjectFee: subFeeList.elementAt(index),
+                onClick: () => onClick?.call(),
+                shouldRadiusOnTop: index == 0,
+                shouldRadiusOnBottom: index == (subFeeList.length - 1),
+              );
+            },
+            separatorBuilder: (context, index) => SizedBox(height: 3),
           ),
         )
       ],

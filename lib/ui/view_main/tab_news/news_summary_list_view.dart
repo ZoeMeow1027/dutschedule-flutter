@@ -272,6 +272,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           NewsList(
             newsList: newsCacheInstance.newsExamination.data,
             isRefreshing: newsCacheInstance.newsExamination.state == ProcessState.running,
+            isEndOfList: newsCacheInstance.newsExamination.parameters["endOfList"] == "1",
             onClick: (news) {
               widget.onClick?.call(news, false);
             },

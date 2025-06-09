@@ -33,13 +33,15 @@ dependencies:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  
   cupertino_icons: ^1.0.8
-
   collection: ^1.19.1
   dynamic_color: ^1.7.0
   flutter_foreground_task: ^9.0.0
   flutter_localization: ^0.3.2
-  intl: ^0.20.2
   package_info_plus: ^8.3.0
   path_provider: ^2.1.5
   provider: ^6.1.4
@@ -53,6 +55,10 @@ dependencies:
       url: https://github.com/dutwrapper/dutwrapper-dart
       ref: "9a6923a9abc105b2728e126a6cded3084f9879b6"
       # path: src/dart
+  
+  # For destop apps (Windows, Linux, macOS)
+  window_manager: ^0.4.3
+  system_tray: ^2.0.3
 
 
 dev_dependencies:

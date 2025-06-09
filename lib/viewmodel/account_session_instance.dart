@@ -9,6 +9,7 @@ import '../model/school_year.dart';
 import '../model/variable_state.dart';
 import '../repository/dut_account_repository.dart';
 import '../repository/storage_repository.dart';
+import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
 class AccountSessionInstance extends BaseViewModel {
@@ -48,15 +49,30 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (authInfo == null) {
-      log("[Account] [Session - ReLogin] Running denied because no auth available. Logout and try again.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Relogin',
+        message: 'Denied this task because no auth available. Logout and try again.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Session - ReLogin] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Relogin',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
-    log("[Account] [Session - ReLogin] Calling Account - Login...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'AccountSession',
+      subTag: 'Relogin',
+      message: 'Calling function login()...',
+    );
     login(
       beforeRun: beforeRun,
       afterRun: afterRun,
@@ -71,7 +87,12 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null && authInfo == null) {
-      log("[Account] [Session - Login] Running denied because of no session. Please login with \"authInfo\" parameters.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Denied this task because no sessions available. Please login with "authInfo" parameters',
+      );
       return;
     }
     // if (accountSession.data != null && authInfo != null) {
@@ -79,7 +100,12 @@ class AccountSessionInstance extends BaseViewModel {
     //   return;
     // }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Session - Login] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
@@ -89,20 +115,45 @@ class AccountSessionInstance extends BaseViewModel {
 
     await Future.delayed(Duration(milliseconds: 500));
 
-    log("[Account] [Session - Login] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'AccountSession',
+      subTag: 'Login',
+      message: 'Running...',
+    );
     try {
       final session = await accRepo.login(account: authInfo!);
       accountSession.data = session;
       this.authInfo = authInfo;
       accountSession.state = ProcessState.successful;
-      log("[Account] [Session - Login] Task successful!");
-      log("[Account] [Session - Login] Session ID: ${session.sessionId}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Task done successfully!',
+      );
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Session ID: ${session.sessionId}',
+      );
     } catch (ex) {
       accountSession.state = authInfo != null ? ProcessState.notRunYet : ProcessState.failed;
-      log("[Account] [Session - Login] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Task failed!',
+      );
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Session - Login] End run.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'AccountSession',
+        subTag: 'Login',
+        message: 'Done task.',
+      );
       _settingsChanged();
       afterRun?.call(accountSession.state == ProcessState.successful);
     }
@@ -114,17 +165,32 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null) {
-      log("[Account] [Session - Logout] Running denied because no available account session.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Logout',
+        message: 'Denied this task because no sessions available.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Session - Logout] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Logout',
+        message: 'Denied this task because account session is running another task...',
+      );
       return;
     }
 
     beforeRun?.call();
 
-    log("[Account] [Session - Logout] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'AccountSession',
+      subTag: 'Logout',
+      message: 'Running...',
+    );
     try {
       if (accountSession.data != null) {
         // Logout account
@@ -133,23 +199,48 @@ class AccountSessionInstance extends BaseViewModel {
           accRepo.logout(session: accountSession.data!);
         }
         accountSession.resetValue();
-        log("[Account] [Session - Logout] Task successful!");
+        AppUtils.showLogToDebug(
+          resultTag: AppLogLevel.info,
+          tag: 'AccountSession',
+          subTag: 'Logout',
+          message: 'Task done successfully!',
+        );
 
         // Clear old data from another variables
         subjectInformationList.resetValue();
         subjectFeeList.resetValue();
         studentInformation.resetValue();
         trainingResult.resetValue();
-        log("[Account] [Session - Logout] Cleared all cached data.");
+        AppUtils.showLogToDebug(
+          resultTag: AppLogLevel.info,
+          tag: 'AccountSession',
+          subTag: 'Logout',
+          message: 'Cleared all cached data.',
+        );
       } else {
-        log("[Account] [Session - Logout] It looks like you don't have any account session.");
+        AppUtils.showLogToDebug(
+          resultTag: AppLogLevel.info,
+          tag: 'AccountSession',
+          subTag: 'Logout',
+          message: "Looks like you don't have any account session.",
+        );
       }
     } catch (ex) {
       accountSession.state = ProcessState.failed;
-      log("[Account] [Session - Logout] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'AccountSession',
+        subTag: 'Logout',
+        message: 'Task failed!',
+      );
     } finally {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Session - Logout] End run.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'AccountSession',
+        subTag: 'Logout',
+        message: 'Done task.',
+      );
       _settingsChanged();
       afterRun?.call();
     }
@@ -333,7 +424,6 @@ class AccountSessionInstance extends BaseViewModel {
       trainingResult.state = ProcessState.successful;
       log("[Account] [Training result] Task successful!");
     } catch (ex) {
-      trainingResult.data = null;
       trainingResult.state = ProcessState.failed;
       log("[Account] [Training result] Task failed!");
     } finally {
@@ -399,7 +489,11 @@ class AccountSessionInstance extends BaseViewModel {
     _pendingChanges = true;
     notifyListeners();
 
-    log("[Account Session] Modified changes! Saving...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'AccountSession',
+      message: 'Modified changes! Saving...',
+    );
     StorageRepository.saveAccountSession(accountSession: _toMapAccountSession());
 
     _pendingChanges = false;

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,7 @@ class NewsListInDate extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 3,
         children: _listWithDate(context, newsListInDate),
       ),
     );
@@ -44,23 +46,30 @@ class NewsListInDate extends StatelessWidget {
         ),
       ),
     ];
-    list.addAll(globalList.map((e) {
-      return NewsListItem(
+    globalList.forEachIndexed((index, news) {
+      list.add(NewsListItem(
         showDate: !showDateInHeader,
-        newsItem: e,
-        padding: const EdgeInsets.symmetric(
-          vertical: 1,
-          horizontal: 10,
-        ),
+        newsItem: news,
         onClick: () {
           if (onClick != null) {
-            onClick!(e);
+            onClick!(news);
           }
         },
-      );
-    }).toList(
-      growable: false,
-    ));
+        shouldRadiusOnTop: index == 0,
+        shouldRadiusOnBottom: index == (globalList.length - 1),
+      ));
+    });
+    // list.addAll(globalList.map((e) {
+    //   return NewsListItem(
+    //     showDate: !showDateInHeader,
+    //     newsItem: e,
+    //     onClick: () {
+    //       if (onClick != null) {
+    //         onClick!(e);
+    //       }
+    //     },
+    //   );
+    // }).toList());
 
     return list;
   }

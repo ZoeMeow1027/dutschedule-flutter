@@ -107,42 +107,41 @@ class _TrainingResultView extends State<TrainingResultView> {
   }
 
   Widget _onData(BuildContext context, AccountSessionInstance accountSession) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TrainingSummary(
-              score: accountSession.trainingResult.data?.trainingSummary.avgTrainingScore4 ?? 0,
-              schoolYearUpdated: accountSession.trainingResult.data?.trainingSummary.schoolYearCurrent,
-              onClick: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SubjectResultView()),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TrainingSummary(
+            score: accountSession.trainingResult.data?.trainingSummary.avgTrainingScore4 ?? 0,
+            schoolYearUpdated: accountSession.trainingResult.data?.trainingSummary.schoolYearCurrent,
+            onClick: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SubjectResultView()),
+              );
+            },
+          ),
+          SizedBox(height: 15),
+          GraduateSummary(
+            graduateStatus: accountSession.trainingResult.data?.graduateStatus,
+            onCopy: (copiedString) {
+              if (copiedString.isNotEmpty) {
+                Clipboard.setData(ClipboardData(text: copiedString));
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
+                  dismissOld: true,
                 );
-              },
-            ),
-            GraduateSummary(
-              graduateStatus: accountSession.trainingResult.data?.graduateStatus,
-              onCopy: (copiedString) {
-                if (copiedString.isNotEmpty) {
-                  Clipboard.setData(ClipboardData(text: copiedString));
-                  context.showCustomSnackBar(
-                    content: Text(AppLocalizations.of(context).translate("clipboard_copied")),
-                    dismissOld: true,
-                  );
-                } else {
-                  context.showCustomSnackBar(
-                    content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
-                    dismissOld: true,
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+              } else {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("clipboard_copynothing")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

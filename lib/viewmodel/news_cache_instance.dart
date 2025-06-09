@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 
 import '../model/process_state.dart';
 import '../model/variable_state.dart';
+import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
 enum NewsFetchType {
@@ -15,23 +14,10 @@ enum NewsFetchType {
 
 class NewsCacheInstance extends BaseViewModel {
   @override
-  void initializing() {
-    // fetchGlobalNews(fetchType: NewsFetchType.firstPage);
-    // fetchSubjectNews(fetchType: NewsFetchType.firstPage);
-
-    // timerInterval = 60000;
-  }
+  void initializing() {}
 
   @override
-  void timerAction() {
-    log("[News Cache] Triggered");
-
-    fetchGlobalNews(fetchType: NewsFetchType.firstPage);
-    fetchSubjectNews(fetchType: NewsFetchType.firstPage);
-    fetchNewsStudentAffairs(fetchType: NewsFetchType.firstPage);
-    fetchNewsExamination(fetchType: NewsFetchType.firstPage);
-    fetchNewsTuitionFee(fetchType: NewsFetchType.firstPage);
-  }
+  void timerAction() {}
 
   VariableListState<NewsGlobal> newsGlobal = VariableListState.from(
     data: [],
@@ -63,87 +49,51 @@ class NewsCacheInstance extends BaseViewModel {
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  // Future<void> _fetchCore<T>({
-  //   required VariableListState<T> variableList,
-  //   required String logHeader,
-  //   NewsFetchType fetchType = NewsFetchType.nextPage,
-  //   // Need to return something like: processState, clearOldNews, newsListToAdd, newsListAddBefore
-  //   required Future<void> Function() doTask,
-  //   bool forceRequest = false,
-  //   Function()? beforeTask,
-  //   Function()? afterTask,
-  // }) async {
-  //   if (variableList.isSuccessfulRequestExpired() && !forceRequest) {
-  //     log("[$logHeader] Task start failed because of timeout. Force this request to continue.");
-  //     return;
-  //   }
-  //   if (variableList.state == ProcessState.running) {
-  //     log("[$logHeader] Task start failed because of running...");
-  //     return;
-  //   }
-  //   if (variableList.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-  //     log("[$logHeader] You're reached end of list. "
-  //         "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
-  //     return;
-  //   }
-
-  //   // Before fetching news.
-  //   beforeTask?.call();
-
-  //   variableList.state = ProcessState.running;
-  //   notifyListeners();
-
-  //   await doTask();
-  //   notifyListeners();
-
-  //   switch (variableList.state) {
-  //     case ProcessState.successful:
-  //       variableList.lastRequest = DateTime.now().millisecondsSinceEpoch;
-  //       log("[$logHeader] Task successful!");
-  //       break;
-  //     case ProcessState.failed:
-  //       log("[$logHeader] Task failed!");
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   notifyListeners();
-
-  //   // Check if end of list
-  //   if (newsGlobal.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-  //     log("[$logHeader] Task done! This news type reached end of list.");
-  //   } else {
-  //     log("[$logHeader] Task done! Next page: ${variableList.parameters["nextPage"] ?? "???"}, current count: ${variableList.data.length}");
-  //   }
-
-  //   // After task.
-  //   afterTask?.call();
-  // }
-
   Future<void> fetchGlobalNews({
     NewsFetchType fetchType = NewsFetchType.nextPage,
     bool forceRequest = false,
     Function(bool)? onDone,
   }) async {
     if (!newsGlobal.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[News global] Task start failed because of timeout. Force this request to continue.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Global',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
     if (newsGlobal.state == ProcessState.running) {
-      log("[News global] Task start failed because another same task is running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Global',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
-    if (newsGlobal.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-      log("[News global] You're reached end of list. "
-          "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
+    if (newsGlobal.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Global',
+        message: "You're reached end of list. "
+            "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
+      );
       return;
     }
 
     newsGlobal.state = ProcessState.running;
     notifyListeners();
 
-    log("[News global] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Global',
+      message: "Running...",
+    );
 
     List<NewsGlobal> latestNews = [];
     try {
@@ -221,18 +171,32 @@ class NewsCacheInstance extends BaseViewModel {
       }
 
       // If listFromInternet is less than 30 items, might be end of list.
-      if (listFromInternet.length < 30) {
-        newsGlobal.parameters["endOfList"] = "1";
-      }
+      newsGlobal.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
 
       newsGlobal.state = ProcessState.successful;
       newsGlobal.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[News global] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Global',
+        message: "Task done successfully!",
+      );
     } catch (ex) {
       newsGlobal.state = ProcessState.failed;
-      log("[News global] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Global',
+        message: "Task failed!",
+      );
     } finally {
-      log("[News global] Task done! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, current count: ${newsGlobal.data.length}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Global',
+        message: "Task done! Next page: ${newsGlobal.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsGlobal.data.length}",
+      );
       notifyListeners();
 
       onDone?.call(newsGlobal.state == ProcessState.successful);
@@ -245,23 +209,45 @@ class NewsCacheInstance extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     if (!newsSubject.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[News subject] Task start failed because of timeout. Force this request to continue.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Subject',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
     if (newsSubject.state == ProcessState.running) {
-      log("[News subject] Task start failed because another same task is running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Subject',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
 
-    if (newsSubject.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-      log("[News subject] You're reached end of list. Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
+    if (newsSubject.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Subject',
+        message: "You're reached end of list. "
+            "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
+      );
       return;
     }
 
     newsSubject.state = ProcessState.running;
     notifyListeners();
 
-    log("[News subject] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Subject',
+      message: "Running...",
+    );
 
     List<NewsSubject> latestNews = [];
     try {
@@ -339,18 +325,32 @@ class NewsCacheInstance extends BaseViewModel {
       }
 
       // If listFromInternet is less than 30 items, might be end of list.
-      if (listFromInternet.length < 30) {
-        newsSubject.parameters["endOfList"] = "1";
-      }
+      newsSubject.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
 
       newsSubject.state = ProcessState.successful;
       newsSubject.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[News subject] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Subject',
+        message: "Task done successfully!",
+      );
     } catch (ex) {
       newsSubject.state = ProcessState.failed;
-      log("[News subject] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Subject',
+        message: "Task failed!",
+      );
     } finally {
-      log("[News subject] End run. Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, current count: ${newsSubject.data.length}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Subject',
+        message: "Task done! Next page: ${newsSubject.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsSubject.data.length}",
+      );
       notifyListeners();
 
       onDone?.call(newsSubject.state == ProcessState.successful);
@@ -363,23 +363,45 @@ class NewsCacheInstance extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     if (!newsStudentAffairs.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[News student affairs] Task start failed because of timeout. Force this request to continue.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
     if (newsStudentAffairs.state == ProcessState.running) {
-      log("[News student affairs] Task start failed because another same task is running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
-    if (newsStudentAffairs.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-      log("[News student affairs] You're reached end of list. Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
+    if (newsStudentAffairs.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: "You're reached end of list. "
+            "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
+      );
       return;
     }
 
     newsStudentAffairs.state = ProcessState.running;
     notifyListeners();
 
-    log("[News student affairs] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Student Affairs',
+      message: "Running...",
+    );
 
     List<NewsGlobal> latestNews = [];
     try {
@@ -460,18 +482,32 @@ class NewsCacheInstance extends BaseViewModel {
       }
 
       // If listFromInternet is less than 30 items, might be end of list.
-      if (listFromInternet.length < 30) {
-        newsStudentAffairs.parameters["endOfList"] = "1";
-      }
+      newsStudentAffairs.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
 
       newsStudentAffairs.state = ProcessState.successful;
       newsStudentAffairs.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[News student affairs] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: "Task done successfully!",
+      );
     } catch (ex) {
       newsStudentAffairs.state = ProcessState.failed;
-      log("[News student affairs] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: "Task failed!",
+      );
     } finally {
-      log("[News student affairs] Task done! Next page: ${newsStudentAffairs.parameters["nextPage"] ?? "???"}, current count: ${newsStudentAffairs.data.length}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Student Affairs',
+        message: "Task done! Next page: ${newsStudentAffairs.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsStudentAffairs.data.length}",
+      );
       notifyListeners();
 
       onDone?.call(newsStudentAffairs.state == ProcessState.successful);
@@ -484,23 +520,44 @@ class NewsCacheInstance extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     if (!newsExamination.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[News examination] Task start failed because of timeout. Force this request to continue.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Examination',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
     if (newsExamination.state == ProcessState.running) {
-      log("[News examination] Task start failed because another same task is running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Examination',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
-    if (newsExamination.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-      log("[News examination] You're reached end of list. Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
+    if (newsExamination.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Examination',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
     newsExamination.state = ProcessState.running;
     notifyListeners();
 
-    log("[News examination] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Examination',
+      message: "Running...",
+    );
 
     List<NewsGlobal> latestNews = [];
     try {
@@ -580,18 +637,32 @@ class NewsCacheInstance extends BaseViewModel {
       }
 
       // If listFromInternet is less than 30 items, might be end of list.
-      if (listFromInternet.length < 30) {
-        newsExamination.parameters["endOfList"] = "1";
-      }
+      newsExamination.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
 
       newsExamination.state = ProcessState.successful;
       newsExamination.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[News examination] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Examination',
+        message: "Task done successfully!",
+      );
     } catch (ex) {
       newsExamination.state = ProcessState.failed;
-      log("[News examination] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Examination',
+        message: "Task failed!",
+      );
     } finally {
-      log("[News examination] Task done! Next page: ${newsExamination.parameters["nextPage"] ?? "???"}, current count: ${newsExamination.data.length}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Examination',
+        message: "Task done! Next page: ${newsExamination.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsExamination.data.length}",
+      );
       notifyListeners();
 
       onDone?.call(newsExamination.state == ProcessState.successful);
@@ -604,23 +675,45 @@ class NewsCacheInstance extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     if (!newsTuitions.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[News tuition] Task start failed because of timeout. Force this request to continue.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
       return;
     }
     if (newsTuitions.state == ProcessState.running) {
-      log("[News tuition] Task start failed because another same task is running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
 
-    if (newsTuitions.parameters["endOfList"] == "1" && fetchType != NewsFetchType.clearCacheAndFirstPage) {
-      log("[News tuition] You're reached end of list. Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.");
+    if (newsTuitions.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: "You're reached end of list. "
+            "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
+      );
       return;
     }
 
     newsTuitions.state = ProcessState.running;
     notifyListeners();
 
-    log("[News tuition] Running...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Tuition fee',
+      message: "Running...",
+    );
 
     List<NewsGlobal> latestNews = [];
     try {
@@ -699,18 +792,32 @@ class NewsCacheInstance extends BaseViewModel {
       }
 
       // If listFromInternet is less than 30 items, might be end of list.
-      if (listFromInternet.length < 30) {
-        newsTuitions.parameters["endOfList"] = "1";
-      }
+      newsTuitions.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
 
       newsTuitions.state = ProcessState.successful;
       newsTuitions.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[News tuition] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: "Task done successfully!",
+      );
     } catch (ex) {
       newsTuitions.state = ProcessState.failed;
-      log("[News tuition] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: "Task failed!",
+      );
     } finally {
-      log("[News tuition] Task done! Next page: ${newsTuitions.parameters["nextPage"] ?? "???"}, current count: ${newsTuitions.data.length}");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Tuition fee',
+        message: "Task done! Next page: ${newsTuitions.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsTuitions.data.length}",
+      );
       notifyListeners();
 
       onDone?.call(newsTuitions.state == ProcessState.successful);
