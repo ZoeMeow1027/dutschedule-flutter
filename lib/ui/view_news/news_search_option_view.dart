@@ -126,6 +126,11 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
                     text: AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
                     value: NewsType.tuitionFee,
                   ),
+                  // TODO: Wait for library update for this
+                  ExpandableChoiceItem(
+                    text: AppLocalizations.of(context).translate("news_search_searchoption_type_bystatuteregulation"),
+                    value: NewsType.statutePolicy,
+                  ),
                 ],
                 onExpandChanged: (shown) => setState(() {
                   _newsTypeComboBoxShown = shown;
@@ -162,11 +167,23 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
                 }),
               ),
               SizedBox(height: 15),
-              Text(
-                AppLocalizations.of(context).translate("news_search_searchoption_history"),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context).translate("news_search_searchoption_history"),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      newsSearchInstance.clearHistory();
+                    },
+                  ),
+                ],
               ),
               Expanded(
                 child: Padding(

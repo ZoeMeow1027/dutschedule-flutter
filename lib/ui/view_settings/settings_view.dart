@@ -72,6 +72,14 @@ class SettingsView extends StatelessWidget {
                     AppUtils.openSystemNotificationSettings();
                   },
                 ),
+                // TODO: Developing do not distrub from time
+                MenuListGroupItem(
+                  title: "Do not distrub",
+                  description: "This feature will prevent notify you from specific time range you chosen."
+                      "\n(This feature is developing. Check back soon)",
+                  leading: Icon(Icons.do_not_disturb),
+                  onClick: () {},
+                ),
               ],
             ),
             SizedBox(height: 15),
@@ -144,7 +152,7 @@ class SettingsView extends StatelessWidget {
                         ? AppLocalizations.of(context).translate("settings_option_applanguage_auto")
                         : AppLocalizations.getLocaleDisplayName(settingsInstance.locale),
                   ]),
-                  leading: Icon(Icons.language),
+                  leading: Icon(Icons.translate),
                   onClick: () async => await Navigator.push(
                     context,
                     MaterialPageRoute(

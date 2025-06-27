@@ -136,18 +136,33 @@ class NewsSearchView extends StatelessWidget {
                 newsSearchInstance.searchQuery.isNotEmpty
                     ? newsSearchInstance.searchQuery
                     : AppLocalizations.of(context).translate("data_nodata"),
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
                 StringUtils.capitalizeFirstLetter(StringUtils.formatString(
                   AppLocalizations.of(context).translate("news_search_searchoption_history_data"),
                   [
-                    newsSearchInstance.searchMethod == NewsSearchMethod.byTitle
-                        ? AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle")
-                        : AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
-                    newsSearchInstance.newsType == NewsType.global
-                        ? AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal")
-                        : AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
+                    switch (newsSearchInstance.searchMethod) {
+                      NewsSearchMethod.byTitle =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_method_bytitle"),
+                      NewsSearchMethod.byContent =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_method_bycontent"),
+                    },
+                    switch (newsSearchInstance.newsType) {
+                      NewsType.global =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_byglobal"),
+                      NewsType.subject =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_bysubject"),
+                      NewsType.studentAffairs =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_bystudentaffairs"),
+                      NewsType.examination =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_byexamination"),
+                      NewsType.tuitionFee =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
+                      NewsType.statutePolicy =>
+                        AppLocalizations.of(context).translate("news_search_searchoption_type_bystatuteregulation"),
+                      _ => AppLocalizations.of(context).translate("data_unknown"),
+                    }
                   ],
                 )),
                 style: Theme.of(context).textTheme.bodyMedium,

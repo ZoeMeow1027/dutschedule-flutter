@@ -32,7 +32,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
   void initState() {
     super.initState();
     _newsCurrentPage = NewsTabLocation.globalNews;
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
     _tabController.addListener(_newsTabChanged);
   }
 
@@ -51,6 +51,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
         2 => NewsTabLocation.studentAffairs,
         3 => NewsTabLocation.examination,
         4 => NewsTabLocation.tuitionFee,
+        5 => NewsTabLocation.statuteRegulation,
         _ => NewsTabLocation.globalNews,
       };
     });
@@ -68,6 +69,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
         NewsTabLocation.studentAffairs => newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
         NewsTabLocation.examination => newsCacheInstance.newsExamination.state == ProcessState.running,
         NewsTabLocation.tuitionFee => newsCacheInstance.newsTuitions.state == ProcessState.running,
+        NewsTabLocation.statuteRegulation => newsCacheInstance.newsStatuteRegulation.state == ProcessState.running,
       };
     }
 
@@ -132,6 +134,12 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
                 textAlign: TextAlign.center,
               ),
             ),
+            Tab(
+              child: Text(
+                AppLocalizations.of(context).translate("news_tabname_statuteregulation"),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
@@ -173,6 +181,12 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
                 break;
               case NewsTabLocation.tuitionFee:
                 newsCacheInstance.fetchNewsTuitionFee(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+                break;
+              case NewsTabLocation.statuteRegulation:
+                newsCacheInstance.fetchNewsStatuteRegulation(
                   fetchType: NewsFetchType.clearCacheAndFirstPage,
                   forceRequest: true,
                 );
@@ -311,7 +325,34 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
             },
             refreshRequested: () {
               try {
-                newsCacheInstance.fetchNewsExamination(
+                newsCacheInstance.fetchNewsTuitionFee(
+                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  forceRequest: true,
+                );
+              } catch (ex) {
+                context.showCustomSnackBar(
+                  content: Text(AppLocalizations.of(context).translate("news_search_failed")),
+                  dismissOld: true,
+                );
+              }
+            },
+          ),
+          NewsList(
+            newsList: newsCacheInstance.newsStatuteRegulation.data,
+            isRefreshing: newsCacheInstance.newsStatuteRegulation.state == ProcessState.running,
+            isEndOfList: newsCacheInstance.newsStatuteRegulation.parameters["endOfList"] == "1",
+            onClick: (news) {
+              widget.onClick?.call(news, false);
+            },
+            endListReached: () {
+              newsCacheInstance.fetchNewsStatuteRegulation(
+                fetchType: NewsFetchType.nextPage,
+                forceRequest: true,
+              );
+            },
+            refreshRequested: () {
+              try {
+                newsCacheInstance.fetchNewsStatuteRegulation(
                   fetchType: NewsFetchType.clearCacheAndFirstPage,
                   forceRequest: true,
                 );

@@ -132,6 +132,23 @@ class SettingsInstance extends BaseViewModel {
 
   bool _newsBackgroundTuitionFeeEnabled = true;
 
+  /// Enable or disable news background notification for statute and policy news
+  ///
+  /// **Settings name:** appsettings.newsbackground.statutepolicy.enabled
+  /// **Since:** v2.5.7+250627
+  bool get newsBackgroundStatuteRegulationEnabled => _newsBackgroundStatuteRegulationEnabled;
+
+  set newsBackgroundStatuteRegulationEnabled(bool value) {
+    if (value == _newsBackgroundStatuteRegulationEnabled) {
+      return;
+    }
+
+    _newsBackgroundStatuteRegulationEnabled = value;
+    _settingsChanged();
+  }
+
+  bool _newsBackgroundStatuteRegulationEnabled = true;
+
   /// Is subject news notify you?
   ///
   /// **Related:** [newsBackgroundFilterList]
@@ -377,6 +394,7 @@ class SettingsInstance extends BaseViewModel {
       "appsettings.newsbackground.studentaffairs.enabled": newsBackgroundStudentAffairsEnabled,
       "appsettings.newsbackground.examination.enabled": newsBackgroundExaminationEnabled,
       "appsettings.newsbackground.tuitionfee.enabled": newsBackgroundTuitionFeeEnabled,
+      "appsettings.newsbackground.statuteregulation.enabled": newsBackgroundStatuteRegulationEnabled,
       // "appsettings.globalvariables.schoolyear": json.encode(currentSchoolYear),
       "appsettings.globalvariables.schoolyear": currentSchoolYear.toJson(),
       "appsettings.behavior.bottomsheetwhenclicknews": openNewsInModalBottomSheet,
@@ -418,6 +436,8 @@ class SettingsInstance extends BaseViewModel {
     newsBackgroundStudentAffairsEnabled = (data["appsettings.newsbackground.studentaffairs.enabled"] as bool?) ?? true;
     newsBackgroundExaminationEnabled = (data["appsettings.newsbackground.examination.enabled"] as bool?) ?? true;
     newsBackgroundTuitionFeeEnabled = (data["appsettings.newsbackground.tuitionfee.enabled"] as bool?) ?? true;
+    newsBackgroundStatuteRegulationEnabled =
+        (data["appsettings.newsbackground.statuteregulation.enabled"] as bool?) ?? true;
     // currentSchoolYear =
     //     SchoolYear.fromJson(json.decode((data["appsettings.globalvariables.schoolyear"] as String?) ?? "{}"));
     currentSchoolYear =

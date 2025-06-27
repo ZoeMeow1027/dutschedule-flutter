@@ -49,6 +49,12 @@ class NewsCacheInstance extends BaseViewModel {
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
+  VariableListState<NewsGlobal> newsStatuteRegulation = VariableListState.from(
+    data: [],
+    lastRequest: 0,
+    parameters: {"nextPage": "1", "endOfList": "0"},
+  );
+
   Future<void> fetchGlobalNews({
     NewsFetchType fetchType = NewsFetchType.nextPage,
     bool forceRequest = false,
@@ -821,6 +827,164 @@ class NewsCacheInstance extends BaseViewModel {
       notifyListeners();
 
       onDone?.call(newsTuitions.state == ProcessState.successful);
+    }
+  }
+
+  Future<void> fetchNewsStatuteRegulation({
+    NewsFetchType fetchType = NewsFetchType.nextPage,
+    bool forceRequest = false,
+    Function(bool)? onDone,
+  }) async {
+    if (!newsStatuteRegulation.isSuccessfulRequestExpired() && !forceRequest) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: 'Denied this task because of timeout. Force this request to continue.',
+      );
+      return;
+    }
+    if (newsStatuteRegulation.state == ProcessState.running) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: 'Denied this task because another same task is running...',
+      );
+      return;
+    }
+
+    if (newsStatuteRegulation.parameters["endOfList"] == "1" &&
+        ![NewsFetchType.clearCacheAndFirstPage, NewsFetchType.firstPage].contains(fetchType)) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: "You're reached end of list. "
+            "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
+      );
+      return;
+    }
+
+    newsStatuteRegulation.state = ProcessState.running;
+    notifyListeners();
+
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'News',
+      subTag: 'Statute & policy',
+      message: "Running...",
+    );
+
+    List<NewsGlobal> latestNews = [];
+    try {
+      // TODO: Wait for library update for this
+      var listFromInternet = await News.getNewsStatutePolicy(
+        page: fetchType == NewsFetchType.nextPage
+            ? (int.tryParse(newsStatuteRegulation.parameters["nextPage"] ?? "") ?? 1)
+            : 1,
+      );
+
+      if (fetchType == NewsFetchType.clearCacheAndFirstPage) {
+        newsStatuteRegulation.data.clear();
+        latestNews.addAll(listFromInternet);
+      } else if (fetchType == NewsFetchType.nextPage) {
+        latestNews.addAll(listFromInternet);
+      } else {
+        for (var item in listFromInternet) {
+          var anyMatch = newsStatuteRegulation.data.any((p) {
+            if ((p.date == item.date) &&
+                (p.title.compareTo(item.title) == 0) &&
+                (p.contentHtml.compareTo(item.contentHtml) == 0)) {
+              return true;
+            }
+            return false;
+          });
+          var anyNeedUpdated = newsStatuteRegulation.data.any((p) {
+            if ((p.date == item.date) &&
+                (p.title.compareTo(item.title) == 0) &&
+                (p.contentHtml.compareTo(item.contentHtml) != 0)) {
+              return true;
+            }
+            return false;
+          });
+
+          // Ignore when entire match
+          if (anyMatch) {
+          }
+          // Update when match date and title
+          else if (anyNeedUpdated) {
+            newsStatuteRegulation.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+              ..title = item.title
+              ..contentHtml = item.contentHtml
+              ..resources.clear()
+              ..resources.addAll(item.resources);
+          }
+          // Otherwise, add to latest news collection
+          else {
+            latestNews.add(item);
+          }
+        }
+      }
+
+      // Reverse latest news collection
+      // Add all news in latestNews to global variable
+      if (fetchType == NewsFetchType.firstPage) {
+        for (var value in latestNews.reversed) {
+          newsStatuteRegulation.data.insert(0, value);
+        }
+      } else {
+        newsStatuteRegulation.data.addAll(latestNews);
+      }
+
+      // Adjust index
+      switch (fetchType) {
+        // Increase by 1
+        case NewsFetchType.nextPage:
+          newsStatuteRegulation.parameters["nextPage"] =
+              ((int.tryParse(newsStatuteRegulation.parameters["nextPage"] ?? "") ?? 1) + 1).toString();
+          break;
+        // Just keep current
+        case NewsFetchType.firstPage:
+          newsStatuteRegulation.parameters["nextPage"] =
+              (int.tryParse(newsStatuteRegulation.parameters["nextPage"] ?? "") ?? 1).toString();
+          break;
+        // Set to 2
+        case NewsFetchType.clearCacheAndFirstPage:
+          newsStatuteRegulation.parameters["nextPage"] = 2.toString();
+          break;
+      }
+
+      // If listFromInternet is less than 30 items, might be end of list.
+      newsStatuteRegulation.parameters["endOfList"] = (listFromInternet.length < 30) ? "1" : "0";
+
+      newsStatuteRegulation.state = ProcessState.successful;
+      newsStatuteRegulation.lastRequest = DateTime.now().millisecondsSinceEpoch;
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: "Task done successfully!",
+      );
+    } catch (ex) {
+      newsStatuteRegulation.state = ProcessState.failed;
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: "Task failed!",
+      );
+    } finally {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'News',
+        subTag: 'Statute & policy',
+        message: "Task done! Next page: ${newsStatuteRegulation.parameters["nextPage"] ?? "???"}, "
+            "current count: ${newsStatuteRegulation.data.length}",
+      );
+      notifyListeners();
+
+      onDone?.call(newsStatuteRegulation.state == ProcessState.successful);
     }
   }
 }

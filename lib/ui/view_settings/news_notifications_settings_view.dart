@@ -168,6 +168,12 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                   onSwitchChanged: (newValue) => settingsInstance.newsBackgroundTuitionFeeEnabled = newValue,
                   wrapTextWhenOverFlow: true,
                 ),
+                MenuListGroupItem.checkboxButton(
+                  title: AppLocalizations.of(context).translate("settings_newsnotify_newsstatuteregulation_enable"),
+                  switchValue: settingsInstance.newsBackgroundStatuteRegulationEnabled,
+                  onSwitchChanged: (newValue) => settingsInstance.newsBackgroundStatuteRegulationEnabled = newValue,
+                  wrapTextWhenOverFlow: true,
+                ),
               ],
             ),
             SizedBox(height: 15),

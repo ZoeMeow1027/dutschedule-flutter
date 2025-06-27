@@ -6,7 +6,6 @@ import 'background/bg_core.dart';
 import 'global_variables.dart';
 import 'repository/storage_repository.dart';
 import 'ui/main_application.dart';
-import 'utils/app_utils.dart';
 import 'viewmodel/account_session_instance.dart';
 import 'viewmodel/news_cache_instance.dart';
 import 'viewmodel/news_search_instance.dart';
@@ -34,9 +33,9 @@ void main() async {
   GlobalVariables.appVersion = (await PackageInfo.fromPlatform()).version;
   GlobalVariables.appBuildNumber = (await PackageInfo.fromPlatform()).buildNumber;
 
-  await AppUtils.checkIfAnotherInstanceIsRunning();
-  await AppUtils.distroyAndCreateNewSystemTray();
-  await AppUtils.hideWindowAtLaunch();
+  // await AppUtils.checkIfAnotherInstanceIsRunning();
+  // await AppUtils.distroyAndCreateNewSystemTray();
+  // await AppUtils.hideWindowAtLaunch();
 
   await BackgroundTask.scheduleNewsBackgroundTaskOnDesktop(
     newsCacheInstance: newsCacheInstance,

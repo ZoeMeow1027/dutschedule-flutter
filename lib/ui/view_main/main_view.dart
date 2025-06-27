@@ -20,15 +20,22 @@ class _MyHomePageState extends State<MainScreenView> {
   int _selectedPage = 0;
 
   // late PageController _controller;
-  final List<Widget> _pages = const <Widget>[
-    DashboardTab(),
-    NewsTab(),
-    NotificationsTab(),
-    AccountTab(),
-  ];
+  late List<Widget> _pages;
 
   @override
   void initState() {
+    _pages = <Widget>[
+      DashboardTab(
+        onClickSwitchNewsTab: () {
+          setState(() {
+            _selectedPage = 1;
+          });
+        },
+      ),
+      NewsTab(),
+      NotificationsTab(),
+      AccountTab(),
+    ];
     super.initState();
     // _controller = PageController(initialPage: _selectedPage);
   }

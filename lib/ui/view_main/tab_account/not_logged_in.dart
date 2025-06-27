@@ -90,45 +90,45 @@ class AccountNotLoggedInView extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: InkWell(
-                onTap: accountSession.accountSession.state == ProcessState.running
-                    ? null
-                    : () {
-                        onAuthInfoChanged(
-                          accTemp?.username ?? "",
-                          accTemp?.password ?? "",
-                          !(accTemp?.rememberLogin ?? false),
-                        );
-                      },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          onChanged: accountSession.accountSession.state == ProcessState.running
-                              ? null
-                              : (checked) {
-                                  onAuthInfoChanged(
-                                    accTemp?.username ?? "",
-                                    accTemp?.password ?? "",
-                                    checked ?? !(accTemp?.rememberLogin ?? false),
-                                  );
-                                },
-                          value: accTemp?.rememberLogin ?? false,
-                        ),
-                        Text(AppLocalizations.of(context).translate("account_login_rememberpassword"))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 10),
+            //   child: InkWell(
+            //     onTap: accountSession.accountSession.state == ProcessState.running
+            //         ? null
+            //         : () {
+            //             onAuthInfoChanged(
+            //               accTemp?.username ?? "",
+            //               accTemp?.password ?? "",
+            //               !(accTemp?.rememberLogin ?? false),
+            //             );
+            //           },
+            //     child: Container(
+            //       alignment: Alignment.centerLeft,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.start,
+            //           crossAxisAlignment: CrossAxisAlignment.center,
+            //           children: [
+            //             Checkbox(
+            //               onChanged: accountSession.accountSession.state == ProcessState.running
+            //                   ? null
+            //                   : (checked) {
+            //                       onAuthInfoChanged(
+            //                         accTemp?.username ?? "",
+            //                         accTemp?.password ?? "",
+            //                         checked ?? !(accTemp?.rememberLogin ?? false),
+            //                       );
+            //                     },
+            //               value: accTemp?.rememberLogin ?? false,
+            //             ),
+            //             Text(AppLocalizations.of(context).translate("account_login_rememberpassword"))
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Container(
               margin: const EdgeInsets.only(),
               child: FilledButton(

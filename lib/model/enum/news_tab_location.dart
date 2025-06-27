@@ -3,7 +3,8 @@ enum NewsTabLocation {
   subjectNews(1),
   studentAffairs(2),
   examination(3),
-  tuitionFee(4);
+  tuitionFee(4),
+  statuteRegulation(5);
 
   final int value;
 

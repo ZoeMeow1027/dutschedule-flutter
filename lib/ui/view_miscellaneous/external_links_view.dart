@@ -48,6 +48,7 @@ class _ExternalLinkMiscellaneousView extends State<ExternalLinkMiscellaneousView
                   (index) {
                     var data = ExternalLinkInfo.getAllExternalLinks(searchQuery: _searchQuery).elementAt(index);
                     return Card.filled(
+                      color: Theme.of(context).buttonTheme.colorScheme?.secondaryContainer,
                       margin: EdgeInsets.only(bottom: 10),
                       child: InkWell(
                         onTap: () {

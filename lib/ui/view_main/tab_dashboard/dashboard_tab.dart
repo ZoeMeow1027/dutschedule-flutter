@@ -1,3 +1,5 @@
+import 'package:dutschedule/ui/components/widget_main/external_links_card.dart';
+import 'package:dutschedule/ui/components/widget_main/today_school_news_count_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
@@ -7,7 +9,12 @@ import '../../view_miscellaneous/external_links_view.dart';
 import '../../view_settings/settings_view.dart';
 
 class DashboardTab extends StatelessWidget {
-  const DashboardTab({super.key});
+  const DashboardTab({
+    super.key,
+    this.onClickSwitchNewsTab,
+  });
+
+  final Function()? onClickSwitchNewsTab;
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +54,10 @@ class DashboardTab extends StatelessWidget {
               ),
               onClick: () {},
             ),
-            CardWithTitle(
-              padding: EdgeInsets.symmetric(vertical: 3),
-              title: "School news",
-              child: Text(
-                "Today news count:"
-                "\nGlobal: 7"
-                "\nSubject: 15"
-                "\nStudent affairs: 0"
-                "\nExamination: 0"
-                "\nTuition: 0",
-              ),
+            TodaySchoolNewsCountCard(
+              onClickSwitchNewsTab: onClickSwitchNewsTab,
             ),
-            CardWithTitle(
-              padding: EdgeInsets.symmetric(vertical: 3),
-              title: AppLocalizations.of(context).translate("main_dashboard_widget_externallinks_title"),
-              child: Text(AppLocalizations.of(context).translate("main_dashboard_widget_externallinks_description")),
+            ExternalLinksCard(
               onClick: () {
                 Navigator.push(
                   context,
