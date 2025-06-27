@@ -66,13 +66,13 @@ class AboutSettingsView extends StatelessWidget {
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_license"),
                     description: AppLocalizations.of(context).translate("settings_about_license_mit"),
-                    leading: Icon(Icons.info),
+                    leading: Icon(Icons.description),
                     onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkLicense),
                   ),
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_credit"),
                     description: AppLocalizations.of(context).translate("settings_about_credit_description"),
-                    leading: Icon(Icons.info),
+                    leading: Icon(Icons.extension),
                     onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkCredits),
                   ),
                   MenuListGroupItem(

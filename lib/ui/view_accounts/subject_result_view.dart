@@ -170,6 +170,7 @@ class _SubjectResultViewState extends State<SubjectResultView> {
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: MenuListGroup(
+                itemMinHeight: 30,
                 itemList: List.generate(
                   data.length,
                   (index) {

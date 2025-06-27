@@ -24,7 +24,7 @@ class SubjectResultBottomSheet extends StatelessWidget {
     return FractionallySizedBox(
       heightFactor: 0.75,
       child: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 15),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
         child: SizedBox(
           width: double.infinity,
           child: Column(

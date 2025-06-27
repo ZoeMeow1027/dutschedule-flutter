@@ -177,6 +177,19 @@ class _PreloadApplication extends State<PreloadApplication> {
         }
       },
     );
+    newsCacheInstance.fetchNewsStatuteRegulation(
+      fetchType: NewsFetchType.firstPage,
+      onDone: (successful) {
+        if (!successful) {
+          // Notify error for user about unsuccessful preload news subject.
+          context.showCustomSnackBar(
+            // TODO: Change error text
+            content: Text(AppLocalizations.of(context).translate("main_preload_preloadfailed_globalnews")),
+            dismissOld: false,
+          );
+        }
+      },
+    );
 
     // Preload account session
     final accountSessionInstance = Provider.of<AccountSessionInstance>(context, listen: false);

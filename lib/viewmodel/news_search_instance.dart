@@ -91,7 +91,12 @@ class NewsSearchInstance extends BaseViewModel {
     _processState = ProcessState.notRunYet;
     _nextPage = 1;
     searchResult.clear();
-    notifyListeners();
+    _settingsChanged();
+  }
+
+  void clearHistory() {
+    newsHistoryList.clear();
+    _settingsChanged();
   }
 
   void changeNewsSearchOption({
@@ -102,7 +107,7 @@ class NewsSearchInstance extends BaseViewModel {
     if (query != null) _searchQuery = query;
     if (newsType != null) _newsType = newsType;
     if (searchMethod != null) _searchMethod = searchMethod;
-    notifyListeners();
+    _settingsChanged();
   }
 
   Future<void> fetchSearchRun({
@@ -143,17 +148,40 @@ class NewsSearchInstance extends BaseViewModel {
       }
       var page = startOver ? 1 : _nextPage;
 
-      final session = newsType == NewsType.global
-          ? await News.getNewsGlobal(
-              page: page,
-              newsSearchQuery: _searchQuery,
-              newsSearchMethod: searchMethod,
-            )
-          : await News.getNewsSubject(
-              page: page,
-              newsSearchQuery: _searchQuery,
-              newsSearchMethod: searchMethod,
-            );
+      final session = (switch (newsType) {
+        NewsType.global => await News.getNewsGlobal(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        NewsType.subject => await News.getNewsSubject(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        NewsType.studentAffairs => await News.getNewsStudentAffairs(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        NewsType.examination => await News.getNewsExamination(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        NewsType.tuitionFee => await News.getNewsTuitionFee(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        // TODO: Wait for library update for this
+        NewsType.statutePolicy => await News.getNewsStatutePolicy(
+            page: page,
+            newsSearchQuery: _searchQuery,
+            newsSearchMethod: searchMethod,
+          ),
+        _ => [],
+      }) as List<NewsGlobal>;
 
       if (startOver) {
         searchResult.clear();

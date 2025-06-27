@@ -19,6 +19,7 @@ class CardWithTitle extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Card.filled(
+        color: Theme.of(context).buttonTheme.colorScheme?.secondaryContainer,
         child: _main(context),
       ),
     );

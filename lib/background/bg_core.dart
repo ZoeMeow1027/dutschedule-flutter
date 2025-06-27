@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import '../model/news_background_subject_type.dart';
 import '../utils/app_utils.dart';
 import '../utils/task_scheduler.dart';
@@ -13,7 +11,11 @@ class BackgroundTask {
   static Future<void> runBackgroundTask() async {
     // Your custom logic
     while (true) {
-      debugPrint("Running background task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.debug,
+        tag: 'BackgroundService',
+        message: 'Running background task...',
+      );
       await Future.delayed(Duration(minutes: 5));
     }
   }
@@ -25,7 +27,12 @@ class BackgroundTask {
   }) async {
     final scheduler = TaskScheduler();
 
-    debugPrint("[News Background] Scheduling task...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'BackgroundService',
+      subTag: 'News',
+      message: 'Scheduling task...',
+    );
     if (settingsInstance.newsBackgroundDuration >= 5) {
       if (scheduler.containsTask('fetch_news')) {
         scheduler.updateTaskInterval('fetch_news', Duration(minutes: settingsInstance.newsBackgroundDuration));
@@ -80,6 +87,12 @@ class BackgroundTask {
         forceRequest: true,
       );
     }
+    if (settingsInstance.newsBackgroundStatuteRegulationEnabled) {
+      newsCacheInstance.fetchNewsStatuteRegulation(
+        fetchType: NewsFetchType.firstPage,
+        forceRequest: true,
+      );
+    }
   }
 
   static Future<void> scheduleAccountBackgroundTaskOnDesktop({
@@ -89,7 +102,12 @@ class BackgroundTask {
   }) async {
     final scheduler = TaskScheduler();
 
-    debugPrint("[Account Background] Scheduling task...");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'BackgroundService',
+      subTag: 'Account',
+      message: 'Scheduling task...',
+    );
     if (settingsInstance.newsBackgroundDuration >= 5) {
       if (scheduler.containsTask('fetch_account')) {
         scheduler.updateTaskInterval('fetch_account', Duration(minutes: 0));
