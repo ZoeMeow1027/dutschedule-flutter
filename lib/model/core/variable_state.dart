@@ -1,5 +1,5 @@
-import '../global_variables.dart';
-import 'process_state.dart';
+import '../../global_variables.dart';
+import '../enum/process_state.dart';
 
 class VariableState<T> {
   VariableState();

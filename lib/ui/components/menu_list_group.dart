@@ -138,7 +138,7 @@ class MenuListGroup extends StatelessWidget {
         (index) {
           if (index == 0 && groupTitle != null) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 5),
+              padding: EdgeInsets.only(bottom: 5),
               child: Text(
                 groupTitle!,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -224,7 +224,7 @@ class _ListGroupItemView extends StatelessWidget {
                           listGroupItem.title,
                           style: Theme.of(context).textTheme.titleMedium,
                           overflow: wrapTextWhenOverflow ? null : TextOverflow.ellipsis,
-                          maxLines: wrapTextWhenOverflow ? null : 1,
+                          maxLines: wrapTextWhenOverflow ? null : 2,
                         ),
                         if (listGroupItem.description != null)
                           Text(

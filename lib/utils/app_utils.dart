@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:system_tray/system_tray.dart';
@@ -116,6 +117,12 @@ class AppUtils {
         message,
       ],
     ));
+  }
+
+  static bool isNewsEqual(NewsCore n1, NewsCore n2) {
+    return (n1.title.compareTo(n2.title) == 0) &&
+        (n1.datePublished == n2.datePublished) &&
+        (n1.contentHtml.compareTo(n2.contentHtml) == 0);
   }
 }
 

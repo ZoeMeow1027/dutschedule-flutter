@@ -126,10 +126,9 @@ class _NewsSearchOptionView extends State<NewsSearchOptionView> {
                     text: AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
                     value: NewsType.tuitionFee,
                   ),
-                  // TODO: Wait for library update for this
                   ExpandableChoiceItem(
                     text: AppLocalizations.of(context).translate("news_search_searchoption_type_bystatuteregulation"),
-                    value: NewsType.statutePolicy,
+                    value: NewsType.statuteRegulation,
                   ),
                 ],
                 onExpandChanged: (shown) => setState(() {

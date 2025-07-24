@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../global_variables.dart';
-import '../../../model/process_state.dart';
+import '../../../model/enum/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/build_context_extension.dart';

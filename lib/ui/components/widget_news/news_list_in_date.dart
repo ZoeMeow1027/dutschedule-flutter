@@ -16,9 +16,9 @@ class NewsListInDate extends StatelessWidget {
   });
 
   final int date;
-  final List<NewsGlobal> newsListInDate;
+  final List<NewsCore> newsListInDate;
   final Color? color;
-  final Function(NewsGlobal)? onClick;
+  final Function(NewsCore)? onClick;
   final bool showDateInHeader;
 
   @override
@@ -34,7 +34,7 @@ class NewsListInDate extends StatelessWidget {
     );
   }
 
-  List<Widget> _listWithDate(BuildContext context, List<NewsGlobal> globalList) {
+  List<Widget> _listWithDate(BuildContext context, List<NewsCore> globalList) {
     List<Widget> list = [
       Text(
         DateFormat("EE, dd/MM/yyyy", Localizations.localeOf(context).toString()).format(

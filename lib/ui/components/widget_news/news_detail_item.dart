@@ -14,13 +14,13 @@ class NewsDetailItem extends StatelessWidget {
     this.isNewsSubject = false,
   });
 
-  final NewsGlobal newsItem;
+  final NewsCore newsItem;
   final bool isNewsSubject;
 
   @override
   Widget build(BuildContext context) {
     var dateStr = DateFormat("EEEE, dd/MM/yyyy", Localizations.localeOf(context).toString()).format(
-      DateTime.fromMillisecondsSinceEpoch(newsItem.date),
+      DateTime.fromMillisecondsSinceEpoch(newsItem.datePublished),
     );
 
     // String to rich text

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/enum/news_tab_location.dart';
-import '../../../model/process_state.dart';
+import '../../../model/enum/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/news_cache_instance.dart';
@@ -18,7 +18,7 @@ class NewsSummaryListView extends StatefulWidget {
     this.onClick,
   });
 
-  final Function(NewsGlobal, bool)? onClick;
+  final Function(NewsCore, bool)? onClick;
 
   @override
   State<StatefulWidget> createState() => _NewsSummaryListView();

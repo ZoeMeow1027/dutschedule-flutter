@@ -17,13 +17,13 @@ class ExternalLinkInfo {
         title: "DUT Official Home Page",
         description: "The official DUT home page",
         tag: "official",
-        url: "http://dut.udn.vn",
+        url: "https://dut.udn.vn",
       ),
       ExternalLinkInfo(
         title: "DUT Student Information System",
         description: "The official DUT student page.",
         tag: "official",
-        url: "http://sv.dut.udn.vn",
+        url: "https://sv.dut.udn.vn",
       ),
       ExternalLinkInfo(
         title: "Forum link",

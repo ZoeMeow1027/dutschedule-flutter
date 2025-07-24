@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/process_state.dart';
+import '../../model/enum/process_state.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/news_search_instance.dart';
@@ -159,7 +159,7 @@ class NewsSearchView extends StatelessWidget {
                         AppLocalizations.of(context).translate("news_search_searchoption_type_byexamination"),
                       NewsType.tuitionFee =>
                         AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
-                      NewsType.statutePolicy =>
+                      NewsType.statuteRegulation =>
                         AppLocalizations.of(context).translate("news_search_searchoption_type_bystatuteregulation"),
                       _ => AppLocalizations.of(context).translate("data_unknown"),
                     }
@@ -235,11 +235,11 @@ class NewsSearchView extends StatelessWidget {
 
   Widget _haveResults({
     required BuildContext context,
-    required List<NewsGlobal> newsList,
+    required List<NewsCore> newsList,
     bool isRefreshing = false,
     Function()? endListReached,
     Function()? refreshRequired,
-    Function(NewsGlobal)? onClick,
+    Function(NewsCore)? onClick,
   }) {
     return SizedBox(
       width: double.infinity,

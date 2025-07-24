@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../background/bg_core.dart';
 import '../../model/background_subject_code.dart';
-import '../../model/news_background_subject_type.dart';
+import '../../model/enum/news_background_subject_type.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';

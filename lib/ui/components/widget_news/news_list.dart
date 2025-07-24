@@ -20,10 +20,10 @@ class NewsList extends StatefulWidget {
     this.showDateInNewsItem = true,
   });
 
-  final List<NewsGlobal> newsList;
+  final List<NewsCore> newsList;
   final ScrollController? scrollController;
   final bool isEndOfList;
-  final Function(NewsGlobal)? onClick;
+  final Function(NewsCore)? onClick;
   final Color? color;
   final Function()? endListReached;
   final Function()? refreshRequested;
@@ -38,7 +38,7 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var tmp = groupBy(widget.newsList, (NewsGlobal item) => item.date);
+    var tmp = groupBy(widget.newsList, (NewsCore item) => item.datePublished);
     return NotificationListener(
       child: Padding(
         padding: const EdgeInsets.all(0),
