@@ -13,7 +13,7 @@ class NewsSplitView extends StatefulWidget {
 }
 
 class _NewsSplitView extends State<NewsSplitView> {
-  NewsGlobal? _newsSelected;
+  NewsCore? _newsSelected;
   bool _newsSelectedIsSubject = false;
 
   @override

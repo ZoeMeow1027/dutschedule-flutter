@@ -2,7 +2,7 @@ import 'package:dutwrapper/account_session_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/process_state.dart';
+import '../../../model/enum/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/account_session_instance.dart';

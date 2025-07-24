@@ -13,7 +13,7 @@ class NewsListItem extends StatelessWidget {
     this.onClick,
   });
 
-  final NewsGlobal newsItem;
+  final NewsCore newsItem;
   final bool showDate, showShadow;
   final bool shouldRadiusOnTop;
   final bool shouldRadiusOnBottom;
@@ -46,7 +46,7 @@ class NewsListItem extends StatelessWidget {
                   ? const Center()
                   : Text(
                       DateFormat("dd/MM/yyyy", Localizations.localeOf(context).toString())
-                          .format(DateTime.fromMillisecondsSinceEpoch(newsItem.date)),
+                          .format(DateTime.fromMillisecondsSinceEpoch(newsItem.datePublished)),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 17,

@@ -4,9 +4,9 @@ import 'package:dutwrapper/account_object.dart';
 import 'package:dutwrapper/account_session_object.dart';
 
 import '../global_variables.dart';
-import '../model/process_state.dart';
+import '../model/enum/process_state.dart';
 import '../model/school_year.dart';
-import '../model/variable_state.dart';
+import '../model/core/variable_state.dart';
 import '../repository/dut_account_repository.dart';
 import '../repository/storage_repository.dart';
 import '../utils/app_utils.dart';

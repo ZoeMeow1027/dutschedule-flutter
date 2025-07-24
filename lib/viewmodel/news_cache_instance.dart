@@ -1,8 +1,9 @@
+import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 
-import '../model/process_state.dart';
-import '../model/variable_state.dart';
+import '../model/enum/process_state.dart';
+import '../model/core/variable_state.dart';
 import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
@@ -19,37 +20,37 @@ class NewsCacheInstance extends BaseViewModel {
   @override
   void timerAction() {}
 
-  VariableListState<NewsGlobal> newsGlobal = VariableListState.from(
+  VariableListState<NewsCore> newsGlobal = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  VariableListState<NewsSubject> newsSubject = VariableListState.from(
+  VariableListState<NewsCore> newsSubject = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  VariableListState<NewsGlobal> newsStudentAffairs = VariableListState.from(
+  VariableListState<NewsCore> newsStudentAffairs = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  VariableListState<NewsGlobal> newsExamination = VariableListState.from(
+  VariableListState<NewsCore> newsExamination = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  VariableListState<NewsGlobal> newsTuitions = VariableListState.from(
+  VariableListState<NewsCore> newsTuitions = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
   );
 
-  VariableListState<NewsGlobal> newsStatuteRegulation = VariableListState.from(
+  VariableListState<NewsCore> newsStatuteRegulation = VariableListState.from(
     data: [],
     lastRequest: 0,
     parameters: {"nextPage": "1", "endOfList": "0"},
@@ -101,9 +102,10 @@ class NewsCacheInstance extends BaseViewModel {
       message: "Running...",
     );
 
-    List<NewsGlobal> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      var listFromInternet = await News.getNewsGlobal(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.global,
         page: fetchType == NewsFetchType.nextPage ? (int.tryParse(newsGlobal.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
 
@@ -115,7 +117,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsGlobal.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -123,7 +125,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsGlobal.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -136,7 +138,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsGlobal.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsGlobal.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -255,9 +257,10 @@ class NewsCacheInstance extends BaseViewModel {
       message: "Running...",
     );
 
-    List<NewsSubject> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      var listFromInternet = await News.getNewsSubject(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.subject,
         page: fetchType == NewsFetchType.nextPage ? (int.tryParse(newsSubject.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
 
@@ -269,7 +272,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsSubject.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -277,7 +280,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsSubject.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -290,7 +293,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsSubject.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsSubject.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -409,9 +412,10 @@ class NewsCacheInstance extends BaseViewModel {
       message: "Running...",
     );
 
-    List<NewsGlobal> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      var listFromInternet = await News.getNewsStudentAffairs(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.studentAffairs,
         page: fetchType == NewsFetchType.nextPage
             ? (int.tryParse(newsStudentAffairs.parameters["nextPage"] ?? "") ?? 1)
             : 1,
@@ -425,7 +429,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsStudentAffairs.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -433,7 +437,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsStudentAffairs.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -446,7 +450,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsStudentAffairs.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsStudentAffairs.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -565,9 +569,10 @@ class NewsCacheInstance extends BaseViewModel {
       message: "Running...",
     );
 
-    List<NewsGlobal> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      var listFromInternet = await News.getNewsExamination(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.examination,
         page:
             fetchType == NewsFetchType.nextPage ? (int.tryParse(newsExamination.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
@@ -580,7 +585,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsExamination.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -588,7 +593,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsExamination.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -601,7 +606,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsExamination.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsExamination.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -721,9 +726,10 @@ class NewsCacheInstance extends BaseViewModel {
       message: "Running...",
     );
 
-    List<NewsGlobal> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      var listFromInternet = await News.getNewsTuitionFee(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.tuitionFee,
         page: fetchType == NewsFetchType.nextPage ? (int.tryParse(newsTuitions.parameters["nextPage"] ?? "") ?? 1) : 1,
       );
 
@@ -735,7 +741,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsTuitions.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -743,7 +749,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsTuitions.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -756,7 +762,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsTuitions.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsTuitions.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -839,7 +845,7 @@ class NewsCacheInstance extends BaseViewModel {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: 'Denied this task because of timeout. Force this request to continue.',
       );
       return;
@@ -848,7 +854,7 @@ class NewsCacheInstance extends BaseViewModel {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: 'Denied this task because another same task is running...',
       );
       return;
@@ -859,7 +865,7 @@ class NewsCacheInstance extends BaseViewModel {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: "You're reached end of list. "
             "Set fetchType to 'clearCacheAndFirstPage' to clear cache and start over.",
       );
@@ -872,14 +878,14 @@ class NewsCacheInstance extends BaseViewModel {
     AppUtils.showLogToDebug(
       resultTag: AppLogLevel.info,
       tag: 'News',
-      subTag: 'Statute & policy',
+      subTag: 'Statute & regulation',
       message: "Running...",
     );
 
-    List<NewsGlobal> latestNews = [];
+    List<NewsCore> latestNews = [];
     try {
-      // TODO: Wait for library update for this
-      var listFromInternet = await News.getNewsStatutePolicy(
+      var listFromInternet = await News.getNews(
+        newsType: NewsType.statuteRegulation,
         page: fetchType == NewsFetchType.nextPage
             ? (int.tryParse(newsStatuteRegulation.parameters["nextPage"] ?? "") ?? 1)
             : 1,
@@ -893,7 +899,7 @@ class NewsCacheInstance extends BaseViewModel {
       } else {
         for (var item in listFromInternet) {
           var anyMatch = newsStatuteRegulation.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) == 0)) {
               return true;
@@ -901,7 +907,7 @@ class NewsCacheInstance extends BaseViewModel {
             return false;
           });
           var anyNeedUpdated = newsStatuteRegulation.data.any((p) {
-            if ((p.date == item.date) &&
+            if ((p.datePublished == item.datePublished) &&
                 (p.title.compareTo(item.title) == 0) &&
                 (p.contentHtml.compareTo(item.contentHtml) != 0)) {
               return true;
@@ -914,7 +920,7 @@ class NewsCacheInstance extends BaseViewModel {
           }
           // Update when match date and title
           else if (anyNeedUpdated) {
-            newsStatuteRegulation.data.firstWhere((p) => p.date == item.date && p.title == item.title)
+            newsStatuteRegulation.data.firstWhere((p) => p.datePublished == item.datePublished && p.title == item.title)
               ..title = item.title
               ..contentHtml = item.contentHtml
               ..resources.clear()
@@ -963,7 +969,7 @@ class NewsCacheInstance extends BaseViewModel {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.info,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: "Task done successfully!",
       );
     } catch (ex) {
@@ -971,14 +977,14 @@ class NewsCacheInstance extends BaseViewModel {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.error,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: "Task failed!",
       );
     } finally {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.debug,
         tag: 'News',
-        subTag: 'Statute & policy',
+        subTag: 'Statute & regulation',
         message: "Task done! Next page: ${newsStatuteRegulation.parameters["nextPage"] ?? "???"}, "
             "current count: ${newsStatuteRegulation.data.length}",
       );

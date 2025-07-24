@@ -4,7 +4,7 @@ import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 
 import '../model/news_search_history.dart';
-import '../model/process_state.dart';
+import '../model/enum/process_state.dart';
 import '../repository/storage_repository.dart';
 import '../utils/app_utils.dart';
 import 'base_view_model.dart';
@@ -81,7 +81,7 @@ class NewsSearchInstance extends BaseViewModel {
   NewsSearchMethod _searchMethod = NewsSearchMethod.byTitle;
   NewsSearchMethod get searchMethod => _searchMethod;
 
-  List<NewsGlobal> searchResult = [];
+  List<NewsCore> searchResult = [];
   List<NewsSearchHistory> newsHistoryList = [];
 
   void resetQueryAndResult() {
@@ -148,40 +148,12 @@ class NewsSearchInstance extends BaseViewModel {
       }
       var page = startOver ? 1 : _nextPage;
 
-      final session = (switch (newsType) {
-        NewsType.global => await News.getNewsGlobal(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        NewsType.subject => await News.getNewsSubject(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        NewsType.studentAffairs => await News.getNewsStudentAffairs(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        NewsType.examination => await News.getNewsExamination(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        NewsType.tuitionFee => await News.getNewsTuitionFee(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        // TODO: Wait for library update for this
-        NewsType.statutePolicy => await News.getNewsStatutePolicy(
-            page: page,
-            newsSearchQuery: _searchQuery,
-            newsSearchMethod: searchMethod,
-          ),
-        _ => [],
-      }) as List<NewsGlobal>;
+      final session = await News.getNews(
+        newsType: newsType,
+        page: page,
+        newsSearchQuery: _searchQuery,
+        newsSearchMethod: searchMethod,
+      );
 
       if (startOver) {
         searchResult.clear();

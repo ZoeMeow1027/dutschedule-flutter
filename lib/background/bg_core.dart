@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../model/news_background_subject_type.dart';
+import '../model/enum/news_background_subject_type.dart';
 import '../utils/app_utils.dart';
 import '../utils/task_scheduler.dart';
 import '../viewmodel/account_session_instance.dart';

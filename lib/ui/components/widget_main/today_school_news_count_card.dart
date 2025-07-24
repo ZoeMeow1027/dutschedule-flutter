@@ -36,18 +36,18 @@ class TodaySchoolNewsCountCard extends StatelessWidget {
         newsCacheInstance.newsTuitions.data.isEmpty) {
       return "No news on $dateToday (Click here to open \"news\" tab)";
     } else {
-      int getNewsSubjectTodayCount(List<NewsGlobal> news) {
+      int getNewsSubjectTodayCount(List<NewsCore> news) {
         var today = DateTime.now().toUtc().add(Duration(hours: 7));
         var todayAt0h = DateTime(today.year, today.month, today.day, 0, 0, 0).add(Duration(hours: -7));
         return news
             .where((p) {
-              return p.date >= todayAt0h.millisecondsSinceEpoch;
+              return p.datePublished >= todayAt0h.millisecondsSinceEpoch;
             })
             .toList()
             .length;
       }
 
-      String stringNewsCount(String title, List<NewsGlobal> news) {
+      String stringNewsCount(String title, List<NewsCore> news) {
         int count = getNewsSubjectTodayCount(news);
         if (count <= 0) {
           return "";

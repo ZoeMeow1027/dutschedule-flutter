@@ -11,7 +11,7 @@ class NewsDetailView extends StatelessWidget {
     this.isNewsSubject = false,
   });
 
-  final NewsGlobal newsItem;
+  final NewsCore newsItem;
   final bool isNewsSubject;
 
   @override

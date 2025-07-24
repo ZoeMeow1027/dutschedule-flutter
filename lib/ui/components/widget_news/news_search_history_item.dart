@@ -61,7 +61,7 @@ class NewsSearchHistoryItem extends StatelessWidget {
                   AppLocalizations.of(context).translate("news_search_searchoption_type_byexamination"),
                 NewsType.tuitionFee =>
                   AppLocalizations.of(context).translate("news_search_searchoption_type_bytuitionfee"),
-                NewsType.statutePolicy =>
+                NewsType.statuteRegulation =>
                   AppLocalizations.of(context).translate("news_search_searchoption_type_bystatuteregulation"),
                 _ => AppLocalizations.of(context).translate("data_unknown"),
               }
