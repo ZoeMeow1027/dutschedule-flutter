@@ -4,11 +4,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../global_variables.dart';
+import '../model/enum/news_fetching_type.dart';
 import '../utils/app_localizations.dart';
 import '../utils/build_context_extension.dart';
 import '../utils/custom_scroll_behavior.dart';
 import '../viewmodel/account_session_instance.dart';
-import '../viewmodel/news_cache_instance.dart';
+import '../viewmodel/news_cache_instance_v2.dart';
 import '../viewmodel/settings_instance.dart';
 import 'view_firstrun/getting_started_view.dart';
 import 'view_main/main_view.dart';
@@ -113,9 +114,9 @@ class _PreloadApplication extends State<PreloadApplication> {
     });
 
     // Preload news
-    final newsCacheInstance = Provider.of<NewsCacheInstance>(context, listen: false);
-    newsCacheInstance.fetchGlobalNews(
-      fetchType: NewsFetchType.firstPage,
+    final newsCacheInstance = Provider.of<NewsCacheInstanceV2>(context, listen: false);
+    newsCacheInstance.fetchNewsGlobal(
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news global.
@@ -126,8 +127,8 @@ class _PreloadApplication extends State<PreloadApplication> {
         }
       },
     );
-    newsCacheInstance.fetchSubjectNews(
-      fetchType: NewsFetchType.firstPage,
+    newsCacheInstance.fetchNewsSubject(
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news subject.
@@ -139,7 +140,7 @@ class _PreloadApplication extends State<PreloadApplication> {
       },
     );
     newsCacheInstance.fetchNewsStudentAffairs(
-      fetchType: NewsFetchType.firstPage,
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news subject.
@@ -152,7 +153,7 @@ class _PreloadApplication extends State<PreloadApplication> {
       },
     );
     newsCacheInstance.fetchNewsExamination(
-      fetchType: NewsFetchType.firstPage,
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news subject.
@@ -165,7 +166,7 @@ class _PreloadApplication extends State<PreloadApplication> {
       },
     );
     newsCacheInstance.fetchNewsTuitionFee(
-      fetchType: NewsFetchType.firstPage,
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news subject.
@@ -178,7 +179,7 @@ class _PreloadApplication extends State<PreloadApplication> {
       },
     );
     newsCacheInstance.fetchNewsStatuteRegulation(
-      fetchType: NewsFetchType.firstPage,
+      fetchType: NewsFetchingType.firstPage,
       onDone: (successful) {
         if (!successful) {
           // Notify error for user about unsuccessful preload news subject.

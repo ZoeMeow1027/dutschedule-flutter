@@ -27,8 +27,8 @@ class NewsListInDate extends StatelessWidget {
       padding: EdgeInsets.only(top: 7, bottom: showDateInHeader ? 0 : 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 3,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 5,
         children: _listWithDate(context, newsListInDate),
       ),
     );

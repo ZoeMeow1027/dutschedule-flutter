@@ -3,6 +3,7 @@ enum NewsFetchingType {
   nextPage,
 
   /// Fetch first page (to find latest news).
+  /// (also notify when have any latest news)
   firstPage,
 
   /// Clear cache and fetch first page

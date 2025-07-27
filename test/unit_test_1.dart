@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('1', () async {
-    NewsCacheInstance2 nci2 = NewsCacheInstance2();
+    NewsCacheInstanceV2 nci2 = NewsCacheInstanceV2();
 
     debugPrint('Fetching... Please wait...');
     await nci2.fetchNewsGlobal(

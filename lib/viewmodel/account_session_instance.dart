@@ -302,19 +302,41 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null) {
-      log("[Account] [Student information] Running denied because no available account session.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Running denied because no available account session.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Student information] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Running denied because account session is running another task...',
+      );
       return;
     }
     if (studentInformation.state == ProcessState.running) {
-      log("[Account] [Student information] Running denied because of another task itself...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Running denied because of another task itself...',
+      );
       return;
     }
     if (!studentInformation.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Student information] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message:
+            'Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)).'
+            ' Set forceRequest to true to bypass it.',
+      );
       return;
     }
     beforeRun?.call();
@@ -322,20 +344,40 @@ class AccountSessionInstance extends BaseViewModel {
     try {
       studentInformation.state = ProcessState.running;
       _settingsChanged();
-      log("[Account] [Student information] Running...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Running...',
+      );
 
       var data = await accRepo.fetchStudentInformation(
         session: accountSession.data!,
       );
       studentInformation.data = data;
       studentInformation.state = ProcessState.successful;
-      log("[Account] [Student information] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Task successful!',
+      );
     } catch (ex) {
       studentInformation.state = ProcessState.failed;
-      log("[Account] [Student information] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'Task failed!',
+      );
     } finally {
       studentInformation.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Student information] End run.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'AccountSession',
+        subTag: 'Student Information',
+        message: 'End run.',
+      );
       _settingsChanged();
       afterRun?.call();
     }

@@ -2,11 +2,11 @@ import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/enum/news_fetching_type.dart';
 import '../../../model/enum/news_tab_location.dart';
-import '../../../model/enum/process_state.dart';
 import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
-import '../../../viewmodel/news_cache_instance.dart';
+import '../../../viewmodel/news_cache_instance_v2.dart';
 import '../../../viewmodel/news_search_instance.dart';
 import '../../components/widget_news/news_list.dart';
 import '../../view_news/news_search_view.dart';
@@ -59,17 +59,17 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
 
   @override
   Widget build(BuildContext context) {
-    final newsCacheInstance = Provider.of<NewsCacheInstance>(context);
+    final newsCacheInstance = Provider.of<NewsCacheInstanceV2>(context);
     final newsSearchInstance = Provider.of<NewsSearchInstance>(context);
 
     bool shouldFABRunning() {
       return switch (_newsCurrentPage) {
-        NewsTabLocation.globalNews => newsCacheInstance.newsGlobal.state == ProcessState.running,
-        NewsTabLocation.subjectNews => newsCacheInstance.newsSubject.state == ProcessState.running,
-        NewsTabLocation.studentAffairs => newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
-        NewsTabLocation.examination => newsCacheInstance.newsExamination.state == ProcessState.running,
-        NewsTabLocation.tuitionFee => newsCacheInstance.newsTuitions.state == ProcessState.running,
-        NewsTabLocation.statuteRegulation => newsCacheInstance.newsStatuteRegulation.state == ProcessState.running,
+        NewsTabLocation.globalNews => newsCacheInstance.newsGlobal.isRunning,
+        NewsTabLocation.subjectNews => newsCacheInstance.newsSubject.isRunning,
+        NewsTabLocation.studentAffairs => newsCacheInstance.newsStudentAffairs.isRunning,
+        NewsTabLocation.examination => newsCacheInstance.newsExamination.isRunning,
+        NewsTabLocation.tuitionFee => newsCacheInstance.newsTuitions.isRunning,
+        NewsTabLocation.statuteRegulation => newsCacheInstance.newsStatuteRegulation.isRunning,
       };
     }
 
@@ -145,6 +145,10 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: shouldFABRunning()
             ? SizedBox(
                 width: 25,
@@ -156,38 +160,38 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           try {
             switch (_newsCurrentPage) {
               case NewsTabLocation.globalNews:
-                newsCacheInstance.fetchGlobalNews(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                newsCacheInstance.fetchNewsGlobal(
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
               case NewsTabLocation.subjectNews:
-                newsCacheInstance.fetchSubjectNews(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                newsCacheInstance.fetchNewsSubject(
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
               case NewsTabLocation.studentAffairs:
                 newsCacheInstance.fetchNewsStudentAffairs(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
               case NewsTabLocation.examination:
                 newsCacheInstance.fetchNewsExamination(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
               case NewsTabLocation.tuitionFee:
                 newsCacheInstance.fetchNewsTuitionFee(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
               case NewsTabLocation.statuteRegulation:
                 newsCacheInstance.fetchNewsStatuteRegulation(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
                 break;
@@ -206,20 +210,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
         children: [
           NewsList(
             newsList: newsCacheInstance.newsGlobal.data,
-            isRefreshing: newsCacheInstance.newsGlobal.state == ProcessState.running,
+            isRefreshing: newsCacheInstance.newsGlobal.isRunning,
+            isEndOfList: newsCacheInstance.newsGlobal.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
             endListReached: () {
-              newsCacheInstance.fetchGlobalNews(
-                fetchType: NewsFetchType.nextPage,
+              newsCacheInstance.fetchNewsGlobal(
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
-                newsCacheInstance.fetchGlobalNews(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                newsCacheInstance.fetchNewsGlobal(
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {
@@ -232,20 +237,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           ),
           NewsList(
             newsList: newsCacheInstance.newsSubject.data,
-            isRefreshing: newsCacheInstance.newsSubject.state == ProcessState.running,
+            isRefreshing: newsCacheInstance.newsSubject.isRunning,
+            isEndOfList: newsCacheInstance.newsSubject.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, true);
             },
             endListReached: () {
-              newsCacheInstance.fetchSubjectNews(
-                fetchType: NewsFetchType.nextPage,
+              newsCacheInstance.fetchNewsSubject(
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
-                newsCacheInstance.fetchSubjectNews(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                newsCacheInstance.fetchNewsSubject(
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {
@@ -258,21 +264,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           ),
           NewsList(
             newsList: newsCacheInstance.newsStudentAffairs.data,
-            isRefreshing: newsCacheInstance.newsStudentAffairs.state == ProcessState.running,
-            isEndOfList: newsCacheInstance.newsStudentAffairs.parameters["endOfList"] == "1",
+            isRefreshing: newsCacheInstance.newsStudentAffairs.isRunning,
+            isEndOfList: newsCacheInstance.newsStudentAffairs.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
             endListReached: () {
               newsCacheInstance.fetchNewsStudentAffairs(
-                fetchType: NewsFetchType.nextPage,
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
                 newsCacheInstance.fetchNewsStudentAffairs(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {
@@ -285,21 +291,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           ),
           NewsList(
             newsList: newsCacheInstance.newsExamination.data,
-            isRefreshing: newsCacheInstance.newsExamination.state == ProcessState.running,
-            isEndOfList: newsCacheInstance.newsExamination.parameters["endOfList"] == "1",
+            isRefreshing: newsCacheInstance.newsExamination.isRunning,
+            isEndOfList: newsCacheInstance.newsExamination.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
             endListReached: () {
               newsCacheInstance.fetchNewsExamination(
-                fetchType: NewsFetchType.nextPage,
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
                 newsCacheInstance.fetchNewsExamination(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {
@@ -312,21 +318,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           ),
           NewsList(
             newsList: newsCacheInstance.newsTuitions.data,
-            isRefreshing: newsCacheInstance.newsTuitions.state == ProcessState.running,
-            isEndOfList: newsCacheInstance.newsTuitions.parameters["endOfList"] == "1",
+            isRefreshing: newsCacheInstance.newsTuitions.isRunning,
+            isEndOfList: newsCacheInstance.newsTuitions.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
             endListReached: () {
               newsCacheInstance.fetchNewsTuitionFee(
-                fetchType: NewsFetchType.nextPage,
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
                 newsCacheInstance.fetchNewsTuitionFee(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {
@@ -339,21 +345,21 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
           ),
           NewsList(
             newsList: newsCacheInstance.newsStatuteRegulation.data,
-            isRefreshing: newsCacheInstance.newsStatuteRegulation.state == ProcessState.running,
-            isEndOfList: newsCacheInstance.newsStatuteRegulation.parameters["endOfList"] == "1",
+            isRefreshing: newsCacheInstance.newsStatuteRegulation.isRunning,
+            isEndOfList: newsCacheInstance.newsStatuteRegulation.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },
             endListReached: () {
               newsCacheInstance.fetchNewsStatuteRegulation(
-                fetchType: NewsFetchType.nextPage,
+                fetchType: NewsFetchingType.nextPage,
                 forceRequest: true,
               );
             },
             refreshRequested: () {
               try {
                 newsCacheInstance.fetchNewsStatuteRegulation(
-                  fetchType: NewsFetchType.clearCacheAndFirstPage,
+                  fetchType: NewsFetchingType.clearAndFetchFirstNewsPage,
                   forceRequest: true,
                 );
               } catch (ex) {

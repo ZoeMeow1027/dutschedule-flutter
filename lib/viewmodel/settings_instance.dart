@@ -12,7 +12,9 @@ import 'base_view_model.dart';
 class SettingsInstance extends BaseViewModel {
   SettingsInstance();
 
-  SettingsInstance.fromPreviousSettings(Map<String, dynamic> json) {
+  SettingsInstance.fromPreviousSettings({
+    required Map<String, dynamic> json,
+  }) {
     _fromMap(json);
     _isSettingsInitialized = true;
   }
@@ -20,10 +22,10 @@ class SettingsInstance extends BaseViewModel {
   @override
   void initializing() async {}
 
-  bool _isSettingsInitialized = false;
-
   @override
   void timerAction() {}
+
+  bool _isSettingsInitialized = false;
 
   /// First run (show welcome page)
   ///

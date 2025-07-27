@@ -19,25 +19,21 @@ class WallpaperAndStyleView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: Text(AppLocalizations.of(context)
-            .translate("settings_wallpaperandcontrols_title")),
+        title: Text(AppLocalizations.of(context).translate("settings_wallpaperandcontrols_title")),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             ListViewGroupItem(
               padding: const EdgeInsets.only(top: 10),
-              title: AppLocalizations.of(context)
-                  .translate("settings_wallpaperandcontrols_category_enabled"),
+              title: AppLocalizations.of(context).translate("settings_wallpaperandcontrols_category_enabled"),
               dividerOnBottom: true,
               children: [
                 ListViewOptionItem(
-                  title: AppLocalizations.of(context)
-                      .translate("settings_wallpaperandcontrols_choice_none"),
+                  title: AppLocalizations.of(context).translate("settings_wallpaperandcontrols_choice_none"),
                   onClick: () {
                     // TODO: Remove all background here.
-                    settingsInstance.backgroundImageOption =
-                        BackgroundImageOption.none;
+                    settingsInstance.backgroundImageOption = BackgroundImageOption.none;
                   },
                   leading: Radio<BackgroundImageOption>(
                     value: BackgroundImageOption.none,
@@ -51,8 +47,8 @@ class WallpaperAndStyleView extends StatelessWidget {
                   ),
                 ),
                 ListViewOptionItem(
-                  title: AppLocalizations.of(context).translate(
-                      "settings_wallpaperandcontrols_choice_currentwallpaper"),
+                  title:
+                      AppLocalizations.of(context).translate("settings_wallpaperandcontrols_choice_currentwallpaper"),
                   description: null, // TODO: Check if qualified.
                   onClick: () {
                     // TODO: Check if can continue.
@@ -68,8 +64,7 @@ class WallpaperAndStyleView extends StatelessWidget {
                   ),
                 ),
                 ListViewOptionItem(
-                  title: AppLocalizations.of(context).translate(
-                      "settings_wallpaperandcontrols_choice_pickaimage"),
+                  title: AppLocalizations.of(context).translate("settings_wallpaperandcontrols_choice_pickanimage"),
                   onClick: () {
                     // TODO: Pick an image before continue.
                   },

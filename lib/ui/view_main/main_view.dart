@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/scaffold_nav.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/get_device_type.dart';
+import '../../viewmodel/notification_instance.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_dashboard/dashboard_tab.dart';
 import 'tab_news/news_tab.dart';
@@ -27,9 +29,10 @@ class _MyHomePageState extends State<MainScreenView> {
     _pages = <Widget>[
       DashboardTab(
         onClickSwitchNewsTab: () {
-          setState(() {
-            _selectedPage = 1;
-          });
+          setState(() => _selectedPage = 1);
+        },
+        onClickSwitchAccountTab: () {
+          setState(() => _selectedPage = 3);
         },
       ),
       NewsTab(),
@@ -158,6 +161,7 @@ class _MyHomePageState extends State<MainScreenView> {
   // }
 
   ScaffoldNavigationList _getNavList(BuildContext context) {
+    final notificationInstance = Provider.of<NotificationInstance>(context);
     return ScaffoldNavigationList(itemList: [
       ScaffoldNavigationItem(
         id: 0,
@@ -172,6 +176,9 @@ class _MyHomePageState extends State<MainScreenView> {
       ScaffoldNavigationItem(
         id: 2,
         label: AppLocalizations.of(context).translate("notification_panel_title"),
+        badgeText: notificationInstance.notificationHistoryList.isNotEmpty
+            ? notificationInstance.notificationHistoryList.length.toString()
+            : null,
         iconData: Icons.notifications,
       ),
       ScaffoldNavigationItem(
