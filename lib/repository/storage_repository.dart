@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 import '../global_variables.dart';
+import '../model/notification_history.dart';
 
 class StorageRepository {
   static Future<Directory> _localDirectory({String? extDir}) async {
@@ -33,8 +34,9 @@ class StorageRepository {
   }
 
   static Future<void> saveAccountSession({required Map<String, dynamic> accountSession}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
     final data = await _localFile(fileName: GlobalVariables.appPathFileAccountSession);
-    await data.writeAsString(json.encode(accountSession));
+    await data.writeAsString(jsonEncoder.convert(accountSession));
   }
 
   static Future<Map<String, dynamic>> loadAccountSession() async {
@@ -48,9 +50,9 @@ class StorageRepository {
   }
 
   static Future<void> saveSettings({required Map<String, dynamic> settings}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
     final data = await _localFile(fileName: GlobalVariables.appPathFileSettings);
-    final data1 = json.encode(settings);
-    await data.writeAsString(data1, mode: FileMode.writeOnly, flush: true);
+    await data.writeAsString(jsonEncoder.convert(settings), mode: FileMode.writeOnly, flush: true);
   }
 
   static Future<Map<String, dynamic>> getPreviousSettings() async {
@@ -60,6 +62,39 @@ class StorageRepository {
       return json.decode(dataString);
     } catch (ex) {
       return {};
+    } finally {}
+  }
+
+  static Future<void> saveNewsCache({required Map<String, dynamic> settings}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
+    final data = await _localFile(fileName: GlobalVariables.appPathNewsCache);
+    await data.writeAsString(jsonEncoder.convert(settings), mode: FileMode.writeOnly, flush: true);
+  }
+
+  static Future<Map<String, dynamic>> getNewsCache() async {
+    try {
+      final data = await _localFile(fileName: GlobalVariables.appPathNewsCache);
+      final dataString = await data.readAsString();
+      return json.decode(dataString);
+    } catch (ex) {
+      return {};
+    } finally {}
+  }
+
+  static Future<void> saveNotificationHistory({required List<NotificationHistory> notifyHistory}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
+    final data = await _localFile(fileName: GlobalVariables.appPathNotificationHistory);
+    final data1 = jsonEncoder.convert(notifyHistory.map((p) => p.toJson()).toList());
+    await data.writeAsString(data1, mode: FileMode.writeOnly, flush: true);
+  }
+
+  static Future<List<NotificationHistory>> getNotificationHistory() async {
+    try {
+      final data = await _localFile(fileName: GlobalVariables.appPathNotificationHistory);
+      final dataString = await data.readAsString();
+      return (json.decode(dataString) as List<dynamic>).map((p) => NotificationHistory.fromJson(data: p)).toList();
+    } catch (ex) {
+      return [];
     } finally {}
   }
 
@@ -74,8 +109,8 @@ class StorageRepository {
   }
 
   static Future<void> saveNewsSearchHistory({required Map<String, dynamic> searchHistory}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
     final data = await _localFile(fileName: GlobalVariables.appPathFileNewsSearchHistory);
-    final data1 = json.encode(searchHistory);
-    await data.writeAsString(data1, mode: FileMode.writeOnly, flush: true);
+    await data.writeAsString(jsonEncoder.convert(searchHistory), mode: FileMode.writeOnly, flush: true);
   }
 }

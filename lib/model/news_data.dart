@@ -1,8 +1,15 @@
 import 'package:dutschedule/model/enum/process_state.dart';
+import 'package:dutwrapper/news_object.dart';
 
 import 'core/variable_state.dart';
 
-class NewsData<NewsCore> {
+class NewsData {
+  NewsData();
+
+  NewsData.fromCache(Map<String, dynamic> json) {
+    fromMap(json);
+  }
+
   final VariableListState<NewsCore> _newsList = VariableListState.from(
     data: [],
     lastRequest: 0,
@@ -61,5 +68,21 @@ class NewsData<NewsCore> {
 
   bool get isRunning {
     return _newsList.state == ProcessState.running;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'data': _newsList.data.map((p) => p.toMap()).toList(),
+      'last_request': _newsList.lastRequest,
+      'parameters': _newsList.parameters,
+    };
+  }
+
+  void fromMap(Map<String, dynamic> data) {
+    _newsList.lastRequest = (data["last_request"] as int?) ?? 0;
+    _newsList.data.addAll((data['data'] as List<dynamic>? ?? []).map((p) => NewsCore.fromMap(p)).toList());
+    _newsList.parameters.addAll((data['parameters'] as Map<String, dynamic>? ?? {}).map((p, q) {
+      return MapEntry(p, q);
+    }));
   }
 }

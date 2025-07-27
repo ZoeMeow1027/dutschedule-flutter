@@ -3,7 +3,7 @@ import 'package:dutschedule/ui/components/widget_main/today_school_news_count_ca
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
-import '../../components/card_with_title.dart';
+import '../../components/widget_main/account_summary.dart';
 import '../../components/widget_main/date_time_card.dart';
 import '../../view_miscellaneous/external_links_view.dart';
 import '../../view_settings/settings_view.dart';
@@ -12,9 +12,11 @@ class DashboardTab extends StatelessWidget {
   const DashboardTab({
     super.key,
     this.onClickSwitchNewsTab,
+    this.onClickSwitchAccountTab,
   });
 
   final Function()? onClickSwitchNewsTab;
+  final Function()? onClickSwitchAccountTab;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class DashboardTab extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: Text(AppLocalizations.of(context).translate("main_dashboard_title")),
+        title: Text(AppLocalizations.of(context).translate('main_dashboard_title')),
         actions: [
           IconButton(
             onPressed: () {
@@ -43,16 +45,8 @@ class DashboardTab extends StatelessWidget {
             DateTimeCard(
               padding: EdgeInsets.symmetric(vertical: 3),
             ),
-            CardWithTitle(
-              padding: EdgeInsets.symmetric(vertical: 3),
-              title: "Your subjects today",
-              child: Text(
-                "Date & time: <place here>"
-                "\n(based on your system settings)"
-                "\n\nSchool year: <place here> - Week: <place here>"
-                "\nCurrent lesson: <place here>",
-              ),
-              onClick: () {},
+            MainDashboardWidgetAccountSummary(
+              onClick: onClickSwitchAccountTab,
             ),
             TodaySchoolNewsCountCard(
               onClickSwitchNewsTab: onClickSwitchNewsTab,

@@ -7,7 +7,7 @@ import '../../model/enum/news_background_subject_type.dart';
 import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
-import '../../viewmodel/news_cache_instance.dart';
+import '../../viewmodel/news_cache_instance_v2.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/menu_list_group.dart';
 import '../components/option_item.dart';
@@ -27,7 +27,7 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
 
   @override
   Widget build(BuildContext context) {
-    final newsCacheInstance = Provider.of<NewsCacheInstance>(context);
+    final newsCacheInstance = Provider.of<NewsCacheInstanceV2>(context);
     final settingsInstance = Provider.of<SettingsInstance>(context);
 
     return Scaffold(

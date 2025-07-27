@@ -102,7 +102,7 @@ class AppUtils {
     log(StringUtils.formatString(
       '[{0}] [{1}] [{2}{3}] {4}',
       [
-        DateFormat("yyyy/MM/dd HH:mm:ss")
+        DateFormat("yyyy/MM/dd HH:mm:ss.SSS")
             .format(DateTime.fromMillisecondsSinceEpoch(dateCreated, isUtc: true).toLocal()),
         switch (resultTag.value) {
           0 => "VERBOSE",

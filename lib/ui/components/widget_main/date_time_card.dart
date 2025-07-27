@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:dutwrapper/custom_clock.dart';
-import 'package:dutwrapper/utils.dart';
-import 'package:dutwrapper/utils_object.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../global_variables.dart';
 import '../../../utils/app_localizations.dart';
 import '../card_with_title.dart';
 
@@ -23,7 +22,6 @@ class DateTimeCard extends StatefulWidget {
 
 class _DateTimeCard extends State<DateTimeCard> {
   Timer? timer;
-  DutSchoolYear? dutSchoolYear;
   String dateTimeStr = "";
   bool needRefershDutSchYear = true;
   String currentLesson = "";
@@ -51,15 +49,6 @@ class _DateTimeCard extends State<DateTimeCard> {
         _ => CustomClock.current().toDUTLesson().toString(),
       };
     });
-
-    if (needRefershDutSchYear) {
-      Utils.getCurrentSchoolYear().then((p) {
-        setState(() {
-          dutSchoolYear = p;
-          needRefershDutSchYear = false;
-        });
-      }).onError((err, _) {});
-    }
   }
 
   @override
@@ -78,8 +67,8 @@ class _DateTimeCard extends State<DateTimeCard> {
         [
           dateTimeStr,
           currentLesson,
-          dutSchoolYear?.schoolYear ?? AppLocalizations.of(context).translate("data_unknown"),
-          dutSchoolYear?.week.toString() ?? AppLocalizations.of(context).translate("data_unknown"),
+          GlobalVariables.dutSchoolYear?.schoolYear ?? AppLocalizations.of(context).translate("data_unknown"),
+          GlobalVariables.dutSchoolYear?.week.toString() ?? AppLocalizations.of(context).translate("data_unknown"),
         ],
       )),
     );

@@ -43,8 +43,14 @@ class GraduateSummary extends StatelessWidget {
               Text(
                 graduateStatus?.hasQualifiedGraduate == true
                     ? AppLocalizations.of(context).translate("account_trainingstatus_graduatebox_elegibletograduate")
-                    : AppLocalizations.of(context)
-                        .translate("account_trainingstatus_graduatebox_notelegibletograduate"),
+                    : (graduateStatus?.hasSigGDQP == true &&
+                            graduateStatus?.hasSigGDTC == true &&
+                            graduateStatus?.hasSigEnglish == true &&
+                            graduateStatus?.hasSigIT == true)
+                        ? AppLocalizations.of(context)
+                            .translate("account_trainingstatus_graduatebox_nottickedelegibletograduate")
+                        : AppLocalizations.of(context)
+                            .translate("account_trainingstatus_graduatebox_notelegibletograduate"),
                 textAlign: TextAlign.center,
               ),
               Padding(

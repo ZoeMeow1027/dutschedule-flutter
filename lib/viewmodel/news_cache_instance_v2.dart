@@ -5,29 +5,46 @@ import 'package:dutwrapper/news_object.dart';
 import '../model/enum/news_fetching_type.dart';
 import '../model/enum/process_state.dart';
 import '../model/news_data.dart';
+import '../repository/storage_repository.dart';
 import '../utils/app_utils.dart';
 import 'base_view_model.dart';
 
-class NewsCacheInstance2 extends BaseViewModel {
+class NewsCacheInstanceV2 extends BaseViewModel {
+  NewsCacheInstanceV2({
+    this.onNewNewsReceived,
+  });
+
+  NewsCacheInstanceV2.fromCache({
+    required Map<String, dynamic> json,
+    this.onNewNewsReceived,
+  }) {
+    _fromMap(json);
+    _isSettingsInitialized = true;
+  }
+
+  final Function(NewsCore)? onNewNewsReceived;
+
   @override
   void initializing() {}
 
   @override
   void timerAction() {}
 
-  NewsData<NewsCore> newsGlobal = NewsData<NewsCore>();
-  NewsData<NewsCore> newsSubject = NewsData<NewsCore>();
-  NewsData<NewsCore> newsStudentAffairs = NewsData<NewsCore>();
-  NewsData<NewsCore> newsExamination = NewsData<NewsCore>();
-  NewsData<NewsCore> newsTuitions = NewsData<NewsCore>();
-  NewsData<NewsCore> newsStatuteRegulation = NewsData<NewsCore>();
+  bool _isSettingsInitialized = false;
+
+  NewsData newsGlobal = NewsData();
+  NewsData newsSubject = NewsData();
+  NewsData newsStudentAffairs = NewsData();
+  NewsData newsExamination = NewsData();
+  NewsData newsTuitions = NewsData();
+  NewsData newsStatuteRegulation = NewsData();
 
   Future<void> _fetchNews({
     required NewsType newsType,
     NewsFetchingType fetchType = NewsFetchingType.nextPage,
     bool forceRequest = false,
     Function(bool)? onDone,
-    required NewsData<NewsCore> newsData,
+    required NewsData newsData,
     String debugSubTag = '',
   }) async {
     if (!newsData.isSuccessfulRequestExpired && !forceRequest) {
@@ -115,7 +132,7 @@ class NewsCacheInstance2 extends BaseViewModel {
         // Fetch news with 'nextPage' parameter to temporary list.
         newsList.addAll(await News.getNews(newsType: newsType, page: newsData.nextPage));
 
-        // Clear old news
+        // Clear old news in current list.
         newsData.data.clear();
         // Add to current list.
         newsData.data.addAll(newsList);
@@ -189,12 +206,16 @@ class NewsCacheInstance2 extends BaseViewModel {
         // This will store filtered temporary news.
         List<NewsCore> newsListFiltered = [];
 
+        // Check if 'newsData.data' is not empty.
+        // We will use them if news list is empty to prevent them if needed.
+        final shouldNotify = newsData.data.isNotEmpty;
+
         // Fetch news with '1' parameter to temporary list.
         newsList.addAll(await News.getNews(newsType: newsType, page: 1));
 
         // Find in current list to find new news, and add them to filtered list.
         for (var newsItem in newsList) {
-          if (newsData.data.any((p) => AppUtils.isNewsEqual(p, newsItem))) {
+          if (!newsData.data.any((p) => AppUtils.isNewsEqual(p, newsItem))) {
             newsListFiltered.add(newsItem);
           }
         }
@@ -212,6 +233,17 @@ class NewsCacheInstance2 extends BaseViewModel {
             return b.dateFetched.compareTo(a.dateFetched);
           }
         });
+
+        if (newsData.nextPage == 1) {
+          newsData.nextPage = 2;
+        }
+
+        // Before clear 'newsListFiltered', notify user when have any latest news.
+        if (shouldNotify) {
+          for (var newsItem in newsListFiltered) {
+            onNewNewsReceived?.call(newsItem);
+          }
+        }
 
         // Clear 'newsList' and 'newsListFiltered'
         newsList.clear();
@@ -259,7 +291,10 @@ class NewsCacheInstance2 extends BaseViewModel {
       debugSubTag: 'Global',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
   }
 
@@ -274,7 +309,10 @@ class NewsCacheInstance2 extends BaseViewModel {
       debugSubTag: 'Subject',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
   }
 
@@ -289,7 +327,10 @@ class NewsCacheInstance2 extends BaseViewModel {
       debugSubTag: 'Student Affairs',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
   }
 
@@ -304,7 +345,10 @@ class NewsCacheInstance2 extends BaseViewModel {
       debugSubTag: 'Examination',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
   }
 
@@ -319,7 +363,10 @@ class NewsCacheInstance2 extends BaseViewModel {
       debugSubTag: 'Tuition fee',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
   }
 
@@ -329,12 +376,60 @@ class NewsCacheInstance2 extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     await _fetchNews(
-      newsData: newsTuitions,
+      newsData: newsStatuteRegulation,
       newsType: NewsType.statuteRegulation,
       debugSubTag: 'Statute & regulation',
       fetchType: fetchType,
       forceRequest: forceRequest,
-      onDone: onDone,
+      onDone: (p1) async {
+        await _settingsChanged();
+        onDone?.call(p1);
+      },
     );
+  }
+
+  bool _pendingChanges = false;
+
+  Future<void> _settingsChanged() async {
+    if (!_isSettingsInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
+
+    _pendingChanges = true;
+    notifyListeners();
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'News cache',
+      message: 'Modified changes! Saving...',
+    );
+
+    await StorageRepository.saveNewsCache(settings: _toMap());
+
+    _pendingChanges = false;
+    notifyListeners();
+  }
+
+  Map<String, dynamic> _toMap() {
+    return {
+      'news_global': newsGlobal.toMap(),
+      'news_subject': newsSubject.toMap(),
+      'news_student_affairs': newsStudentAffairs.toMap(),
+      'news_examination': newsExamination.toMap(),
+      'news_tuition': newsTuitions.toMap(),
+      'news_statute_regulations': newsStatuteRegulation.toMap(),
+    };
+  }
+
+  void _fromMap(Map<String, dynamic> data) {
+    newsGlobal = NewsData.fromCache(data['news_global'] as Map<String, dynamic>? ?? {});
+    newsSubject = NewsData.fromCache(data['news_subject'] as Map<String, dynamic>? ?? {});
+    newsStudentAffairs = NewsData.fromCache(data['news_student_affairs'] as Map<String, dynamic>? ?? {});
+    newsExamination = NewsData.fromCache(data['news_examination'] as Map<String, dynamic>? ?? {});
+    newsTuitions = NewsData.fromCache(data['news_tuition'] as Map<String, dynamic>? ?? {});
+    newsStatuteRegulation = NewsData.fromCache(data['news_statute_regulations'] as Map<String, dynamic>? ?? {});
   }
 }

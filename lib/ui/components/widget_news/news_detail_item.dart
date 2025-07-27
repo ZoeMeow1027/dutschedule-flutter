@@ -47,7 +47,7 @@ class NewsDetailItem extends StatelessWidget {
             child: Text(
               dateStr,
               style: const TextStyle(
-                fontWeight: FontWeight.w400,
+                // fontWeight: FontWeight.w400,
                 fontSize: 20,
               ),
             ),
@@ -75,13 +75,13 @@ class NewsDetailItem extends StatelessWidget {
                               //     ? null
                               //     : TextDecoration.underline,
                               decoration: TextDecoration.none,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
+                              // fontWeight: FontWeight.w400,
+                              fontSize: 16, // default: 14
                               color: data[index].url != null
                                   ? Colors.blueAccent
                                   : context.isAppDarkMode()
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? Colors.white.withAlpha(240)
+                                      : Colors.black.withAlpha(240),
                             ),
                             recognizer: data[index].url != null
                                 ? (TapGestureRecognizer()

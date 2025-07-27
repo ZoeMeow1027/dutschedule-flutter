@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import '../model/enum/news_background_subject_type.dart';
+import '../model/enum/news_fetching_type.dart';
 import '../utils/app_utils.dart';
 import '../utils/task_scheduler.dart';
 import '../viewmodel/account_session_instance.dart';
-import '../viewmodel/news_cache_instance.dart';
+import '../viewmodel/news_cache_instance_v2.dart';
 import '../viewmodel/settings_instance.dart';
 
 class BackgroundTask {
@@ -21,7 +22,7 @@ class BackgroundTask {
   }
 
   static Future<void> scheduleNewsBackgroundTaskOnDesktop({
-    required NewsCacheInstance newsCacheInstance,
+    required NewsCacheInstanceV2 newsCacheInstance,
     required SettingsInstance settingsInstance,
     bool runNow = false,
   }) async {
@@ -53,43 +54,43 @@ class BackgroundTask {
   }
 
   static Future<void> _onNewsBackgroundTaskOnDesktop({
-    required NewsCacheInstance newsCacheInstance,
+    required NewsCacheInstanceV2 newsCacheInstance,
     required SettingsInstance settingsInstance,
   }) async {
     AppUtils.showLogToDebug(resultTag: AppLogLevel.debug, tag: 'News', subTag: 'NewsCache', message: 'Triggered');
     if (settingsInstance.newsBackgroundGlobalEnabled) {
-      newsCacheInstance.fetchGlobalNews(
-        fetchType: NewsFetchType.firstPage,
+      newsCacheInstance.fetchNewsGlobal(
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
     if (settingsInstance.newsBackgroundSubjectEnabled != NewsBackgroundSubjectType.none) {
-      newsCacheInstance.fetchSubjectNews(
-        fetchType: NewsFetchType.firstPage,
+      newsCacheInstance.fetchNewsSubject(
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
     if (settingsInstance.newsBackgroundStudentAffairsEnabled) {
       newsCacheInstance.fetchNewsStudentAffairs(
-        fetchType: NewsFetchType.firstPage,
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
     if (settingsInstance.newsBackgroundExaminationEnabled) {
       newsCacheInstance.fetchNewsExamination(
-        fetchType: NewsFetchType.firstPage,
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
     if (settingsInstance.newsBackgroundTuitionFeeEnabled) {
       newsCacheInstance.fetchNewsTuitionFee(
-        fetchType: NewsFetchType.firstPage,
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
     if (settingsInstance.newsBackgroundStatuteRegulationEnabled) {
       newsCacheInstance.fetchNewsStatuteRegulation(
-        fetchType: NewsFetchType.firstPage,
+        fetchType: NewsFetchingType.firstPage,
         forceRequest: true,
       );
     }
