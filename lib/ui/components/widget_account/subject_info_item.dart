@@ -2,6 +2,7 @@ import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_localizations.dart';
+import '../../../utils/build_context_extension.dart';
 import '../../../utils/string_utils.dart';
 
 class SubjectInfoItem extends StatelessWidget {
@@ -57,7 +58,7 @@ class SubjectInfoItem extends StatelessWidget {
                     subjectInfo.subjectStudy.subjectStudyList.map((p) {
                       return StringUtils.formatString(
                         AppLocalizations.of(context).translate("account_subjectinfo_summary_schitem"),
-                        [p.dayOfWeek.toString(), p.lesson.start.toString(), p.lesson.end.toString(), p.room],
+                        [context.getDateOfWeekString(dayOfWeek: p.dayOfWeek), p.lesson.start.toString(), p.lesson.end.toString(), p.room,],
                       );
                     }).join("\n"),
                   ],

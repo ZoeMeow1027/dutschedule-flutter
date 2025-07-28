@@ -42,7 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   collection: ^1.19.1
   dynamic_color: ^1.7.0
-  flutter_foreground_task: ^9.0.0
+  flutter_launcher_icons: ^0.14.4
   flutter_localization: ^0.3.2
   package_info_plus: ^8.3.0
   path_provider: ^2.1.5
@@ -57,11 +57,10 @@ dependencies:
       url: https://github.com/dutwrapper/dutwrapper-dart
       ref: "dd372b298423ca3d332e6468520a5c7eaa799acc"
       # path: src/dart
-  
-  # For destop apps (Windows, Linux, macOS)
-  window_manager: ^0.5.1
-  system_tray: ^2.0.3
 
+  # Flutter community packages
+
+  # For desktop apps (Windows, Linux, macOS)
 
 dev_dependencies:
   flutter_test:
