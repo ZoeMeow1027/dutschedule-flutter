@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_localizations.dart';
 import 'get_device_type.dart';
 
 extension BuildContextExtension on BuildContext {
@@ -45,6 +46,19 @@ extension BuildContextExtension on BuildContext {
 
   bool isOSDarkMode() {
     return MediaQuery.of(this).platformBrightness == Brightness.dark;
+  }
+
+  String getDateOfWeekString({required int dayOfWeek}) {
+    return switch (dayOfWeek) {
+      1 => AppLocalizations.of(this).translate("date_dow_8"),
+      2 => AppLocalizations.of(this).translate("date_dow_2"),
+      3 => AppLocalizations.of(this).translate("date_dow_3"),
+      4 => AppLocalizations.of(this).translate("date_dow_4"),
+      5 => AppLocalizations.of(this).translate("date_dow_5"),
+      6 => AppLocalizations.of(this).translate("date_dow_6"),
+      7 => AppLocalizations.of(this).translate("date_dow_7"),
+      _ => '-',
+    };
   }
 
   String getDurationFromCurrent(DateTime dateTime) {

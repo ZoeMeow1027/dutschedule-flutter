@@ -2,6 +2,7 @@ import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 
+import '../model/enum/app_log_level.dart';
 import '../model/enum/news_fetching_type.dart';
 import '../model/enum/process_state.dart';
 import '../model/news_data.dart';

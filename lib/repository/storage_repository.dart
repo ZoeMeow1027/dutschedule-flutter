@@ -24,7 +24,7 @@ class StorageRepository {
       }
       return Directory(directory);
     } else {
-      return await getApplicationSupportDirectory();
+      return await getApplicationDocumentsDirectory();
     }
   }
 

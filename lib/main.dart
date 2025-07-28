@@ -1,4 +1,4 @@
-import 'package:dutschedule/model/notification_history.dart';
+import 'model/notification_history.dart';
 import 'package:dutwrapper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -15,6 +15,9 @@ import 'viewmodel/notification_instance.dart';
 import 'viewmodel/settings_instance.dart';
 
 void main() async {
+  // Ensure is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Initialize settings instance
   var settingsInstance = SettingsInstance.fromPreviousSettings(
     json: await StorageRepository.getPreviousSettings(),
@@ -50,18 +53,11 @@ void main() async {
     newsSearchJson: await StorageRepository.getNewsSearchHistory(),
   );
 
-  // Ensure is initialized
-  WidgetsFlutterBinding.ensureInitialized();
-
   // Extract app version to global variables
   GlobalVariables.appVersion = (await PackageInfo.fromPlatform()).version;
   GlobalVariables.appBuildNumber = (await PackageInfo.fromPlatform()).buildNumber;
   // Extract dut school year to global variables
   GlobalVariables.dutSchoolYear = await Utils.getCurrentSchoolYear();
-
-  // await AppUtils.checkIfAnotherInstanceIsRunning();
-  // await AppUtils.distroyAndCreateNewSystemTray();
-  // await AppUtils.hideWindowAtLaunch();
 
   await BackgroundTask.scheduleNewsBackgroundTaskOnDesktop(
     newsCacheInstance: newsCacheInstance,

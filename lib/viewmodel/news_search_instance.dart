@@ -3,6 +3,7 @@ import 'package:dutwrapper/enums.dart';
 import 'package:dutwrapper/news.dart';
 import 'package:dutwrapper/news_object.dart';
 
+import '../model/enum/app_log_level.dart';
 import '../model/news_search_history.dart';
 import '../model/enum/process_state.dart';
 import '../repository/storage_repository.dart';
