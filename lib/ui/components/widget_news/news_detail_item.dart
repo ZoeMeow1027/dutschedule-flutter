@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/app_localizations.dart';
-import '../../../utils/app_utils.dart';
 import '../../../utils/build_context_extension.dart';
 
 class NewsDetailItem extends StatelessWidget {
@@ -89,7 +88,7 @@ class NewsDetailItem extends StatelessWidget {
                                     if (data[index].url == null) {
                                       return;
                                     }
-                                    AppUtils.launchOwnUrl(
+                                    context.openUrl(
                                       data[index].url!,
                                       onFailed: () {
                                         context.showCustomSnackBar(

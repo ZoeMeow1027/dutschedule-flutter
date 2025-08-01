@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../viewmodel/settings_instance.dart';
 import 'app_localizations.dart';
 import 'get_device_type.dart';
 
@@ -108,6 +111,29 @@ extension BuildContextExtension on BuildContext {
         true => '$second second ago',
         false => '$second seconds ago',
       };
+    }
+  }
+
+  Future<void> openUrl(
+    String url, {
+    Function()? onFailed,
+  }) async {
+    // https://pub.dev/packages/url_launcher#configuration
+    final settingsInstance = Provider.of<SettingsInstance>(this, listen: false);
+
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(
+        Uri.parse(url),
+        mode: settingsInstance.openLinkInsideApp ? LaunchMode.inAppBrowserView : LaunchMode.externalApplication,
+        webViewConfiguration: const WebViewConfiguration(
+          enableJavaScript: true,
+          enableDomStorage: true,
+        ),
+      );
+    } else {
+      if (onFailed != null) {
+        onFailed();
+      }
     }
   }
 }

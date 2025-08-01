@@ -1,8 +1,8 @@
+import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../global_variables.dart';
 import '../../utils/app_localizations.dart';
-import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
 import '../components/menu_list_group.dart';
 
@@ -61,25 +61,25 @@ class AboutSettingsView extends StatelessWidget {
                     title: AppLocalizations.of(context).translate("settings_about_changelog"),
                     description: AppLocalizations.of(context).translate("settings_about_changelog_description"),
                     leading: Icon(Icons.restore_rounded),
-                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkChangelog),
+                    onClick: () => context.openUrl(GlobalVariables.repoLinkChangelog),
                   ),
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_license"),
                     description: AppLocalizations.of(context).translate("settings_about_license_mit"),
                     leading: Icon(Icons.description),
-                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkLicense),
+                    onClick: () => context.openUrl(GlobalVariables.repoLinkLicense),
                   ),
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_credit"),
                     description: AppLocalizations.of(context).translate("settings_about_credit_description"),
                     leading: Icon(Icons.extension),
-                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLinkCredits),
+                    onClick: () => context.openUrl(GlobalVariables.repoLinkCredits),
                   ),
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_github"),
                     description: GlobalVariables.repoLink,
                     leading: Icon(Icons.science),
-                    onClick: () => AppUtils.launchOwnUrl(GlobalVariables.repoLink),
+                    onClick: () => context.openUrl(GlobalVariables.repoLink),
                   ),
                 ],
               ),

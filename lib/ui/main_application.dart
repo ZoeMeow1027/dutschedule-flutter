@@ -56,8 +56,8 @@ class MainApplication extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: [
-            const Locale("en"),
-            const Locale("vi"),
+            const Locale('en'),
+            const Locale('vi'),
           ],
           themeMode: settingsInstance.themeMode.toThemeMode(),
           home: PreloadApplication(),

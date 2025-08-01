@@ -231,6 +231,7 @@ class SettingsInstance extends BaseViewModel {
   /// Follow accent color from system
   ///
   /// **Settings name:** appsettings.appearance.dynamiccolor
+  /// **Requires:** At least Windows 8, Android 12, iOS..., macOS...
   bool get followAccentColor => _followAccentColor;
 
   set followAccentColor(bool value) {

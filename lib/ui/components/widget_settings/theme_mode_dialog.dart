@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../model/enum/app_theme_mode.dart';
 import '../../../utils/app_localizations.dart';
-import '../option_item.dart';
+import '../menu_list_group.dart';
 
 class ThemeModeDialog extends StatelessWidget {
   const ThemeModeDialog({
@@ -31,44 +31,35 @@ class ThemeModeDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              children: _getThemeModeOptions(context)
-                  .entries
-                  .map(
-                    (e) => OptionItem(
-                      paddingInside: const EdgeInsets.symmetric(vertical: 7),
-                      title: e.value,
-                      onClick: () {
-                        onSelectModeChanged?.call(e.key);
-                      },
-                      leading: Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Radio<AppThemeMode>(
-                          value: e.key,
-                          groupValue: selectedMode,
-                          onChanged: (value) {
-                            if (value != null) {
-                              onSelectModeChanged?.call(e.key);
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            OptionItem(
-              paddingInside: const EdgeInsets.symmetric(vertical: 7),
-              title: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_dynamiccolor"),
-              onClick: () {
-                onAccentColorModeChanged?.call(!accentColor);
-              },
-              leading: Checkbox(
-                onChanged: (value) {
-                  onAccentColorModeChanged?.call(value ?? !accentColor);
+            MenuListGroup(
+              itemMinHeight: 60,
+              itemList: List.generate(
+                _getThemeModeOptions(context).entries.length,
+                (index) {
+                  var option = _getThemeModeOptions(context).entries.elementAt(index);
+                  return MenuListGroupItem.radioButton(
+                    title: option.value,
+                    radioValue: option.key,
+                    currentValue: selectedMode,
+                    onRadioClicked: () {
+                      onSelectModeChanged?.call(option.key);
+                    },
+                  );
                 },
-                value: accentColor,
               ),
+            ),
+            SizedBox(height: 10),
+            MenuListGroup(
+              itemMinHeight: 60,
+              itemList: [
+                MenuListGroupItem.checkboxButton(
+                  title: AppLocalizations.of(context).translate("settings_dialog_apptheme_choice_dynamiccolor"),
+                  switchValue: accentColor,
+                  onSwitchChanged: (changedValue) {
+                    onAccentColorModeChanged?.call(changedValue);
+                  },
+                ),
+              ],
             ),
             if (Platform.isAndroid || Platform.isWindows)
               Padding(
