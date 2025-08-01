@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../model/enum/app_log_level.dart';
+import 'app_utils.dart';
 import 'string_utils.dart';
 
 class AppLocalizations {
@@ -24,8 +25,31 @@ class AppLocalizations {
     Map<String, dynamic> jsonMapEn = json.decode(await rootBundle.loadString('assets/lang/en.json'));
     Map<String, dynamic> jsonMapLocale = {};
 
-    if (await File('assets/lang/${locale.languageCode}.json').exists()) {
+    String filePath = 'assets/lang/${locale.languageCode}.json';
+
+    debugPrint(filePath);
+    try {
       jsonMapLocale = json.decode(await rootBundle.loadString('assets/lang/${locale.languageCode}.json'));
+      AppUtils.showLogToDebug(
+        tag: 'Localization',
+        resultTag: AppLogLevel.info,
+        dateCreated: DateTime.now().toUtc().millisecondsSinceEpoch,
+        message: '$filePath loaded with locale (${locale.languageCode}, ${locale.countryCode})',
+      );
+    } catch (_) {
+      // TODO: Exception when not successfully loaded
+      AppUtils.showLogToDebug(
+        tag: 'Localization',
+        resultTag: AppLogLevel.error,
+        dateCreated: DateTime.now().toUtc().millisecondsSinceEpoch,
+        message: 'Cannot load $filePath. Maybe file not found, or file error?',
+      );
+      AppUtils.showLogToDebug(
+        tag: 'Localization',
+        resultTag: AppLogLevel.warning,
+        dateCreated: DateTime.now().toUtc().millisecondsSinceEpoch,
+        message: 'English will be used instead.',
+      );
     }
 
     // Merging maps using addAll with a check

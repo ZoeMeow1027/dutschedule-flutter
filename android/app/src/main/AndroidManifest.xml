@@ -4,11 +4,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- This is required for internet -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- This is required for foreground service, which is required in Android 14 or above -->
+    <!-- This is required for foreground service, which is required on Android 14 or above -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- This is required for schedule an task, which is required in Android 14 or above -->
+    <!-- This is required for schedule an task, which is required on Android 14 or above -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-		
+
     <application
         android:label="DutSchedule"
         android:name="${applicationName}"
@@ -28,12 +28,12 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme"
+            />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
@@ -49,8 +49,12 @@
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
         <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+        <!-- If your application checks for inAppBrowserView launch mode support -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
         </intent>
     </queries>
 </manifest>

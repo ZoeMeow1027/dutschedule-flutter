@@ -3,14 +3,14 @@
 - Continuing from [DutSchedule](https://github.com/ZoeMeow1027/DutSchedule), but written with Dart/Flutter.
 
 ## Version
-- You're viewing v2.5.5+250506
+- You're viewing v2.6.3+1754057030
   - Note that we will continue from old DutSchedule project, so we will use v2.0-alpha17 as beginning for now.
-- Latest release version [![https://github.com/ZoeMeow1027/dutschedule-flutter](https://img.shields.io/github/v/release/ZoeMeow1027/dutschedule-flutter)](https://github.com/ZoeMeow1027/dutschedule-flutter/releases)
-- [Entire source code changes](https://github.com/ZoeMeow1027/dutschedule-flutter/commits)
+- Latest release version [![https://github.com/ZoeMeow1027/dutschedule_flutter](https://img.shields.io/github/v/release/ZoeMeow1027/dutschedule_flutter)](https://github.com/ZoeMeow1027/dutschedule_flutter/releases)
+- [Entire source code changes](https://github.com/ZoeMeow1027/dutschedule_flutter/commits)
 <!--[Summary change log](CHANGELOG.md) / -->
 
 ## Downloads
-- Navigate to release (at right of this README) or click [here](https://github.com/ZoeMeow1027/dutschedule-flutter/releases) to download app.
+- Navigate to release (at right of this README) or click [here](https://github.com/ZoeMeow1027/dutschedule_flutter/releases) to download app.
 
 ## Features & screenshots?
 - This isn't available right now. Please check later.
@@ -24,7 +24,7 @@
 - You just need to refresh news and this will clear old and get latest one automatically.
 
 ### I'm got issue or a feature request about this library. What should I do?
-- Navigate to [issue tab](https://github.com/ZoeMeow1027/dutschedule-flutter/issues) on this repository to create a issue or feature request.
+- Navigate to [issue tab](https://github.com/ZoeMeow1027/dutschedule_flutter/issues) on this repository to create a issue or feature request.
 
 ## Developing
 - Requirements
@@ -36,12 +36,20 @@
   - If you got errors while building, you can try to clear package cache first by running command `dart pub cache clean`.
 - Building/Running on CLI:
   - Just build or run with command `flutter build ...` or `flutter run` in your project directory. No extras arguments required. For more information, navigate to [Flutter document](https://docs.flutter.dev/).
+  
+## Known issues
+- Background news task for fetching news on outside app doesn't work.
+  - This will be solved in future releases.
+- Notifications when outside app doesn't work.
+  - This will be solved when `background news task` is ready to use.
+- App background wallpaper doesn't work.
+  - I will focus main task, plus it has difficult due to Android API changes by Google. [You can read here for why](https://github.com/ZoeMeow1027/DutSchedule/issues/19)
 
 ## Credit and license?
 - License: [**MIT**](LICENSE)
 - DISCLAIMER:
-  - This project - dutschedule-flutter - is not affiliated with [Da Nang University of Science and Technology school](http://dut.udn.vn).
-  - DUT, Da Nang University of Technology, web materials and web contents are trademarks and copyrights of [Da Nang University of Science and Technology school](http://dut.udn.vn).
+  - This project - dutschedule_flutter - is not affiliated with [Da Nang University of Science and Technology school](https://dut.udn.vn).
+  - DUT, Da Nang University of Technology, web materials and web contents are trademarks and copyrights of [Da Nang University of Science and Technology school](https://dut.udn.vn).
 - Badge indicator powered by [shields.io](https://shields.io/)
 - References
   - https://github.com/flutter/flutter/issues/53229#issuecomment-1452057539

@@ -1,8 +1,8 @@
+import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/external_link_info.dart';
 import '../../utils/app_localizations.dart';
-import '../../utils/app_utils.dart';
 
 class ExternalLinkMiscellaneousView extends StatefulWidget {
   const ExternalLinkMiscellaneousView({super.key});
@@ -52,7 +52,7 @@ class _ExternalLinkMiscellaneousView extends State<ExternalLinkMiscellaneousView
                       margin: EdgeInsets.only(bottom: 10),
                       child: InkWell(
                         onTap: () {
-                          AppUtils.launchOwnUrl(
+                          context.openUrl(
                             data.url,
                             onFailed: () {},
                           );
