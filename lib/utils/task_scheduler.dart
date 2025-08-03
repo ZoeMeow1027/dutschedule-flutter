@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import '../model/enum/app_log_level.dart';
+import 'app_utils.dart';
 
 class _TaskSchedulerItem {
   final String name;
@@ -17,13 +18,23 @@ class _TaskSchedulerItem {
   void start() {
     stop();
     timer = Timer.periodic(interval, (_) => callback());
-    debugPrint('[TaskScheduler] [$name] Task started, every ${interval.inMinutes}min.');
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Task Scheduler',
+      subTag: name,
+      message: 'Task started, every ${interval.inMinutes} minute(s).',
+    );
   }
 
   void stop() {
     timer?.cancel();
     timer = null;
-    debugPrint('[TaskScheduler] [$name] Task stopped');
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Task Scheduler',
+      subTag: name,
+      message: 'Task stopped.',
+    );
   }
 
   void update(Duration newInterval) {
@@ -32,7 +43,12 @@ class _TaskSchedulerItem {
   }
 
   void triggerNow() {
-    debugPrint('[TaskScheduler] [$name] Task triggered');
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Task Scheduler',
+      subTag: name,
+      message: 'Task triggered.',
+    );
     callback();
   }
 
@@ -55,11 +71,21 @@ class TaskScheduler {
     bool triggerAfterCreated = false,
   }) {
     if (_tasks.containsKey(name)) {
-      debugPrint('[TaskScheduler] Task "$name" already exists! Please remove this task if you want that name.');
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Task Scheduler',
+        subTag: name,
+        message: 'Task "$name" is already exists! Please remove this task if you want that name.',
+      );
       return;
     }
     if (interval.inMinutes < 1) {
-      debugPrint('[TaskScheduler] Task must not shorter than 1 minute!');
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Task Scheduler',
+        subTag: name,
+        message: 'Task must not shorter than 1 minute!',
+      );
       return;
     }
     final task = _TaskSchedulerItem(name: name, interval: interval, callback: callback);
@@ -74,7 +100,12 @@ class TaskScheduler {
   void removeTask(String name) {
     final task = _tasks.remove(name);
     task?.stop();
-    debugPrint('[TaskScheduler] [$name] Task removed.');
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Task Scheduler',
+      subTag: name,
+      message: 'Task removed.',
+    );
   }
 
   bool containsTask(String name) {
@@ -88,7 +119,12 @@ class TaskScheduler {
 
   void updateTaskInterval(String name, Duration newInterval) {
     if (newInterval.inMinutes < 1) {
-      debugPrint('[TaskScheduler] [$name] Task must not shorter than 1 minute!');
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Task Scheduler',
+        subTag: name,
+        message: 'Task must not shorter than 1 minute!',
+      );
       return;
     }
 
@@ -96,7 +132,12 @@ class TaskScheduler {
     if (task != null) {
       task.update(newInterval);
     }
-    debugPrint('[TaskScheduler] [$name] Task duration changed to ${newInterval.toString()}.');
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Task Scheduler',
+      subTag: name,
+      message: 'Task duration changed to ${newInterval.toString()} minute(s).',
+    );
   }
 
   void triggerTaskNow(String name) {

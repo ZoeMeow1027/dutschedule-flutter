@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../viewmodel/news_cache_instance_v2.dart';
 import '../card_with_title.dart';
 
@@ -66,7 +66,7 @@ class TodaySchoolNewsCountCard extends StatelessWidget {
         isNewsTodayListEmpty(newsCacheInstance.newsSubject.data) &&
         isNewsTodayListEmpty(newsCacheInstance.newsStudentAffairs.data) &&
         isNewsTodayListEmpty(newsCacheInstance.newsExamination.data) &&
-        isNewsTodayListEmpty(newsCacheInstance.newsTuitions.data) &&
+        isNewsTodayListEmpty(newsCacheInstance.newsTuition.data) &&
         isNewsTodayListEmpty(newsCacheInstance.newsStatuteRegulation.data)) {
       return AppLocalizations.of(context).translateWithParameters(
         'main_dashboard_widget_news_nonews',
@@ -95,7 +95,7 @@ class TodaySchoolNewsCountCard extends StatelessWidget {
       )}"
           "${getNewsTodayCountString(
         AppLocalizations.of(context).translate("main_dashboard_widget_news_newscount_tuition"),
-        newsCacheInstance.newsTuitions.data,
+        newsCacheInstance.newsTuition.data,
       )}"
           "${getNewsTodayCountString(
         AppLocalizations.of(context).translate("main_dashboard_widget_news_newscount_statuteregulation"),

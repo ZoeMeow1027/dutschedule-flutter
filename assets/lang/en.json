@@ -313,7 +313,7 @@
   "settings_about_github": "GitHub (click to open link)",
   "settings_about_license": "License",
   "settings_about_license_mit": "MIT",
-  "settings_about_madewith": "Made with Flutter",
+  "settings_about_madewith": "Made with Flutter platform",
   "settings_about_title": "About",
   "settings_applanguage_restartrequired_content": "You must restart app to save changes and take effect. Restart?",
   "settings_applanguage_restartrequired_no": "Not now",
@@ -479,5 +479,6 @@
   "settings_wallpaperandcontrols_title": "Wallpaper and style",
   "time_last_request": "Last request: {0}",
   "tooltip_info": "Information",
-  "tooltip_selected": "Selected"
+  "tooltip_selected": "Selected",
+  "not_available_windows": "(This option isn't available on Windows)"
 }

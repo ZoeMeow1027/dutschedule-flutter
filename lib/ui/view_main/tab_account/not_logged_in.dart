@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../global_variables.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../model/enum/process_state.dart';
-import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import 'account_tab.dart';

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dutwrapper/account_object.dart';
 import 'package:dutwrapper/account_session_object.dart';
 
@@ -7,7 +5,7 @@ import '../global_variables.dart';
 import '../model/enum/app_log_level.dart';
 import '../model/enum/process_state.dart';
 import '../model/school_year.dart';
-import '../model/core/variable_state.dart';
+import '../model/variable_state.dart';
 import '../repository/dut_account_repository.dart';
 import '../repository/storage_repository.dart';
 import '../utils/app_utils.dart';
@@ -18,20 +16,26 @@ class AccountSessionInstance extends BaseViewModel {
 
   AccountSessionInstance();
 
-  AccountSessionInstance.fromPreviousSettings({Map<String, dynamic>? accountSessionJson}) {
+  AccountSessionInstance.fromPreviousSettings({
+    Map<String, dynamic>? accountSessionJson,
+    Map<String, dynamic>? accountCacheJson,
+    SchoolYear? schoolYear,
+  }) {
+    if (schoolYear != null) {
+      this.schoolYear = schoolYear;
+    }
     if (accountSessionJson != null) {
       _fromMapAccountSession(accountSessionJson);
     }
-    _isSettingsInitialized = true;
+    if (accountCacheJson != null) {
+      _fromMapAccountCache(accountCacheJson);
+    }
   }
 
   @override
   void initializing() {
     accRepo = DUTAccountRepository();
-    _isSettingsInitialized = true;
   }
-
-  bool _isSettingsInitialized = false;
 
   @override
   void timerAction() {}
@@ -52,7 +56,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (authInfo == null) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Relogin',
         message: 'Denied this task because no auth available. Logout and try again.',
       );
@@ -61,7 +65,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.state == ProcessState.running) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Relogin',
         message: 'Denied this task because another same task is running...',
       );
@@ -70,7 +74,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     AppUtils.showLogToDebug(
       resultTag: AppLogLevel.debug,
-      tag: 'AccountSession',
+      tag: 'Account Session',
       subTag: 'Relogin',
       message: 'Calling function login()...',
     );
@@ -90,7 +94,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.data == null && authInfo == null) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Denied this task because no sessions available. Please login with "authInfo" parameters',
       );
@@ -103,7 +107,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.state == ProcessState.running) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Denied this task because another same task is running...',
       );
@@ -118,7 +122,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     AppUtils.showLogToDebug(
       resultTag: AppLogLevel.info,
-      tag: 'AccountSession',
+      tag: 'Account Session',
       subTag: 'Login',
       message: 'Running...',
     );
@@ -129,13 +133,13 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.state = ProcessState.successful;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.info,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Task done successfully!',
       );
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.debug,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Session ID: ${session.sessionId}',
       );
@@ -143,7 +147,7 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.state = authInfo != null ? ProcessState.notRunYet : ProcessState.failed;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.error,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Task failed!',
       );
@@ -151,7 +155,7 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.error,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Login',
         message: 'Done task.',
       );
@@ -168,7 +172,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.data == null) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Logout',
         message: 'Denied this task because no sessions available.',
       );
@@ -177,7 +181,7 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.state == ProcessState.running) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Logout',
         message: 'Denied this task because account session is running another task...',
       );
@@ -188,7 +192,7 @@ class AccountSessionInstance extends BaseViewModel {
 
     AppUtils.showLogToDebug(
       resultTag: AppLogLevel.info,
-      tag: 'AccountSession',
+      tag: 'Account Session',
       subTag: 'Logout',
       message: 'Running...',
     );
@@ -202,7 +206,7 @@ class AccountSessionInstance extends BaseViewModel {
         accountSession.resetValue();
         AppUtils.showLogToDebug(
           resultTag: AppLogLevel.info,
-          tag: 'AccountSession',
+          tag: 'Account Session',
           subTag: 'Logout',
           message: 'Task done successfully!',
         );
@@ -214,14 +218,14 @@ class AccountSessionInstance extends BaseViewModel {
         trainingResult.resetValue();
         AppUtils.showLogToDebug(
           resultTag: AppLogLevel.info,
-          tag: 'AccountSession',
+          tag: 'Account Session',
           subTag: 'Logout',
           message: 'Cleared all cached data.',
         );
       } else {
         AppUtils.showLogToDebug(
           resultTag: AppLogLevel.info,
-          tag: 'AccountSession',
+          tag: 'Account Session',
           subTag: 'Logout',
           message: "Looks like you don't have any account session.",
         );
@@ -230,7 +234,7 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.state = ProcessState.failed;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.error,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Logout',
         message: 'Task failed!',
       );
@@ -238,7 +242,7 @@ class AccountSessionInstance extends BaseViewModel {
       accountSession.lastRequest = DateTime.now().millisecondsSinceEpoch;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.debug,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Logout',
         message: 'Done task.',
       );
@@ -253,27 +257,54 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null) {
-      log("[Account] [Subject information] Running denied because no available account session.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Denied this task because no sessions available.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Subject information] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Denied this task because account session is running another task...',
+      );
       return;
     }
     if (subjectInformationList.state == ProcessState.running) {
-      log("[Account] [Subject information] Running denied because of another task itself...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
     if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Subject information] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Denied this task because of timeout '
+            '(${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). '
+            'Set "forceRequest" to true to bypass it.',
+      );
       return;
     }
     beforeRun?.call();
 
     try {
       subjectInformationList.state = ProcessState.running;
-      _settingsChanged();
-      log("[Account] [Subject information] Running...");
+      _cacheChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Running...',
+      );
 
       var data = await accRepo.fetchSubjectInformation(
         session: accountSession.data!,
@@ -285,14 +316,29 @@ class AccountSessionInstance extends BaseViewModel {
       subjectInformationList.data.addAll(data);
 
       subjectInformationList.state = ProcessState.successful;
-      log("[Account] [Subject information] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Task done successfully!',
+      );
     } catch (ex) {
       subjectInformationList.state = ProcessState.failed;
-      log("[Account] [Subject information] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Task failed!',
+      );
     } finally {
       subjectInformationList.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Subject information] End run.");
-      _settingsChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Information',
+        message: 'Done task.',
+      );
+      _cacheChanged();
       afterRun?.call();
     }
   }
@@ -305,38 +351,38 @@ class AccountSessionInstance extends BaseViewModel {
     if (accountSession.data == null) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message: 'Running denied because no available account session.',
+        message: 'Denied this task because no sessions available.',
       );
       return;
     }
     if (accountSession.state == ProcessState.running) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message: 'Running denied because account session is running another task...',
+        message: 'Denied this task because account session is running another task...',
       );
       return;
     }
-    if (studentInformation.state == ProcessState.running) {
+    if (subjectInformationList.state == ProcessState.running) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message: 'Running denied because of another task itself...',
+        message: 'Denied this task because another same task is running...',
       );
       return;
     }
-    if (!studentInformation.isSuccessfulRequestExpired() && !forceRequest) {
+    if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message:
-            'Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)).'
-            ' Set forceRequest to true to bypass it.',
+        message: 'Denied this task because of timeout '
+            '(${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). '
+            'Set "forceRequest" to true to bypass it.',
       );
       return;
     }
@@ -344,10 +390,10 @@ class AccountSessionInstance extends BaseViewModel {
 
     try {
       studentInformation.state = ProcessState.running;
-      _settingsChanged();
+      _cacheChanged();
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
         message: 'Running...',
       );
@@ -359,15 +405,15 @@ class AccountSessionInstance extends BaseViewModel {
       studentInformation.state = ProcessState.successful;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message: 'Task successful!',
+        message: 'Task done successfully!',
       );
     } catch (ex) {
       studentInformation.state = ProcessState.failed;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
         message: 'Task failed!',
       );
@@ -375,11 +421,11 @@ class AccountSessionInstance extends BaseViewModel {
       studentInformation.lastRequest = DateTime.now().millisecondsSinceEpoch;
       AppUtils.showLogToDebug(
         resultTag: AppLogLevel.warning,
-        tag: 'AccountSession',
+        tag: 'Account Session',
         subTag: 'Student Information',
-        message: 'End run.',
+        message: 'Done task.',
       );
-      _settingsChanged();
+      _cacheChanged();
       afterRun?.call();
     }
   }
@@ -390,27 +436,54 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null) {
-      log("[Account] [Subject fee] Running denied because no available account session.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Denied this task because no sessions available.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Subject fee] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Denied this task because account session is running another task...',
+      );
       return;
     }
-    if (subjectFeeList.state == ProcessState.running) {
-      log("[Account] [Subject fee] Running denied because of another task itself...");
+    if (subjectInformationList.state == ProcessState.running) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
-    if (!subjectFeeList.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Subject fee] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+    if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Denied this task because of timeout '
+            '(${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). '
+            'Set "forceRequest" to true to bypass it.',
+      );
       return;
     }
     beforeRun?.call();
 
     try {
       subjectFeeList.state = ProcessState.running;
-      _settingsChanged();
-      log("[Account] [Subject fee] Running...");
+      _cacheChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Running...',
+      );
 
       var data = await accRepo.fetchSubjectFee(
         session: accountSession.data!,
@@ -421,14 +494,29 @@ class AccountSessionInstance extends BaseViewModel {
       subjectFeeList.data.addAll(data);
 
       subjectFeeList.state = ProcessState.successful;
-      log("[Account] [Subject fee] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Task done successfully!',
+      );
     } catch (ex) {
       subjectFeeList.state = ProcessState.failed;
-      log("[Account] [Subject fee] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Task failed!',
+      );
     } finally {
       subjectFeeList.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Subject fee] End run.");
-      _settingsChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Subject Fee',
+        message: 'Done task.',
+      );
+      _cacheChanged();
       afterRun?.call();
     }
   }
@@ -439,42 +527,134 @@ class AccountSessionInstance extends BaseViewModel {
     bool forceRequest = false,
   }) async {
     if (accountSession.data == null) {
-      log("[Account] [Student information] Running denied because no available account session.");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Denied this task because no sessions available.',
+      );
       return;
     }
     if (accountSession.state == ProcessState.running) {
-      log("[Account] [Training result] Running denied because account session is running another task...");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Denied this task because account session is running another task...',
+      );
       return;
     }
-    if (trainingResult.state == ProcessState.running) {
-      log("[Account] [Training result] Running denied because of another task itself...");
+    if (subjectInformationList.state == ProcessState.running) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Denied this task because another same task is running...',
+      );
       return;
     }
-    if (!trainingResult.isSuccessfulRequestExpired() && !forceRequest) {
-      log("[Account] [Training result] Task start failed because of timeout (${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). Set forceRequest to true to bypass it.");
+    if (!subjectInformationList.isSuccessfulRequestExpired() && !forceRequest) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Denied this task because of timeout '
+            '(${GlobalVariables.requestExpiredDuration / 1000 / 60} minute(s)). '
+            'Set "forceRequest" to true to bypass it.',
+      );
       return;
     }
     beforeRun?.call();
 
     try {
       trainingResult.state = ProcessState.running;
-      _settingsChanged();
-      log("[Account] [Training result] Running...");
+      _cacheChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Running...',
+      );
 
       var data = await accRepo.fetchTrainingResult(session: accountSession.data!);
       trainingResult.data = data;
 
       trainingResult.state = ProcessState.successful;
-      log("[Account] [Training result] Task successful!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Task done successfully!',
+      );
     } catch (ex) {
       trainingResult.state = ProcessState.failed;
-      log("[Account] [Training result] Task failed!");
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.error,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Task failed!',
+      );
     } finally {
       trainingResult.lastRequest = DateTime.now().millisecondsSinceEpoch;
-      log("[Account] [Training result] End run.");
-      _settingsChanged();
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.warning,
+        tag: 'Account Session',
+        subTag: 'Training Result',
+        message: 'Done task.',
+      );
+      _cacheChanged();
       afterRun?.call();
     }
+  }
+
+  bool _pendingChanges = false;
+
+  void _settingsChanged() async {
+    if (!isInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
+
+    _pendingChanges = true;
+    notifyListeners();
+
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Account Session',
+      subTag: 'Session Instance',
+      message: 'Modified changes! Saving...',
+    );
+    StorageRepository.saveAccountSession(accountSession: _toMapAccountSession());
+
+    _pendingChanges = false;
+    notifyListeners();
+  }
+
+  void _cacheChanged() async {
+    if (!isInitialized) {
+      return;
+    }
+    while (_pendingChanges) {
+      await Future.delayed(Duration(milliseconds: 100));
+      // return;
+    }
+
+    _pendingChanges = true;
+    notifyListeners();
+
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.debug,
+      tag: 'Account Session',
+      subTag: 'Session Cache',
+      message: 'Modified changes! Saving...',
+    );
+    StorageRepository.saveAccountCache(accountCache: _toMapAccountCache());
+
+    _pendingChanges = false;
+    notifyListeners();
   }
 
   Map<String, dynamic> _toMapAccountSession() {
@@ -518,28 +698,71 @@ class AccountSessionInstance extends BaseViewModel {
     _settingsChanged();
   }
 
-  bool _pendingChanges = false;
+  Map<String, dynamic> _toMapAccountCache() {
+    return {
+      'account.username': authInfo?.username,
+      'account.schoolyear': schoolYear.toJson(),
+      'account.cache.subjectinformation': {
+        'lastrequest': subjectInformationList.lastRequest,
+        'data': subjectInformationList.data.map((p) => p.toMap()).toList(),
+      },
+      'account.cache.subjectfee': {
+        'lastrequest': subjectFeeList.lastRequest,
+        'data': subjectFeeList.data.map((p) => p.toMap()).toList(),
+      },
+      'account.cache.studentinformation': {
+        'lastrequest': studentInformation.lastRequest,
+        'data': studentInformation.data?.toMap(),
+      },
+      'account.cache.trainingresult': {
+        'lastrequest': trainingResult.lastRequest,
+        'data': trainingResult.data?.toMap(),
+      },
+    };
+  }
 
-  void _settingsChanged() async {
-    if (!_isSettingsInitialized) {
+  void _fromMapAccountCache(Map<String, dynamic> data) {
+    // If `authInfo` is null or mismatch with this cache, prevent load from cache.
+    if (authInfo == null) {
       return;
     }
-    while (_pendingChanges) {
-      await Future.delayed(Duration(milliseconds: 100));
-      // return;
+    // Check if cache is mismatch for prevent loading.
+    final cacheUsername = data['account.username'] as String?;
+    if (authInfo?.username != null &&
+        cacheUsername != null &&
+        cacheUsername.compareTo(authInfo?.username ?? '') != 0) {
+      return;
     }
 
-    _pendingChanges = true;
-    notifyListeners();
-
-    AppUtils.showLogToDebug(
-      resultTag: AppLogLevel.debug,
-      tag: 'AccountSession',
-      message: 'Modified changes! Saving...',
+    schoolYear = SchoolYear.fromJson((data['account.schoolyear'] as Map<String, dynamic>?) ?? {});
+    // Load subject information list.
+    final dataSubjectInformation = (data['account.cache.subjectinformation'] as Map<String, dynamic>?) ?? {};
+    subjectInformationList = VariableListState<SubjectInformation>.from(
+      lastRequest: (dataSubjectInformation['lastrequest'] as int?) ?? 0,
+      data:
+          (dataSubjectInformation['data'] as List<dynamic>? ?? []).map((p) => SubjectInformation.fromMap(p)).toList(),
+      parameters: {},
     );
-    StorageRepository.saveAccountSession(accountSession: _toMapAccountSession());
-
-    _pendingChanges = false;
-    notifyListeners();
+    // Load subject fee list.
+    final dataSubjectFee = (data['account.cache.subjectfee'] as Map<String, dynamic>?) ?? {};
+    subjectFeeList = VariableListState<SubjectFee>.from(
+      lastRequest: (dataSubjectFee['lastrequest'] as int?) ?? 0,
+      data: (dataSubjectFee['data'] as List<dynamic>? ?? []).map((p) => SubjectFee.fromMap(p)).toList(),
+      parameters: {},
+    );
+    // Load student information
+    final dataStudentInformation = (data['account.cache.studentinformation'] as Map<String, dynamic>?) ?? {};
+    studentInformation = VariableState<StudentInformation>.from(
+      lastRequest: (dataStudentInformation['lastrequest'] as int?) ?? 0,
+      data: StudentInformation.fromMap((dataStudentInformation['data'] as Map<String, dynamic>?) ?? {}),
+      parameters: {},
+    );
+    // Load training result
+    final dataTrainingResult = (data['account.cache.trainingresult'] as Map<String, dynamic>?) ?? {};
+    trainingResult = VariableState<TrainingResult>.from(
+      lastRequest: (dataTrainingResult['lastrequest'] as int?) ?? 0,
+      data: TrainingResult.fromMap((dataTrainingResult['data'] as Map<String, dynamic>?) ?? {}),
+      parameters: {},
+    );
   }
 }

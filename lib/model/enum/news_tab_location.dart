@@ -7,6 +7,5 @@ enum NewsTabLocation {
   statuteRegulation(5);
 
   final int value;
-
   const NewsTabLocation(this.value);
 }

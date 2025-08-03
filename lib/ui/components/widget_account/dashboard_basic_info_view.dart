@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DashboardBasicInfoView extends StatelessWidget {
   const DashboardBasicInfoView({

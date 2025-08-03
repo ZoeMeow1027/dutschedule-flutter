@@ -2,9 +2,9 @@ import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../model/enum/news_fetching_type.dart';
 import '../../../model/enum/news_tab_location.dart';
-import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/news_cache_instance_v2.dart';
 import '../../../viewmodel/news_search_instance.dart';
@@ -68,7 +68,7 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
         NewsTabLocation.subjectNews => newsCacheInstance.newsSubject.isRunning,
         NewsTabLocation.studentAffairs => newsCacheInstance.newsStudentAffairs.isRunning,
         NewsTabLocation.examination => newsCacheInstance.newsExamination.isRunning,
-        NewsTabLocation.tuitionFee => newsCacheInstance.newsTuitions.isRunning,
+        NewsTabLocation.tuitionFee => newsCacheInstance.newsTuition.isRunning,
         NewsTabLocation.statuteRegulation => newsCacheInstance.newsStatuteRegulation.isRunning,
       };
     }
@@ -317,9 +317,9 @@ class _NewsSummaryListView extends State<NewsSummaryListView> with TickerProvide
             },
           ),
           NewsList(
-            newsList: newsCacheInstance.newsTuitions.data,
-            isRefreshing: newsCacheInstance.newsTuitions.isRunning,
-            isEndOfList: newsCacheInstance.newsTuitions.isEndOfList,
+            newsList: newsCacheInstance.newsTuition.data,
+            isRefreshing: newsCacheInstance.newsTuition.isRunning,
+            isEndOfList: newsCacheInstance.newsTuition.isEndOfList,
             onClick: (news) {
               widget.onClick?.call(news, false);
             },

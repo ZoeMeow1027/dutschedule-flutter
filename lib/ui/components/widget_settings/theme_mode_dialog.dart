@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../model/enum/app_theme_mode.dart';
-import '../../../utils/app_localizations.dart';
 import '../menu_list_group.dart';
 
 class ThemeModeDialog extends StatelessWidget {

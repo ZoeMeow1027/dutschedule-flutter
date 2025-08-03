@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../model/enum/device_type.dart';
 import '../../model/scaffold_nav.dart';
-import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
-import '../../utils/get_device_type.dart';
 import '../../viewmodel/notification_instance.dart';
 import 'tab_account/account_tab.dart';
 import 'tab_dashboard/dashboard_tab.dart';
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MainScreenView> {
                     padding: const EdgeInsets.symmetric(vertical: 30),
                     child: ClipOval(
                       child: Image(
-                        image: AssetImage('assets/app_icon_512.png'),
+                        image: AssetImage('assets/icons/app_icon_512.png'),
                         width: 96,
                         height: 96,
                         fit: BoxFit.contain,

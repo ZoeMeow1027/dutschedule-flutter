@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../model/enum/process_state.dart';
-import '../../utils/app_localizations.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/news_search_instance.dart';
 import '../components/widget_news/news_list.dart';

@@ -8,6 +8,7 @@ enum AppLogLevel {
   final int value;
   final String _text;
   
+  @override
   String toString() {
     return _text;
   }

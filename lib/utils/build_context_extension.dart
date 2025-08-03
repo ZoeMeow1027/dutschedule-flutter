@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/app_localizations.dart';
+import '../model/enum/device_type.dart';
 import '../viewmodel/settings_instance.dart';
-import 'app_localizations.dart';
-import 'get_device_type.dart';
 
 extension BuildContextExtension on BuildContext {
   void clearSnackBars() {
@@ -28,8 +28,10 @@ extension BuildContextExtension on BuildContext {
     );
   }
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(SnackBar snackBar,
-      {AnimationStyle? snackBarAnimationStyle}) {
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+    SnackBar snackBar, {
+    AnimationStyle? snackBarAnimationStyle,
+  }) {
     return ScaffoldMessenger.of(this).showSnackBar(snackBar, snackBarAnimationStyle: snackBarAnimationStyle);
   }
 
@@ -47,7 +49,7 @@ extension BuildContextExtension on BuildContext {
     return Theme.of(this).brightness == Brightness.dark;
   }
 
-  bool isOSDarkMode() {
+  bool isOsDarkMode() {
     return MediaQuery.of(this).platformBrightness == Brightness.dark;
   }
 

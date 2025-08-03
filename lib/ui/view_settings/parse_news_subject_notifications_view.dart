@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/switch_with_surface.dart';
 

@@ -37,7 +37,7 @@ class NewsCacheInstanceV2 extends BaseViewModel {
   NewsData newsSubject = NewsData();
   NewsData newsStudentAffairs = NewsData();
   NewsData newsExamination = NewsData();
-  NewsData newsTuitions = NewsData();
+  NewsData newsTuition = NewsData();
   NewsData newsStatuteRegulation = NewsData();
 
   Future<void> _fetchNews({
@@ -359,7 +359,7 @@ class NewsCacheInstanceV2 extends BaseViewModel {
     Function(bool)? onDone,
   }) async {
     await _fetchNews(
-      newsData: newsTuitions,
+      newsData: newsTuition,
       newsType: NewsType.tuitionFee,
       debugSubTag: 'Tuition fee',
       fetchType: fetchType,
@@ -420,7 +420,7 @@ class NewsCacheInstanceV2 extends BaseViewModel {
       'news_subject': newsSubject.toMap(),
       'news_student_affairs': newsStudentAffairs.toMap(),
       'news_examination': newsExamination.toMap(),
-      'news_tuition': newsTuitions.toMap(),
+      'news_tuition': newsTuition.toMap(),
       'news_statute_regulations': newsStatuteRegulation.toMap(),
     };
   }
@@ -430,7 +430,7 @@ class NewsCacheInstanceV2 extends BaseViewModel {
     newsSubject = NewsData.fromCache(data['news_subject'] as Map<String, dynamic>? ?? {});
     newsStudentAffairs = NewsData.fromCache(data['news_student_affairs'] as Map<String, dynamic>? ?? {});
     newsExamination = NewsData.fromCache(data['news_examination'] as Map<String, dynamic>? ?? {});
-    newsTuitions = NewsData.fromCache(data['news_tuition'] as Map<String, dynamic>? ?? {});
+    newsTuition = NewsData.fromCache(data['news_tuition'] as Map<String, dynamic>? ?? {});
     newsStatuteRegulation = NewsData.fromCache(data['news_statute_regulations'] as Map<String, dynamic>? ?? {});
   }
 }

@@ -2,7 +2,7 @@ import 'package:dutschedule/ui/components/widget_main/external_links_card.dart';
 import 'package:dutschedule/ui/components/widget_main/today_school_news_count_card.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../components/widget_main/account_summary.dart';
 import '../../components/widget_main/date_time_card.dart';
 import '../../view_miscellaneous/external_links_view.dart';

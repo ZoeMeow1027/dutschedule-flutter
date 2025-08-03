@@ -81,6 +81,22 @@ class StorageRepository {
     } finally {}
   }
 
+  static Future<void> saveAccountCache({required Map<String, dynamic> accountCache}) async {
+    var jsonEncoder = JsonEncoder.withIndent('    ');
+    final data = await _localFile(fileName: GlobalVariables.appPathFileAccountCache);
+    await data.writeAsString(jsonEncoder.convert(accountCache), mode: FileMode.writeOnly, flush: true);
+  }
+
+  static Future<Map<String, dynamic>> getAccountCache() async {
+    try {
+      final data = await _localFile(fileName: GlobalVariables.appPathFileAccountCache);
+      final dataString = await data.readAsString();
+      return json.decode(dataString);
+    } catch (ex) {
+      return {};
+    } finally {}
+  }
+
   static Future<void> saveNotificationHistory({required List<NotificationHistory> notifyHistory}) async {
     var jsonEncoder = JsonEncoder.withIndent('    ');
     final data = await _localFile(fileName: GlobalVariables.appPathNotificationHistory);

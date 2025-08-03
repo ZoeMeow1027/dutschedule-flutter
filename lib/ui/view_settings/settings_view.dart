@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../global_variables.dart';
+import '../../l10n/app_localizations.dart';
 import '../../model/enum/app_theme_mode.dart';
 import '../../model/enum/background_image_option.dart';
-import '../../utils/app_localizations.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/settings_instance.dart';
@@ -72,7 +74,7 @@ class SettingsView extends StatelessWidget {
                     AppUtils.openSystemNotificationSettings();
                   },
                 ),
-                // TODO: Developing do not distrub from time
+                // TODO: Developing do not disturb from time
                 MenuListGroupItem(
                   title: "Do not distrub",
                   description: "This feature will prevent notify you from specific time range you chosen."
@@ -167,7 +169,10 @@ class SettingsView extends StatelessWidget {
                 ),
                 MenuListGroupItem.toggleButton(
                   title: AppLocalizations.of(context).translate("settings_option_openlinkinsideapp"),
-                  description: AppLocalizations.of(context).translate("settings_option_openlinkinsideapp_description"),
+                  description: Platform.isWindows
+                      ? AppLocalizations.of(context).translate("not_available_windows")
+                      : AppLocalizations.of(context).translate("settings_option_openlinkinsideapp_description"),
+                  isEnabled: Platform.isAndroid || Platform.isIOS,
                   leading: Icon(Icons.language),
                   switchValue: settingsInstance.openLinkInsideApp,
                   onSwitchChanged: (newValue) => settingsInstance.openLinkInsideApp = newValue,

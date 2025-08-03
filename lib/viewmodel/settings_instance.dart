@@ -17,7 +17,6 @@ class SettingsInstance extends BaseViewModel {
     required Map<String, dynamic> json,
   }) {
     _fromMap(json);
-    _isSettingsInitialized = true;
   }
 
   @override
@@ -25,8 +24,6 @@ class SettingsInstance extends BaseViewModel {
 
   @override
   void timerAction() {}
-
-  bool _isSettingsInitialized = false;
 
   /// First run (show welcome page)
   ///
@@ -245,6 +242,26 @@ class SettingsInstance extends BaseViewModel {
 
   bool _followAccentColor = true;
 
+  /// Custom app color (when follow accent color is disabled)
+  ///
+  /// **Settings name:** appsettings.appearance.appcolor
+  Color get appColor => _appColor;
+
+  set appColor(Color value) {
+    if (value == _appColor) {
+      return;
+    }
+
+    _appColor = value;
+    _settingsChanged();
+  }
+
+  Color _appColor = Colors.deepPurple;
+
+  void resetAppColorSettingsToDefault() {
+    appColor = Colors.deepPurple;
+  }
+
   /// Set background image option.
   ///
   /// **Settings name:** appsettings.appearance.backgroundimage.option
@@ -355,7 +372,7 @@ class SettingsInstance extends BaseViewModel {
   bool _pendingChanges = false;
 
   void _settingsChanged() async {
-    if (!_isSettingsInitialized) {
+    if (!isInitialized) {
       return;
     }
     while (_pendingChanges) {
@@ -384,6 +401,7 @@ class SettingsInstance extends BaseViewModel {
       "appsettings.locale.auto": localeAuto,
       "appsettings.appearance.thememode": themeMode.value,
       "appsettings.appearance.dynamiccolor": followAccentColor,
+      "appsettings.appearance.appcolor": {'a': appColor.a, 'r': appColor.r, 'g': appColor.g, 'b': appColor.b},
       "appsettings.appearance.blackbackground": blackBackground,
       "appsettings.appearance.backgroundimage.option": backgroundImageOption.value,
       "appsettings.appearance.backgroundimage.opacity.background": backgroundImageOpacity,
@@ -414,6 +432,7 @@ class SettingsInstance extends BaseViewModel {
             .firstOrNull ??
         AppThemeMode.followSystemSettings;
     followAccentColor = (data["appsettings.appearance.dynamiccolor"] as bool?) ?? true;
+    appColor = _loadAppColor(data["appsettings.appearance.appcolor"] as Map<String, dynamic>? ?? {});
     blackBackground = (data["appsettings.appearance.blackbackground"] as bool?) ?? false;
     backgroundImageOption = BackgroundImageOption.values
             .where((p) => p.value == ((data["appsettings.appearance.backgroundimage.option"] as int?) ?? 0))
@@ -447,5 +466,28 @@ class SettingsInstance extends BaseViewModel {
     currentSchoolYear =
         SchoolYear.fromJson(data["appsettings.globalvariables.schoolyear"] as Map<String, dynamic>? ?? {});
     openNewsInModalBottomSheet = (data["appsettings.behavior.bottomsheetwhenclicknews"] as bool?) ?? true;
+  }
+
+  Color _loadAppColor(Map<String, dynamic> appColorMap) {
+    try {
+      bool canContinue = true;
+      for (String s in ['a', 'r', 'g', 'b']) {
+        if (!appColorMap.containsKey(s)) {
+          canContinue = false;
+          break;
+        }
+      }
+      if (!canContinue) {
+        throw Exception('App color in settings file is corrupt. Returning to default...');
+      }
+      return Color.fromARGB(
+        appColorMap['a'] as int? ?? 0,
+        appColorMap['r'] as int? ?? 0,
+        appColorMap['g'] as int? ?? 0,
+        appColorMap['b'] as int? ?? 0,
+      );
+    } catch (_) {
+      return Colors.deepPurple;
+    }
   }
 }

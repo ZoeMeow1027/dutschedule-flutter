@@ -1,7 +1,7 @@
 import 'package:dutschedule/model/enum/process_state.dart';
 import 'package:dutwrapper/news_object.dart';
 
-import 'core/variable_state.dart';
+import 'variable_state.dart';
 
 class NewsData {
   NewsData();

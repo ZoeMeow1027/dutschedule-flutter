@@ -313,7 +313,7 @@
   "settings_about_github": "GitHub (nhấp để mở liên kết)",
   "settings_about_license": "Giấy phép",
   "settings_about_license_mit": "MIT",
-  "settings_about_madewith": "Được tạo với Flutter",
+  "settings_about_madewith": "Được tạo dựa trên nền tảng Flutter",
   "settings_about_title": "Về ứng dụng",
   "settings_applanguage_restartrequired_content": "Bạn bắt buộc phải khởi động lại ứng dụng để lưu thay đổi và có hiệu lực. Khởi động lại?",
   "settings_applanguage_restartrequired_no": "Không",
@@ -479,5 +479,6 @@
   "settings_wallpaperandcontrols_title": "Hình nền và phong cách",
   "time_last_request": "Lần yêu cầu cuối: {0}",
   "tooltip_info": "Thông tin",
-  "tooltip_selected": "Đã chọn"
+  "tooltip_selected": "Đã chọn",
+  "not_available_windows": "(Tùy chọn này không có sẵn trên Windows)"
 }

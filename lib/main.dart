@@ -1,4 +1,3 @@
-import 'model/notification_history.dart';
 import 'package:dutwrapper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -6,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'background/bg_core.dart';
 import 'global_variables.dart';
+import 'model/notification_history.dart';
 import 'repository/storage_repository.dart';
 import 'ui/main_application.dart';
 import 'viewmodel/account_session_instance.dart';
@@ -29,8 +29,9 @@ void main() async {
   // Initialize account session instance
   var accountSessionInstance = AccountSessionInstance.fromPreviousSettings(
     accountSessionJson: await StorageRepository.loadAccountSession(),
+    accountCacheJson: await StorageRepository.getAccountCache(),
+    schoolYear: settingsInstance.currentSchoolYear,
   );
-  accountSessionInstance.schoolYear = settingsInstance.currentSchoolYear;
   // Initialize news cache instance
   var newsCacheInstance = NewsCacheInstanceV2.fromCache(
     json: await StorageRepository.getNewsCache(),
@@ -45,6 +46,7 @@ void main() async {
           'data': p0.toJson(),
         },
         isRead: false,
+        isNotifiedToOs: false,
       ));
     },
   );
