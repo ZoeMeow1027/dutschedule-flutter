@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../background/bg_core.dart';
+import '../../l10n/app_localizations.dart';
 import '../../model/background_subject_code.dart';
 import '../../model/enum/news_background_subject_type.dart';
-import '../../utils/app_localizations.dart';
 import '../../utils/build_context_extension.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/news_cache_instance_v2.dart';
@@ -24,6 +24,16 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
   final _tfSchoolYearId = TextEditingController();
   final _tfClassId = TextEditingController();
   final _tfSubjectName = TextEditingController();
+
+  late int newsBackgroundDuration;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final settingsInstance = Provider.of<SettingsInstance>(context, listen: false);
+    newsBackgroundDuration = settingsInstance.newsBackgroundDuration;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +59,10 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
               value: settingsInstance.newsBackgroundDuration > 0,
               isEnabled: true,
               onClick: (changedValue) {
-                if (changedValue) {
-                  settingsInstance.newsBackgroundDuration = 60;
-                } else {
-                  settingsInstance.newsBackgroundDuration = 0;
-                }
+                setState(() {
+                  newsBackgroundDuration = changedValue ? 60 : 0;
+                });
+                settingsInstance.newsBackgroundDuration = newsBackgroundDuration;
                 BackgroundTask.scheduleNewsBackgroundTaskOnDesktop(
                   newsCacheInstance: newsCacheInstance,
                   settingsInstance: settingsInstance,
@@ -85,27 +94,26 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                       AppLocalizations.of(context).translate("settings_newsnotify_fetchnewsinbackground_duration"),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    if (settingsInstance.newsBackgroundDuration == 0)
-                      Text(AppLocalizations.of(context)
+                    switch (newsBackgroundDuration) {
+                      <= 0 => Text(AppLocalizations.of(context)
                           .translate("settings_newsnotify_fetchnewsinbackground_value_disabled")),
-                    if (settingsInstance.newsBackgroundDuration == 1)
-                      Text(AppLocalizations.of(context)
+                      1 => Text(AppLocalizations.of(context)
                           .translate("settings_newsnotify_fetchnewsinbackground_value_enabled1")),
-                    if (settingsInstance.newsBackgroundDuration > 1)
-                      Text(AppLocalizations.of(context).translateWithParameters(
+                      _ => Text(AppLocalizations.of(context).translateWithParameters(
                         "settings_newsnotify_fetchnewsinbackground_value_enabled2",
-                        [settingsInstance.newsBackgroundDuration.toString()],
+                        [newsBackgroundDuration.toString()],
                       )),
+                    },
                     Slider(
-                      value: (settingsInstance.newsBackgroundDuration - 5 < 0
-                              ? 0
-                              : settingsInstance.newsBackgroundDuration - 5)
-                          .toDouble(),
+                      value: (newsBackgroundDuration - 5 < 0 ? 0 : newsBackgroundDuration - 5).toDouble(),
                       onChanged: (value) {
-                        settingsInstance.newsBackgroundDuration = (value + 5).toInt();
+                        setState(() {
+                          newsBackgroundDuration = (value + 5).toInt();
+                        });
+                        // settingsInstance.newsBackgroundDuration = (value + 5).toInt();
                       },
                       onChangeEnd: (value) {
-                        settingsInstance.newsBackgroundDuration = (value + 5).toInt();
+                        settingsInstance.newsBackgroundDuration = newsBackgroundDuration;
                         BackgroundTask.scheduleNewsBackgroundTaskOnDesktop(
                           newsCacheInstance: newsCacheInstance,
                           settingsInstance: settingsInstance,
@@ -126,7 +134,10 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                             [duration.toString()],
                           )),
                           onPressed: () {
-                            settingsInstance.newsBackgroundDuration = duration;
+                            setState(() {
+                              newsBackgroundDuration = duration;
+                            });
+                            settingsInstance.newsBackgroundDuration = newsBackgroundDuration;
                             BackgroundTask.scheduleNewsBackgroundTaskOnDesktop(
                               newsCacheInstance: newsCacheInstance,
                               settingsInstance: settingsInstance,
@@ -277,14 +288,14 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                       Text(
                         AppLocalizations.of(context).translate("settings_newsnotify_newsfilter_list_nofilters"),
                       ),
-                    Column(
-                      children: settingsInstance.newsBackgroundFilterList.map((filter) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3),
-                          child: OptionItem(
-                            roundSize: 10,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            paddingInside: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    MenuListGroup(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      itemMinHeight: 40,
+                      itemList: List.generate(
+                        settingsInstance.newsBackgroundFilterList.length,
+                        (index) {
+                          final filter = settingsInstance.newsBackgroundFilterList.elementAt(index);
+                          return MenuListGroupItem(
                             title: StringUtils.formatString(
                               "{2} [{0}.Nh{1}]",
                               [filter.studentYearId, filter.classId, filter.subjectName],
@@ -347,9 +358,9 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
                               },
                               icon: Icon(Icons.delete),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        },
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 3),

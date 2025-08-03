@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 #
 # For now: version is build for major, minor, revision, build version
-version: 2.6.3+1754057030
+# With format yyMMddHHmm
+version: 2.6.4+2508030300
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -39,6 +40,7 @@ dependencies:
   ## The following adds the Cupertino Icons font to your application.
   ## Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8 
+  flutter_svg: ^2.2.0
   path_provider: ^2.1.5
   url_launcher: ^6.3.2
   # Official dart package
@@ -56,10 +58,10 @@ dependencies:
   split_view: ^3.2.1 # https://github.com/toshiaki-h/split_view
   theme_mode_handler: ^3.0.0 # https://github.com/arthurdenner/theme_mode_handler
   # dutwrapper - External package
-  dutwrapper:
+  dutwrapper: # v1.2.1 (draft)
     git:
       url: https://github.com/dutwrapper/dutwrapper-dart
-      ref: "dd372b298423ca3d332e6468520a5c7eaa799acc"
+      ref: "1ed47cdc44e64773754ef987ffd8dea97bd0630a"
       # path: src/dart
 
 dev_dependencies:
@@ -117,10 +119,11 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     # Icons
-    - assets/app_icon_48.ico
-    - assets/app_icon_256.ico
+    - assets/icons/app_icon_48.ico
+    - assets/icons/app_icon_256.ico
     # Logos
-    - assets/app_icon_512.png
+    - assets/icons/app_icon_256.png
+    - assets/icons/app_icon_512.png
     # Localization files
     - assets/lang/en.json
     - assets/lang/vi.json

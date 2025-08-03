@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../global_variables.dart';
 import '../model/enum/news_fetching_type.dart';
-import '../utils/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import '../utils/build_context_extension.dart';
 import '../utils/custom_scroll_behavior.dart';
 import '../viewmodel/account_session_instance.dart';

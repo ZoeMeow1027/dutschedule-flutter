@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../utils/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../card_with_title.dart';
 
 class ExternalLinksCard extends StatelessWidget {

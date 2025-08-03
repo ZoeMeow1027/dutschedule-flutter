@@ -2,8 +2,8 @@ import 'package:dutschedule/ui/components/menu_list_group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../model/enum/process_state.dart';
-import '../../../utils/app_localizations.dart';
 import '../../../utils/build_context_extension.dart';
 import '../../../viewmodel/account_session_instance.dart';
 import '../../components/message_card.dart';
@@ -51,7 +51,7 @@ class AccountDashboardView extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: context.isOSDarkMode() ? Colors.black : null),
+                            ?.copyWith(color: context.isOsDarkMode() ? Colors.black : null),
                       ),
                       onClick: () {
                         if (accountSessionInstance.authInfo != null) {

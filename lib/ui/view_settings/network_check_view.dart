@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../model/enum/app_log_level.dart';
 import '../../model/enum/background_image_option.dart';
-import '../../utils/app_localizations.dart';
+import '../../utils/app_utils.dart';
 import '../../utils/string_utils.dart';
 import '../../viewmodel/settings_instance.dart';
 import '../components/card_with_title.dart';
@@ -29,7 +31,12 @@ class _NetworkCheckSettingsView extends State<NetworkCheckSettingsView> {
       _hasConnectedToInternet = -1;
       _hasDutSvOnline = -1;
     });
-    debugPrint("Start checking");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'Diagnostics',
+      subTag: 'Network',
+      message: 'Starting check...',
+    );
     await Future.delayed(Duration(milliseconds: 500));
     try {
       setState(() => _hasConnectedToInternet = 0);
@@ -38,11 +45,22 @@ class _NetworkCheckSettingsView extends State<NetworkCheckSettingsView> {
     } catch (_) {
       setState(() => _hasConnectedToInternet = 1);
     }
-    debugPrint("Done checking internet connection");
+    AppUtils.showLogToDebug(
+      resultTag: AppLogLevel.info,
+      tag: 'Diagnostics',
+      subTag: 'Network',
+      message: 'Done checking internet connection...',
+    );
     await Future.delayed(Duration(milliseconds: 500));
     if (_hasConnectedToInternet != 2) {
       setState(() {
         // TODO: Show notify about not have internet connection here.
+        AppUtils.showLogToDebug(
+          resultTag: AppLogLevel.error,
+          tag: 'Diagnostics',
+          subTag: 'Network',
+          message: 'You haven\'t connected to internet.',
+        );
       });
     } else {
       try {
@@ -53,7 +71,21 @@ class _NetworkCheckSettingsView extends State<NetworkCheckSettingsView> {
         setState(() => _hasDutSvOnline = 1);
       }
     }
-    debugPrint("Done checking dut server online");
+    if (_hasDutSvOnline == 2) {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Diagnostics',
+        subTag: 'Network',
+        message: 'DUT server is online!',
+      );
+    } else {
+      AppUtils.showLogToDebug(
+        resultTag: AppLogLevel.info,
+        tag: 'Diagnostics',
+        subTag: 'Network',
+        message: 'DUT server downed or you have blocked sv.dut.udn.vn.',
+      );
+    }
     setState(() {
       _isRunning = false;
       _lastRequest = DateTime.now().toUtc().millisecondsSinceEpoch;

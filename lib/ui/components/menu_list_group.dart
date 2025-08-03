@@ -29,6 +29,7 @@ class MenuListGroupItem<T> {
     bool wrapTextWhenOverFlow = false,
     bool switchValue = false,
     bool isEnabled = true,
+    bool showBackgroundColor = true,
     Function(bool)? onSwitchChanged,
   }) {
     return MenuListGroupItem(
@@ -37,17 +38,21 @@ class MenuListGroupItem<T> {
       leading: leading,
       trailing: Switch(
         value: switchValue,
-        onChanged: (value) {
-          if (isEnabled) {
-            onSwitchChanged?.call(value);
-          }
-        },
+        onChanged: isEnabled
+            ? (value) {
+                if (isEnabled) {
+                  onSwitchChanged?.call(value);
+                }
+              }
+            : null,
       ),
       spaceForEmptyLeading: spaceForEmptyLeading,
       wrapTextWhenOverflow: wrapTextWhenOverFlow,
-      onClick: () {
-        onSwitchChanged?.call(!switchValue);
-      },
+      onClick: isEnabled
+          ? () {
+              onSwitchChanged?.call(!switchValue);
+            }
+          : null,
       isEnabled: isEnabled,
     );
   }
@@ -59,6 +64,7 @@ class MenuListGroupItem<T> {
     bool wrapTextWhenOverFlow = false,
     bool switchValue = false,
     bool isEnabled = true,
+    bool showBackgroundColor = true,
     Function(bool)? onSwitchChanged,
   }) {
     return MenuListGroupItem(
@@ -89,6 +95,7 @@ class MenuListGroupItem<T> {
     bool wrapTextWhenOverFlow = false,
     required T currentValue,
     required T radioValue,
+    bool showBackgroundColor = true,
     bool isEnabled = true,
     Function()? onRadioClicked,
   }) {
@@ -118,14 +125,18 @@ class MenuListGroupItem<T> {
 class MenuListGroup extends StatelessWidget {
   const MenuListGroup({
     super.key,
-    required this.itemList,
-    this.itemMinHeight = 85,
+    this.itemMinHeight = 70,
+    this.showBackgroundColor = true,
+    this.backgroundColor,
     this.groupTitle,
+    required this.itemList,
   });
 
   final List<MenuListGroupItem> itemList;
   final double itemMinHeight;
   final String? groupTitle;
+  final bool showBackgroundColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +160,8 @@ class MenuListGroup extends StatelessWidget {
           } else {
             var indexTemp = groupTitle != null ? index - 1 : index;
             return _ListGroupItemView(
+              showBackgroundColor: showBackgroundColor,
+              backgroundColor: backgroundColor,
               listGroupItem: itemList.elementAt(indexTemp),
               shouldRadiusOnTop: indexTemp == 0,
               shouldRadiusOnBottom: indexTemp == (itemList.length - 1),
@@ -168,6 +181,8 @@ class _ListGroupItemView extends StatelessWidget {
     this.shouldRadiusOnTop = false,
     this.shouldRadiusOnBottom = false,
     this.wrapTextWhenOverflow = false,
+    this.showBackgroundColor = true,
+    this.backgroundColor,
     this.minHeight = -1,
   });
 
@@ -175,12 +190,16 @@ class _ListGroupItemView extends StatelessWidget {
   final bool shouldRadiusOnBottom;
   final bool wrapTextWhenOverflow;
   final double minHeight;
+  final bool showBackgroundColor;
+  final Color? backgroundColor;
   final MenuListGroupItem listGroupItem;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.secondaryContainer,
+      color: !showBackgroundColor
+          ? Colors.transparent
+          : backgroundColor ?? Theme.of(context).colorScheme.secondaryContainer,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(shouldRadiusOnTop ? 20 : 5),
         topLeft: Radius.circular(shouldRadiusOnTop ? 20 : 5),
@@ -195,7 +214,7 @@ class _ListGroupItemView extends StatelessWidget {
         // width: double.infinity,
         // height: (height <= 0) ? null : height,
         child: InkWell(
-          onTap: listGroupItem.onClick,
+          onTap: listGroupItem.isEnabled ? listGroupItem.onClick : null,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
@@ -203,12 +222,9 @@ class _ListGroupItemView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 listGroupItem.leading != null
-                    ? listGroupItem.leading!
+                    ? SizedBox(width: 33, child: listGroupItem.leading!)
                     : listGroupItem.spaceForEmptyLeading
-                        ? Icon(
-                            Icons.yard_outlined,
-                            color: Colors.white.withAlpha(0),
-                          )
+                        ? Container(width: 33)
                         : Container(),
                 Expanded(
                   child: Padding(

@@ -5,6 +5,5 @@ enum ProcessState {
   successful(2);
 
   final int value;
-
   const ProcessState(this.value);
 }

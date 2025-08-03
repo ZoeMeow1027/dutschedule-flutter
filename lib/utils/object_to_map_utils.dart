@@ -1,7 +1,7 @@
-import 'app_localizations.dart';
 import 'package:dutwrapper/account_object.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'string_utils.dart';
 
 class ObjectToMapUtils {
@@ -48,10 +48,13 @@ class ObjectToMapUtils {
       AppLocalizations.of(context).translate("account_accinfo_item_gender"): st.gender,
       AppLocalizations.of(context).translate("account_accinfo_item_citizencardid"): st.citizenIdCard,
       AppLocalizations.of(context).translate("account_accinfo_item_citizencarddate"): st.citizenIdCardIssueDate,
-      AppLocalizations.of(context).translate("account_accinfo_item_bankcardid"): StringUtils.formatString("{0} ({1})", [
-        st.accountBankId,
-        st.accountBankName,
-      ]),
+      AppLocalizations.of(context).translate("account_accinfo_item_bankcardid"): StringUtils.formatString(
+        "{0} ({1})",
+        [
+          st.accountBankId,
+          st.accountBankName,
+        ],
+      ),
       AppLocalizations.of(context).translate("account_accinfo_item_personalemail"): st.personalEmail,
       AppLocalizations.of(context).translate("account_accinfo_item_phonenumber"): st.phoneNumber,
       AppLocalizations.of(context).translate("account_accinfo_item_class"): st.schoolClass,

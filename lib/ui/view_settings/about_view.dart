@@ -2,7 +2,7 @@ import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../global_variables.dart';
-import '../../utils/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../utils/string_utils.dart';
 import '../components/menu_list_group.dart';
 
@@ -30,7 +30,7 @@ class AboutSettingsView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 30),
                 child: ClipOval(
                   child: Image(
-                    image: AssetImage('assets/app_icon_512.png'),
+                    image: AssetImage('assets/icons/app_icon_512.png'),
                     width: 128,
                     height: 128,
                     fit: BoxFit.contain,
@@ -78,7 +78,7 @@ class AboutSettingsView extends StatelessWidget {
                   MenuListGroupItem(
                     title: AppLocalizations.of(context).translate("settings_about_github"),
                     description: GlobalVariables.repoLink,
-                    leading: Icon(Icons.science),
+                    leading: Icon(Icons.info),
                     onClick: () => context.openUrl(GlobalVariables.repoLink),
                   ),
                 ],

@@ -1,8 +1,8 @@
 import 'package:dutschedule/utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../model/external_link_info.dart';
-import '../../utils/app_localizations.dart';
 
 class ExternalLinkMiscellaneousView extends StatefulWidget {
   const ExternalLinkMiscellaneousView({super.key});

@@ -1,7 +1,7 @@
-import '../../../utils/build_context_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/get_device_type.dart';
+import '../../../model/enum/device_type.dart';
+import '../../../utils/build_context_extension.dart';
 import 'account_mobile_view.dart';
 import 'account_tablet_view.dart';
 

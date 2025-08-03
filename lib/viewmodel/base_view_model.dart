@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 
 abstract class BaseViewModel extends ChangeNotifier {
   BaseViewModel() {
-    if (_isInitialized) {
+    if (_isInitialized >= 0) {
       return;
     }
-    _isInitialized = true;
-
+    _isInitialized = 0;
     initializing();
-  }
 
-  bool _isInitialized = false;
+    _isInitialized = 1;
+  }
 
   void initializing();
 
   void timerAction();
+
+  // Check if initialized.
+  // -1: Not initialized yet, 0: Initializing, 1: Initialized.
+  int _isInitialized = -1;
+
+  bool get isInitialized => _isInitialized == 1;
 }

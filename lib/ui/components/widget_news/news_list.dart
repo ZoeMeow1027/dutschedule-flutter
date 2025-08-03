@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:dutwrapper/news_object.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import 'news_end_list_item.dart';
 import 'news_list_in_date.dart';
 

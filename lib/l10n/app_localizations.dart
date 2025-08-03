@@ -1,10 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../model/enum/app_log_level.dart';
-import 'app_utils.dart';
-import 'string_utils.dart';
+import '../utils/app_utils.dart';
+import '../utils/string_utils.dart';
 
 class AppLocalizations {
   static final Map<String, String> availableLocaleList = {
@@ -27,7 +28,6 @@ class AppLocalizations {
 
     String filePath = 'assets/lang/${locale.languageCode}.json';
 
-    debugPrint(filePath);
     try {
       jsonMapLocale = json.decode(await rootBundle.loadString('assets/lang/${locale.languageCode}.json'));
       AppUtils.showLogToDebug(

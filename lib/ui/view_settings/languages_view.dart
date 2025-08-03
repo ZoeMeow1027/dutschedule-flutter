@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../viewmodel/settings_instance.dart';
-import '../components/list_view_option_item.dart';
+import '../components/menu_list_group.dart';
 
 class LanguageSettingsView extends StatefulWidget {
   const LanguageSettingsView({super.key});
@@ -34,7 +34,7 @@ class _LanguageSettingsView extends State<LanguageSettingsView> {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        title: Text(AppLocalizations.of(context).translate("settings_applanguage_title")),
+        title: Text(AppLocalizations.of(context).translate('settings_applanguage_title')),
       ),
       body: Column(
         children: [
@@ -47,41 +47,48 @@ class _LanguageSettingsView extends State<LanguageSettingsView> {
               }),
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                label: Text(AppLocalizations.of(context).translate("settings_option_applanguage_searchhint")),
+                label: Text(AppLocalizations.of(context).translate('settings_option_applanguage_searchhint')),
               ),
             ),
           ),
           SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: List.generate(
-                searchResult.length + 1,
-                (index) {
-                  if (index == 0) {
-                    return ListViewOptionItem(
-                      title: AppLocalizations.of(context).translate("settings_applanguage_yoursystemlang"),
-                      trailing: settingsInstance.localeAuto ? Icon(Icons.check) : null,
-                      onClick: () {
-                        settingsInstance.localeAuto = true;
-                      },
-                    );
-                  } else {
-                    return ListViewOptionItem(
-                      title: searchResult.elementAt(index - 1).value,
-                      trailing: settingsInstance.localeAuto
-                          ? null
-                          : settingsInstance.locale.languageCode == searchResult.elementAt(index - 1).key
+              children: [
+                MenuListGroup(
+                  itemMinHeight: 50,
+                  showBackgroundColor: false,
+                  itemList: List.generate(
+                    searchResult.length + 1,
+                    (index) {
+                      if (index == 0) {
+                        return MenuListGroupItem(
+                          title: AppLocalizations.of(context).translate('settings_applanguage_yoursystemlang'),
+                          trailing: settingsInstance.localeAuto ? Icon(Icons.check) : null,
+                          onClick: () {
+                            settingsInstance.localeAuto = true;
+                          },
+                        );
+                      } else {
+                        return MenuListGroupItem(
+                          title: searchResult.elementAt(index - 1).value,
+                          trailing: settingsInstance.localeAuto
+                              ? null
+                              : settingsInstance.locale.languageCode == searchResult.elementAt(index - 1).key
                               ? Icon(Icons.check)
                               : null,
-                      onClick: () {
-                        settingsInstance.localeAuto = false;
-                        settingsInstance.locale = Locale(searchResult.elementAt(index - 1).key);
-                      },
-                    );
-                  }
-                },
-              ),
+                          onClick: () {
+                            settingsInstance.localeAuto = false;
+                            settingsInstance.locale = Locale(searchResult.elementAt(index - 1).key);
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
