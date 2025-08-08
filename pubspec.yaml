@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 #
 # For now: version is build for major, minor, revision, build version
 # With format yyMMddHHmm
-version: 2.6.4+2508030300
+version: 2.6.4+2508080000
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

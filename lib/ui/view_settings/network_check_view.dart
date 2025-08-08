@@ -83,7 +83,7 @@ class _NetworkCheckSettingsView extends State<NetworkCheckSettingsView> {
         resultTag: AppLogLevel.info,
         tag: 'Diagnostics',
         subTag: 'Network',
-        message: 'DUT server downed or you have blocked sv.dut.udn.vn.',
+        message: 'Can\'t reach DUT server (sv.dut.udn.vn).',
       );
     }
     setState(() {

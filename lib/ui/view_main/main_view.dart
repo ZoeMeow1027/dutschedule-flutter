@@ -102,64 +102,6 @@ class _MyHomePageState extends State<MainScreenView> {
     );
   }
 
-  // Widget _buildv1() {
-  //   var screenType = context.getDeviceType();
-
-  //   return Scaffold(
-  //     body: Row(
-  //       children: [
-  //         screenType.value > DeviceType.phone.value
-  //             ? NavigationRail(
-  //                 // extended: true,
-  //                 groupAlignment: 0.0,
-  //                 destinations: _getNavList(context).convertToListNavRailDestination(),
-  //                 selectedIndex: _selectedPage,
-  //                 labelType: NavigationRailLabelType.all,
-  //                 onDestinationSelected: (index) {
-  //                   _controller.animateToPage(
-  //                     index,
-  //                     duration: const Duration(milliseconds: 300),
-  //                     curve: Curves.fastLinearToSlowEaseIn,
-  //                   );
-  //                 },
-  //                 minWidth: 80,
-  //               )
-  //             : const Center(),
-  //         Expanded(
-  //           child: PageView(
-  //             physics: const NeverScrollableScrollPhysics(),
-  //             controller: _controller,
-  //             onPageChanged: (page) {
-  //               setState(() {
-  //                 _selectedPage = page;
-  //               });
-  //             },
-  //             children: const <Widget>[
-  //               DashboardTab(),
-  //               NewsTab(),
-  //               NotificationsTab(),
-  //               AccountTab(),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     bottomNavigationBar: screenType.value <= DeviceType.phone.value
-  //         ? NavigationBar(
-  //             destinations: _getNavList(context).convertToListNavDestination(),
-  //             selectedIndex: _selectedPage,
-  //             onDestinationSelected: (index) {
-  //               _controller.animateToPage(
-  //                 index,
-  //                 duration: const Duration(milliseconds: 300),
-  //                 curve: Curves.fastLinearToSlowEaseIn,
-  //               );
-  //             },
-  //           )
-  //         : null,
-  //   );
-  // }
-
   ScaffoldNavigationList _getNavList(BuildContext context) {
     final notificationInstance = Provider.of<NotificationInstance>(context);
     return ScaffoldNavigationList(itemList: [
