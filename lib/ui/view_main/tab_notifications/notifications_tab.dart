@@ -126,7 +126,6 @@ class NotificationsTab extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context).translate('main_notifications_dialog_deleteone_description'),
                         ),
-                        // TODO: Show notification is being deleted here.
                         WidgetMainNotificationItem(
                           notifyHistoryItem: item,
                           showDeleteButton: false,

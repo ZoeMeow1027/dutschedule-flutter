@@ -29,7 +29,6 @@ class _NewsNotificationsSettingsView extends State<NewsNotificationsSettingsView
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final settingsInstance = Provider.of<SettingsInstance>(context, listen: false);
     newsBackgroundDuration = settingsInstance.newsBackgroundDuration;

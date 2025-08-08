@@ -47,64 +47,24 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
           alignment: Alignment.topCenter,
           child: RefreshIndicator(
             child: tmp.isNotEmpty
-                ? ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    controller: widget.scrollController,
-                    itemCount: tmp.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == tmp.length) {
-                        return Padding(
-                          padding: EdgeInsets.only(top: 7),
-                          child: NewsEndListItem(
-                            isRefreshing: widget.isRefreshing,
-                            isEndOfList: widget.isEndOfList,
-                            refreshRequested: () {
-                              if (widget.endListReached != null) {
-                                widget.endListReached!();
-                              }
-                            },
-                          ),
-                        );
-                      } else {
-                        return Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: NewsListInDate(
-                            date: tmp.keys.elementAt(index),
-                            newsListInDate: tmp[tmp.keys.elementAt(index)] ?? [],
-                            color: widget.color,
-                            onClick: widget.onClick,
-                            showDateInHeader: widget.showDateInNewsItem,
-                          ),
-                        );
-                      }
-                    },
-                    separatorBuilder: (context, index) => SizedBox(),
+                // If have news list (not empty)
+                ? _hasNews(
+                    context: context,
+                    newsList: tmp,
+                    color: widget.color,
+                    showDateInNewsItem: widget.showDateInNewsItem,
+                    scrollController: widget.scrollController,
+                    onClick: widget.onClick,
+                    isRefreshing: widget.isRefreshing,
+                    isEndOfList: widget.isEndOfList,
+                    endOfListReached: widget.endListReached,
                   )
                 // If no available news in list
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      widget.isRefreshing
-                          // If loading
-                          ? CircularProgressIndicator()
-                          // If end of list
-                          : widget.isEndOfList
-                              ? Text(
-                                  AppLocalizations.of(context).translate("main_news_nonews_nonews"),
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                                  textAlign: TextAlign.center,
-                                )
-                              // If no internet
-                              : Text(
-                                  AppLocalizations.of(context).translate("main_news_nonews_nointernet"),
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                                  textAlign: TextAlign.center,
-                                ),
-                      // TODO: Need information about can't reaching to server here.
-                      Spacer(),
-                    ],
-                  ),
+                : widget.isRefreshing
+                    ? _noNewsLoading()
+                    : widget.isEndOfList
+                        ? _noNewsEndOfList(context: context)
+                        : _noNewsNoInternet(context: context),
             onRefresh: () async {
               if (widget.refreshRequested != null) {
                 await widget.refreshRequested!();
@@ -124,6 +84,82 @@ class _NewsListState extends State<NewsList> with AutomaticKeepAliveClientMixin 
         }
         return true;
       },
+    );
+  }
+
+  Widget _hasNews({
+    required BuildContext context,
+    required Map<int, List<NewsCore>> newsList,
+    Color? color,
+    bool showDateInNewsItem = false,
+    ScrollController? scrollController,
+    Function(NewsCore)? onClick,
+    bool isRefreshing = false,
+    bool isEndOfList = false,
+    Function()? endOfListReached,
+  }) {
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      controller: scrollController,
+      itemCount: newsList.length + 1,
+      itemBuilder: (context, index) {
+        if (index == newsList.length) {
+          return Padding(
+            padding: EdgeInsets.only(top: 7),
+            child: NewsEndListItem(
+              isRefreshing: isRefreshing,
+              isEndOfList: isEndOfList,
+              refreshRequested: () {
+                endOfListReached?.call();
+              },
+            ),
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: NewsListInDate(
+              date: newsList.keys.elementAt(index),
+              newsListInDate: newsList[newsList.keys.elementAt(index)] ?? [],
+              color: color,
+              onClick: onClick,
+              showDateInHeader: showDateInNewsItem,
+            ),
+          );
+        }
+      },
+      separatorBuilder: (context, index) => SizedBox(),
+    );
+  }
+
+  Widget _noNewsLoading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget _noNewsEndOfList({
+    required BuildContext context,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Center(
+        child: Text(
+          AppLocalizations.of(context).translate("main_news_nonews_nonews"),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _noNewsNoInternet({
+    required BuildContext context,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Center(
+        child: Text(
+          AppLocalizations.of(context).translate("main_news_nonews_nointernet"),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 

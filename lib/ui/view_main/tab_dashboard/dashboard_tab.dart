@@ -13,10 +13,12 @@ class DashboardTab extends StatelessWidget {
     super.key,
     this.onClickSwitchNewsTab,
     this.onClickSwitchAccountTab,
+    this.showSettingsButton = true,
   });
 
   final Function()? onClickSwitchNewsTab;
   final Function()? onClickSwitchAccountTab;
+  final bool showSettingsButton;
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +29,18 @@ class DashboardTab extends StatelessWidget {
         elevation: 0,
         title: Text(AppLocalizations.of(context).translate('main_dashboard_title')),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsView()),
-              );
-            },
-            icon: const Icon(Icons.settings),
-          ),
+          switch (showSettingsButton) {
+            true => IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsView()),
+                  );
+                },
+                icon: const Icon(Icons.settings),
+              ),
+            false => Container(),
+          },
         ],
       ),
       body: SingleChildScrollView(

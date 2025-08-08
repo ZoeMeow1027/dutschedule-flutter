@@ -76,7 +76,7 @@ class SettingsView extends StatelessWidget {
                 ),
                 // TODO: Developing do not disturb from time
                 MenuListGroupItem(
-                  title: "Do not distrub",
+                  title: "Do not disturb",
                   description: "This feature will prevent notify you from specific time range you chosen."
                       "\n(This feature is developing. Check back soon)",
                   leading: Icon(Icons.do_not_disturb),

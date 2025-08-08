@@ -241,7 +241,7 @@ class NewsCacheInstanceV2 extends BaseViewModel {
 
         // Before clear 'newsListFiltered', notify user when have any latest news.
         if (shouldNotify) {
-          for (var newsItem in newsListFiltered) {
+          for (var newsItem in newsListFiltered.reversed) {
             onNewNewsReceived?.call(newsItem);
           }
         }
