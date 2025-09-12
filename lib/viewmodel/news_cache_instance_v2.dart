@@ -16,10 +16,10 @@ class NewsCacheInstanceV2 extends BaseViewModel {
   });
 
   NewsCacheInstanceV2.fromCache({
-    required Map<String, dynamic> json,
+    required Map<String, dynamic> cache,
     this.onNewNewsReceived,
   }) {
-    _fromMap(json);
+    _fromMap(cache);
     _isSettingsInitialized = true;
   }
 

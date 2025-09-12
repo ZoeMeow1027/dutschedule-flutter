@@ -52,10 +52,12 @@ class _ExternalLinkMiscellaneousView extends State<ExternalLinkMiscellaneousView
                       margin: EdgeInsets.only(bottom: 10),
                       child: InkWell(
                         onTap: () {
-                          context.openUrl(
-                            data.url,
-                            onFailed: () {},
-                          );
+                          if (data.url.length == 1) {
+                            context.openUrl(
+                              data.url.elementAt(0),
+                              onFailed: () {},
+                            );
+                          }
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -68,12 +70,12 @@ class _ExternalLinkMiscellaneousView extends State<ExternalLinkMiscellaneousView
                                   data.title,
                                   style: Theme.of(context).textTheme.titleMedium,
                                 ),
-                                Text(data.url),
-                                SizedBox(height: 15),
                                 (data.description != null)
                                     ? Text(data.description!)
                                     : Text(AppLocalizations.of(context)
-                                        .translate("miscellaneous_externallinks_nodescription")),
+                                    .translate("miscellaneous_externallinks_nodescription")),
+                                SizedBox(height: 15),
+                                Text(data.url.map((p) => '- $p').join('\n')),
                               ],
                             ),
                           ),

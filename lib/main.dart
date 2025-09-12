@@ -34,7 +34,7 @@ void main() async {
   );
   // Initialize news cache instance
   var newsCacheInstance = NewsCacheInstanceV2.fromCache(
-    json: await StorageRepository.getNewsCache(),
+    cache: await StorageRepository.getNewsCache(),
     onNewNewsReceived: (p0) {
       notificationInstance.addNotification(NotificationHistory(
         title: p0.title,

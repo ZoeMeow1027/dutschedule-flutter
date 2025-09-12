@@ -44,7 +44,7 @@
   - This will be solved when `background news task` is ready to use.
 - App background wallpaper doesn't work.
   - I will focus main task, plus it has difficult due to Android API changes by Google. [You can read here for why](https://github.com/ZoeMeow1027/DutSchedule/issues/19)
-- If you find another issues or want to add a feature, navigate to [issue tab](https://github.com/ZoeMeow1027/dutschedule_flutter/issues) on this repository to create a issue or feature request.
+- If you found another issues or want to add a feature, navigate to [issue tab](https://github.com/ZoeMeow1027/dutschedule_flutter/issues) on this repository to create a issue or feature request.
 
 ## Credit and license?
 - License: [**MIT**](LICENSE)
