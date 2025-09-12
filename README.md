@@ -2,6 +2,11 @@
 - An unofficial Android app to provide friendly UI from sv.dut.udn.vn.
 - Continuing from [DutSchedule](https://github.com/ZoeMeow1027/DutSchedule), but written with Dart/Flutter.
 
+> [!NOTE]
+> - I will decrepate this repository on 2025/09/11. This will not archive those repositories, but I won't provide another updates and fix for them.
+> - Simple reason for that: I have no longer access my account to do that on sv.dut.udn.vn, so I won't able to check if `Account` is broken by page element changes.
+> - If you want to fork and add fix yourself, feel free to do that.
+
 ## Version
 - You're viewing v2.6.4+2508080000 (alpha)
   - Note that we will continue from old DutSchedule project, so we will use v2.0-alpha17 as beginning for now.
