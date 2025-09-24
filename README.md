@@ -3,6 +3,11 @@
 - Continuing from [DutSchedule](https://github.com/ZoeMeow1027/DutSchedule), but written with Dart/Flutter.
 
 > [!NOTE]
+> **Updated 2025/09/24:** DUT school has released (second) official app - dDUT. [You can check more information about app here](https://www.facebook.com/watch/?v=25405244652410471)
+> - iOS link: https://apps.apple.com/vn/app/ddut/id6749891213
+> - Android link: https://play.google.com/store/apps/details?id=com.ddut.e_dut
+
+> [!NOTE]
 > - I will decrepate this repository on 2025/09/11. This repository won't provide another updates and fix for them.
 > - Simple reason for that: I have no longer access my account to do that on sv.dut.udn.vn, so I won't able to check if `Account` is broken by page element changes.
 > - If you want to fork and add fix yourself, feel free to do that.
